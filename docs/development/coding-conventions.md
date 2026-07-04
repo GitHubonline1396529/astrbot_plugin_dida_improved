@@ -44,28 +44,28 @@ ruff check .
 - 异步测试不需要手动添加 `@pytest.mark.asyncio`，`pyproject.toml` 中已配置 `asyncio_mode = "auto"`
 - 遵守与业务代码相同的代码风格：ruff 80 列格式、Google 风格 docstring、源码全部使用英文
 
-## Commit conventions
+## 提交规范
 
-This project follows [Conventional Commits](https://www.conventionalcommits.org/).
+本项目遵循 [Conventional Commits](https://www.conventionalcommits.org/) 规范。
 
-Format: `type(scope): short description`
+格式：`type(scope): short description`
 
-- **Lowercase only** — no capitals at start
-- **No trailing period**
-- **No gitmoji**
-- **Language**: English (consistent with source code)
+- **全小写** — 首字母不大写
+- **末尾不加句号**
+- **不使用 gitmoji**
+- **使用英文** — 与源码语言保持一致
 
-| Type       | Usage                                    |
-|------------|------------------------------------------|
-| `feat`     | New feature                              |
-| `fix`      | Bug fix                                  |
-| `chore`    | Repo maintenance, config, tooling        |
-| `docs`     | Documentation only                       |
-| `refactor` | Code change with no behavior change      |
-| `test`     | Adding or fixing tests                   |
-| `ci`       | CI/CD workflow changes                   |
+| 类型       | 用途                          |
+|------------|-------------------------------|
+| `feat`     | 新功能                        |
+| `fix`      | 缺陷修复                      |
+| `chore`    | 仓库维护、配置、工具链         |
+| `docs`     | 仅文档变更                    |
+| `refactor` | 重构，不改变外部行为           |
+| `test`     | 新增或修改测试                |
+| `ci`       | CI/CD 工作流变更              |
 
-Examples:
+示例：
 
 ```
 feat(client): add inbox task query support

@@ -64,5 +64,6 @@ nav:
       - 编码规范: development/coding-conventions.md
       - 测试: development/testing.md
       - 文档工作流: development/docs-workflow.md
+      - 发布流程: development/release-workflow.md
   - 常见问题: troubleshooting.md
   - 变更日志: changelog.md

@@ -53,6 +53,7 @@ astrbot_plugin_dida_improved/
 | Documentation workflow | `docs/development/docs-workflow.md` |
 | Dida365 API technical details | `docs/development/architecture.md#dida365-api` |
 | Commit conventions | `docs/development/coding-conventions.md#commit-conventions` |
+| Release workflow | `docs/development/release-workflow.md` |
 
 ## Coding rules
 

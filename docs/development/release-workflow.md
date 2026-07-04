@@ -1,0 +1,155 @@
+# 发布流程
+
+## 背景
+
+AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载源码（ZIP 归档），而不使用 GitHub Releases 的发布包。这意味着默认分支上的**所有文件**都会被包含在下载包中，无论它们是否对插件运行有用。
+
+与此同时，本项目中存在大量仅在开发阶段需要的文件，包括但不限于：
+
+- 文档源码（`docs/` 目录、`mkdocs.yml`）
+- 测试套件（`tests/` 目录）
+- 开发依赖声明（`requirements-dev.txt`、`pyproject.toml`）
+- CI/CD 工作流（`.github/` 目录）
+- 仅用于 `pytest` 包导入的 `__init__.py`
+- AI 辅助开发参考（`AGENTS.md`）
+
+这些文件不应出现在最终用户下载的插件包中。
+
+## 分支策略
+
+为解决上述问题，我们采用双分支策略管理代码：
+
+```
+远程 GitHub 仓库
+├── main   ← 发布分支（仅包含 12 个运行时必需文件）
+└── dev    ← 开发分支（包含全部源文件，包括测试、文档等）
+
+本地开发环境
+└── dev ← 唯一本地分支
+     ├── feat/xxx  （特性分支）
+     ├── fix/xxx   （修复分支）
+     └── ...
+
+日常开发在 dev 上进行；main 分支不创建于本地，仅由 GitHub Actions
+在发布时自动同步。
+```
+
+这里的命名策略与直觉相反：
+
+- **`main`** 实际上是发布分支，只放插件运行所必需的最小文件集合。
+- **`dev`** 实际上是开发的主分支，所有工作都在此进行。
+
+之所以如此命名，是因为 AstrBot 的插件下载机制读取的是 GitHub 仓库的默认分支。将 `main` 设为默认分支，并让它只包含发布文件，可以确保用户下载的永远是干净的插件包。
+
+### 发布文件清单
+
+以下 12 个文件是插件运行的必要条件，也是 `main` 分支的全部内容：
+
+| 文件 | 用途 |
+|------|------|
+| `main.py` | 插件入口：命令处理器和 LLM 工具注册 |
+| `client.py` | Dida365 Open API HTTP 客户端 |
+| `service.py` | 业务逻辑层 |
+| `models.py` | 数据模型 |
+| `exceptions.py` | 自定义异常层次 |
+| `time_utils.py` | 时区工具 |
+| `_conf_schema.json` | 插件配置 Schema（WebUI 自动渲染） |
+| `metadata.yaml` | 插件元数据 |
+| `requirements.txt` | 运行时依赖 |
+| `README.md` | 使用说明 |
+| `LICENSE` | AGPL v3 许可证 |
+| `.gitignore` | Git 忽略规则（保持模板原样） |
+
+## 技术实现
+
+### 第一层防护：`.gitattributes`
+
+在 `dev` 分支根目录下的 `.gitattributes` 文件中，所有开发专用文件都标记为 `export-ignore`：
+
+```gitattributes
+.gitattributes    export-ignore
+.env              export-ignore
+AGENTS.md         export-ignore
+docs/             export-ignore
+mkdocs.yml        export-ignore
+pyproject.toml    export-ignore
+requirements-dev.txt export-ignore
+tests/            export-ignore
+__init__.py       export-ignore
+.github/          export-ignore
+.vscode/          export-ignore
+data/             export-ignore
+site/             export-ignore
+```
+
+当有人通过 GitHub 的 ZIP 下载功能获取 `dev` 分支的代码时，被标记的文件会被自动排除。这是一道双保险，即使有人错误地从 `dev` 分支下载，也不会拿到开发文件。
+
+### 第二层防护：GitHub Actions 自动同步
+
+真正的发布流程由 `sync-main-on-tag.yml` 工作流自动完成。该工作流在推送到 `dev` 分支的 `v*` 标签时触发。
+
+触发后的执行逻辑：
+
+1. 检出标签所指向的 `dev` 分支提交
+2. `git checkout --orphan release-temp` — 创建一个没有历史的新分支
+3. `git add` 上述 12 个发布文件 — 仅暂存运行时必需的文件
+4. `git commit -m "release: v*"` — 提交只包含发布文件的快照
+5. `git branch -f main release-temp` — 用这个快照替换 `main` 分支
+6. `git push origin main --force` — 强制推送到远程
+
+由于使用了 `--orphan`，`main` 分支的每次发布都是一个独立的根提交，没有与 `dev` 共享的历史。这保证了 `main` 的纯净。
+
+推送时使用 Personal Access Token（`RELEASE_TOKEN` Secret）绕过 GitHub 分支保护规则，确保只有 GitHub Actions 可以写入 `main`。
+
+### 远程仓库防护
+
+为防止意外推送 `main` 分支，在 GitHub 仓库设置中配置了分支保护规则：
+
+- 分支名：`main`
+- "Restrict who can push to matching branches" — 已启用
+- 仅允许 GitHub Actions（通过 PAT）推送
+
+因此，执行 `git push origin main` 会被 GitHub 直接拒绝。
+
+## 发布流程
+
+```bash
+# 1. 进入 dev 分支
+git checkout dev
+
+# 2. 更新 metadata.yaml 中的版本号
+#    手动编辑 version 字段，例如 v0.1.0 → v0.2.0
+
+# 3. 提交版本变更
+git add metadata.yaml
+git commit -m "chore: bump version to v0.2.0"
+
+# 4. 打标签（标签名必须为 v 开头）
+git tag v0.2.0
+
+# 5. 推送标签（触发 GitHub Actions 自动同步到 main）
+git push origin v0.2.0
+
+# 可选：同时推送 dev 分支的最新提交
+git push origin dev
+```
+
+推送标签后，可以在 GitHub 仓库的 Actions 页面查看 `sync release to main` 工作流的执行状态。执行成功后，`main` 分支将自动更新为只包含 12 个发布文件的新快照。
+
+## 常见问题
+
+### 如果不小心对 `main` 执行了 `git push`？
+
+GitHub 的分支保护规则会直接拒绝推送：`remote: error: GH006: Protected branch update failed for refs/heads/main.`
+
+### 如果本地不小心创建了 `main` 分支？
+
+没有影响。`main` 仅存在于远程，且本地的 `main` 分支内容与远程不同。只需删除本地分支：`git branch -D main`。
+
+### `RELEASE_TOKEN` 是什么？
+
+是一个 GitHub Fine-grained Personal Access Token，具有对仓库 `Contents: Write` 权限。它被存储在仓库的 Secrets 中（名称为 `RELEASE_TOKEN`），供 GitHub Actions 在推送 `main` 时认证使用。
+
+### 为什么不在本地创建 `main` 分支？
+
+避免误推。本地只有 `dev`，开发者没有机会执行 `git push origin main`。`main` 的维护完全交由 GitHub Actions 处理。
