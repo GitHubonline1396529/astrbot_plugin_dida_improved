@@ -1,0 +1,40 @@
+name: 部署文档到 GitHub Pages
+
+on:
+  push:
+    branches:
+      - dev  # docs/ and mkdocs.yml only exist on dev; main is an auto-synced release branch
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'astrbot_plugin_dida_improved/**/*.py'
+      - 'requirements.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装依赖
+        run: |
+          pip install mkdocs mkdocs-material mkdocstrings[python]
+
+      - name: 构建文档
+        run: mkdocs build
+
+      - name: 部署到 gh-pages 分支
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          mkdocs gh-deploy --force

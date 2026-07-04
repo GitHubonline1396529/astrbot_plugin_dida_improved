@@ -1,0 +1,15 @@
+[project]
+name = "astrbot_plugin_dida_improved"
+version = "0.0.1-beta"
+description = "滴答清单改进版 - AstrBot 插件"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 80
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

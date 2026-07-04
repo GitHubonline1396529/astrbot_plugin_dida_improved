@@ -1,0 +1,15 @@
+# Files/directories below are excluded from GitHub archive downloads.
+# They exist in the repository for development purposes only.
+.gitattributes    export-ignore
+.env              export-ignore
+AGENTS.md         export-ignore
+docs/             export-ignore
+mkdocs.yml        export-ignore
+pyproject.toml    export-ignore
+requirements-dev.txt export-ignore
+tests/            export-ignore
+__init__.py       export-ignore
+.github/          export-ignore
+.vscode/          export-ignore
+data/             export-ignore
+site/             export-ignore

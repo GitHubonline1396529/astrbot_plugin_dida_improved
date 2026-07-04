@@ -1,0 +1,68 @@
+site_name: 滴答清单改进版
+site_description: AstrBot Dida365（滴答清单）插件 - 完整任务管理
+site_url: https://yourname.github.io/astrbot_plugin_dida_improved
+repo_url: https://github.com/YourName/astrbot_plugin_dida_improved
+edit_uri: edit/dev/docs/
+
+theme:
+  name: material
+  language: zh  # Set the language to Chinese.
+  palette:
+    primary: teal
+    accent: indigo
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+          options:
+            show_source: true
+            show_bases: true
+            docstring_style: google
+            separate_signature: true
+            merge_init_into_class: true
+            # The following options control the display of headings and table
+            # of contents for symbols. To ensure that all the `class` and
+            # `function` symbols are displayed in the documentation in correct
+            # order, we set these options to `true`.
+            show_root_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - tables
+  - attr_list
+
+nav:
+  - 首页: index.md
+  - 安装: installation.md
+  - 配置: configuration.md
+  - 使用指南:
+      - 管理员指令: usage/commands.md
+      - LLM 工具: usage/llm-tools.md
+  - 开发:
+      - 环境搭建: development/setup.md
+      - 架构设计: development/architecture.md
+      - API 参考: development/api-reference.md
+      - 编码规范: development/coding-conventions.md
+      - 测试: development/testing.md
+      - 文档工作流: development/docs-workflow.md
+  - 常见问题: troubleshooting.md
+  - 变更日志: changelog.md

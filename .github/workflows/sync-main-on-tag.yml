@@ -1,0 +1,33 @@
+# Sync release files from dev to main when a v* tag is pushed.
+# This is the ONLY channel through which main should be updated.
+name: sync release to main
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: create clean main branch
+        run: |
+          TAG_NAME="${GITHUB_REF#refs/tags/}"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git checkout --orphan release-temp
+          git add main.py client.py service.py models.py exceptions.py time_utils.py \
+                  _conf_schema.json metadata.yaml requirements.txt README.md LICENSE \
+                  .gitignore
+          git commit -m "release: ${TAG_NAME}"
+          git branch -f main release-temp
+          git push https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/GitHubonline1396529/astrbot_plugin_dida_improved.git main --force
