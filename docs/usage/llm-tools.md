@@ -15,6 +15,7 @@
 ### 列出项目
 
 > 我的滴答清单里有哪些项目？
+> 
 > 帮我看看项目列表
 
 LLM 会自动调用 `list_dida_projects` 工具返回项目列表。
@@ -22,6 +23,7 @@ LLM 会自动调用 `list_dida_projects` 工具返回项目列表。
 ### 查询今日任务
 
 > 今天有什么任务
+> 
 > 今天到期的待办有哪些
 
 LLM 会自动调用 `list_dida_tasks(filter="today")` 返回今日到期任务。
@@ -29,6 +31,7 @@ LLM 会自动调用 `list_dida_tasks(filter="today")` 返回今日到期任务�
 ### 查询未完成任务
 
 > 我的待办有哪些
+> 
 > 还有哪些事情没有做
 
 LLM 会自动调用 `list_dida_tasks(filter="unfinished")` 返回所有未完成任务列表。
@@ -36,6 +39,7 @@ LLM 会自动调用 `list_dida_tasks(filter="unfinished")` 返回所有未完成
 ### 更新任务
 
 > 把任务 6a2a9b91e4b039e491b1de54 的备注改为"已完成"
+> 
 > 将任务标题改为"新标题"，优先级调到高
 
 LLM 会自动调用 `update_dida_task` 工具。传入参数：

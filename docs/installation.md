@@ -34,8 +34,8 @@
 如果返回类似以下信息则表示安装成功：
 
 ```
-滴答清单改进版已加载
-- 已配置访问令牌: True
-- API 地址: https://api.dida365.com/open/v1
-- 时区: Asia/Shanghai
+Dida365 Improved Plugin loaded
+- Access token configured: True
+- API base URL: https://api.dida365.com/open/v1
+- Timezone: Asia/Shanghai
 ```

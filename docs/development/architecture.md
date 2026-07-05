@@ -27,7 +27,7 @@
 
 ### 1. 收集箱任务独立获取
 
-Dida365 API 的收集箱 (Inbox) 是一个虚拟项目，不能通过 `/project/{id}/data` 访问，必须使用独立的端点 `/project/inbox/data`。因此在 `DidaService._collect_all_tasks()` 中，分别从两个渠道获取任务后合并。实际上，在滴答清单中像这样的虚拟项目一共有 5 个，分别是所有 (All) 、收集箱 (Inbox) 、今天 (Today) 、最近7天 (Next 7 Days) 、摘要。但是翻阅官方文档并实际进行了一些 API 测试之后发现其中似乎只有这个收集箱可以通过 Inbox 进行访问，其余的都不行。
+Dida365 API 的收集箱 (Inbox) 是一个虚拟项目，不能通过 `/project/{id}/data` 访问，必须使用独立的端点 `/project/inbox/data`。因此在 `DidaService._collect_all_tasks()` 中，分别从两个渠道获取任务后合并。实际上，在滴答清单中像这样的虚拟项目一共有 5 个，分别是所有 (All)、收集箱 (Inbox)、今天 (Today)、最近 7 天 (Next 7 Days)、摘要。但是翻阅官方文档并实际进行了一些 API 测试之后发现其中似乎只有这个收集箱可以通过 Inbox 进行访问，其余的都不行。
 
 ### 2. 任务更新不包含 reminders
 

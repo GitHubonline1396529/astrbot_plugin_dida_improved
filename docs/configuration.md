@@ -2,7 +2,7 @@
 
 ## 配置项
 
-插件配置在 AstrBot WebUI 中管理，支持以下配置项：
+插件提供了如下的配置选项，其中 `access_token` 是一个必填项，如不填写，则项目将无法使用。
 
 | 配置项 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
@@ -19,24 +19,25 @@
 
 ### 第 1 步：创建应用
 
-打开 [Dida365 开发者平台](https://developer.dida365.com/manage) 并登录。
+打开 [Dida365 开发者平台](https://developer.dida365.com/manage) 并登录。当然，这需要你提前注册好你的 Dida 365 账号，可以使用邮箱注册。
 
-点击创建 App，填写应用名称。创建完成后你会看到两个关键信息：
+接下来，点击“创建 App”，填写应用名称 (这里建议您填写 `Astrbot`)。创建完成后你会看到两个关键信息：
 
-- **Client ID**
-- **Client Secret**
+- **Client ID**;
+- **Client Secret**。
 
-接着在应用配置中设置回调地址（Callback URL），例如：
+接着在应用配置中设置回调地址 (Callback URL)，例如：
 
 ```
 http://localhost:8000/callback
 ```
 
-这个地址只需能够接收 OAuth 回调即可，它不必是一个真正运行的服务器——你只需要从浏览器地址栏中复制出 `code` 参数。
+!!! tips "设置回调地址"
+    这个地址只需能够接收 OAuth 回调即可，它不必是一个真正运行的服务器——你只需要从浏览器地址栏中复制出 `code` 参数。
 
 ### 第 2 步：打开授权链接
 
-在浏览器中访问以下地址（替换 `你的_CLIENT_ID`）：
+在浏览器中访问以下地址 (替换 `你的_CLIENT_ID`)：
 
 ```
 https://dida365.com/oauth/authorize?client_id=你的_CLIENT_ID&response_type=code&redirect_uri=http://localhost:8000/callback&scope=tasks:read%20tasks:write&state=123
@@ -44,8 +45,8 @@ https://dida365.com/oauth/authorize?client_id=你的_CLIENT_ID&response_type=cod
 
 用自己的 Dida365 账号登录并完成授权。这里请求了两个权限：
 
-- `tasks:read` — 读取任务
-- `tasks:write` — 写入任务
+- `tasks:read` — 读取任务；
+- `tasks:write` — 写入任务。
 
 ### 第 3 步：从回调地址中取出 code
 
@@ -55,16 +56,16 @@ https://dida365.com/oauth/authorize?client_id=你的_CLIENT_ID&response_type=cod
 http://localhost:8000/callback?code=ABC123&state=123
 ```
 
-从浏览器地址栏中复制出 `code` 参数的值（上例中的 `ABC123`）。
+从浏览器地址栏中复制出 `code` 参数的值 (上例中的 `ABC123`)。
 
 !!! warning "code 有效期"
     这个 `code` 通常只能使用一次，过期后需要重新授权。
 
 ### 第 4 步：生成 Basic 认证字符串
 
-将你的 `ClientID:ClientSecret`（中间用冒号连接）进行 Base64 编码。
+将你的 `ClientID:ClientSecret` (中间用冒号连接) 进行 Base64 编码。
 
-**PowerShell：**
+对于 **Windows** 平台的用户，你可以使用如下的 **PowerShell** 命令：
 
 ```powershell
 $plain = "你的ClientID:你的ClientSecret"
@@ -72,7 +73,7 @@ $bytes = [System.Text.Encoding]::UTF8.GetBytes($plain)
 [Convert]::ToBase64String($bytes)
 ```
 
-**macOS / Linux：**
+而对于 **macOS** / **Linux** 的用户，你可以使用下面的 Bash 命令：
 
 ```bash
 printf '%s' '你的ClientID:你的ClientSecret' | base64
@@ -92,6 +93,13 @@ curl.exe -X POST "https://dida365.com/oauth/token" `
   --data-urlencode "code=你的code" `
   --data-urlencode "redirect_uri=http://localhost:8000/callback"
 ```
+
+!!! tips "你可以直接复制这里的命令"
+    哦，对对对，我想起来了，Windows Terminal 复制黏贴多行终端文本的时候一直会出现粘贴困难的问题，文本末尾的换行符 `\n` 经常触发命令被直接执行。所以我这里帮你提前打好了一个 one line 的版本，你可以直接从这里复制过去粘贴执行。
+
+    ```powershell
+    curl.exe -X POST "https://dida365.com/oauth/token" -H "Authorization: Basic 你的Base64结果" -H "Content-Type: application/x-www-form-urlencoded" --data-urlencode "grant_type=authorization_code" --data-urlencode "code=你的code" --data-urlencode "redirect_uri=http://localhost:8000/callback"
+    ```
 
 **macOS / Linux：**
 

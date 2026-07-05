@@ -67,7 +67,7 @@ pip install -r requirements-dev.txt
 pytest -v
 ```
 
-默认 121 个测试用例通过，3 个集成测试跳过（需要真实 API Token）。
+测试用例数量视当前代码状态而定，集成测试默认跳过（需要真实 API Token）。
 
 ### 跑特定测试文件
 

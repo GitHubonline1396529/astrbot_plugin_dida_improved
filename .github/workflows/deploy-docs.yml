@@ -7,7 +7,7 @@ on:
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
-      - 'astrbot_plugin_dida_improved/**/*.py'
+      - '**/*.py'
       - 'requirements.txt'
 
 permissions:

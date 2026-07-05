@@ -2,7 +2,7 @@
 
 ## 背景
 
-AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载源码（ZIP 归档），而不使用 GitHub Releases 的发布包。这意味着默认分支上的**所有文件**都会被包含在下载包中，无论它们是否对插件运行有用。
+AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载源码 (ZIP 归档)，而不使用 GitHub Releases 的发布包。这意味着默认分支上的 **所有文件** 都会被包含在下载包中，无论它们是否对插件运行有用。
 
 与此同时，本项目中存在大量仅在开发阶段需要的文件，包括但不限于：
 
@@ -13,28 +13,24 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 - 仅用于 `pytest` 包导入的 `__init__.py`
 - AI 辅助开发参考（`AGENTS.md`）
 
-这些文件不应出现在最终用户下载的插件包中。
+这些文件不应出现在最终用户下载的插件包中，因为用户实际上用不到。而且 Astrbot 的插件规范也不允许这些非必要的内容存在。
 
 ## 分支策略
 
 为解决上述问题，我们采用双分支策略管理代码：
 
-```
-远程 GitHub 仓库
-├── main   ← 发布分支（仅包含 12 个运行时必需文件）
-└── dev    ← 开发分支（包含全部源文件，包括测试、文档等）
+远程 GitHub 仓库：
 
-本地开发环境
-└── dev ← 唯一本地分支
-     ├── feat/xxx  （特性分支）
-     ├── fix/xxx   （修复分支）
-     └── ...
+- `main`：发布分支（仅包含 12 个运行时必需文件）；
+- `dev`：开发分支（包含全部源文件，包括测试、文档等）。
 
-日常开发在 dev 上进行；main 分支不创建于本地，仅由 GitHub Actions
-在发布时自动同步。
-```
+本地开发环境下，`dev` 为唯一本地分支，包括：
 
-这里的命名策略与直觉相反：
+- `feat/xxx` ——特性分支；
+- `fix/xxx` ——修复分支；
+- ……
+
+日常开发在 `dev` 上进行；`main` 分支不创建于本地，仅由 GitHub Actions 在发布时自动同步。这里的命名策略与直觉相反：
 
 - **`main`** 实际上是发布分支，只放插件运行所必需的最小文件集合。
 - **`dev`** 实际上是开发的主分支，所有工作都在此进行。
@@ -105,34 +101,50 @@ site/             export-ignore
 
 为防止意外推送 `main` 分支，在 GitHub 仓库设置中配置了分支保护规则：
 
-- 分支名：`main`
-- "Restrict who can push to matching branches" — 已启用
-- 仅允许 GitHub Actions（通过 PAT）推送
+- 分支名：`main`；
+- "Restrict who can push to matching branches" — 已启用；
+- 仅允许 GitHub Actions（通过 PAT）推送。
 
 因此，执行 `git push origin main` 会被 GitHub 直接拒绝。
 
 ## 发布流程
 
+**1. 进入 dev 分支**：确保当前工作目录在 `dev` 分支上，所有后续操作都基于此分支进行。
+
 ```bash
-# 1. 进入 dev 分支
 git checkout dev
+```
 
-# 2. 更新 metadata.yaml 中的版本号
-#    手动编辑 version 字段，例如 v0.1.0 → v0.2.0
+**2. 更新 `metadata.yaml` 中的版本号**：你需要手动编辑 `version` 字段，例如从 `v0.1.0` 改为 `v0.2.0`。
 
-# 3. 提交版本变更
+**3. 提交版本变更**：将版本号的修改提交到 `dev` 分支。
+
+```bash
 git add metadata.yaml
 git commit -m "chore: bump version to v0.2.0"
+```
 
-# 4. 打标签（标签名必须为 v 开头）
+**4. 打标签**：标签名**必须**以 `v` 开头，这是 GitHub Actions 工作流的触发条件。 
+
+```bash
 git tag v0.2.0
+```
 
-# 5. 推送标签（触发 GitHub Actions 自动同步到 main）
+**5. 推送标签（触发 GitHub Actions 自动同步到 main）**
+
+```bash
 git push origin v0.2.0
+```
 
-# 可选：同时推送 dev 分支的最新提交
+推送标签后，GitHub Actions 工作流 `sync-main-on-tag.yml` 会自动执行，将发布文件同步到 `main` 分支。
+
+**可选：同时推送 dev 分支的最新提交**
+
+```bash
 git push origin dev
 ```
+
+如果希望远程 `dev` 分支也保持最新，可以一并推送。
 
 推送标签后，可以在 GitHub 仓库的 Actions 页面查看 `sync release to main` 工作流的执行状态。执行成功后，`main` 分支将自动更新为只包含 12 个发布文件的新快照。
 
