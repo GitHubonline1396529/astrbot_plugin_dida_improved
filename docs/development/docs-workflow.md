@@ -47,8 +47,10 @@
 ## 本地开发
 
 ```bash
-mkdocs serve  # 启动开发服务器 → http://localhost:8000
+mkdocs serve  # 启动开发服务器
 ```
+
+服务启动后将会运行在本机的 8000 端口，通过 `http://127.0.0.1:8000/astrbot_plugin_dida_improved/` 可用访问。其中，`astrbot_plugin_dida_improved` 请替换为您本地项目文件夹的实际名称。或者，在服务启动后的终端窗口中也会弹出正确的文档预览地址。
 
 支持热重载，编辑文件后浏览器自动刷新。
 
