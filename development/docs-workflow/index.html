@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://yourname.github.io/astrbot_plugin_dida_improved/development/docs-workflow/">
+        <link rel="canonical" href="https://githubonline1396529.github.io/astrbot_plugin_dida_improved/development/docs-workflow/">
       
       
         <link rel="prev" href="../testing/">
@@ -168,7 +168,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/YourName/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -214,7 +214,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/YourName/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -1084,11 +1084,15 @@
 <h3 id="_4">文档编写规范</h3>
 <p>文档的编写应当遵循如下的规范：</p>
 <ol>
-<li>使用标准的 Markdown 语法，如非必要，不引入兼容性更低的专有语法；</li>
-<li>对于每一个连贯的段落，不进行折行；当且仅当涉及将文本分割为 2 个独立的段落时，在文本之间插入 2 个折行；</li>
+<li>使用标准的 Markdown 语法，如非必要，不引入兼容性更低的专有语法，但 MKDocs 原生的以 <code>!!!</code> 用作行头的 Callot / Alert 应当被保留。</li>
+<li>对于每一个连贯的段落，不进行折行；当且仅当涉及将文本分割为 2 个独立的段落时，在文本之间插入 2 个折行。</li>
+<li>永远不使用 ASCII Art + 代码块的格式展示内容。</li>
 <li>中文和英文字符、中文和数字在正常表意的情况下，需留有 1 个空格的间距。</li>
+<li>中文文本中的括号请使用“空格 + 西文括号”，即：用 <code>（</code> 代替 <code>（</code>，用 <code>)</code> 代替 <code>）</code>。如果括号与中文标点符号相邻，例如 <code>！(</code> 或者 <code>)。</code>，则括号与标点符号之间不应存在空格。</li>
+<li>对于无序列表和有序列表，如果一个列表行包含多个以句号“。”、感叹号“！”、问号“？”结尾的句子，则结尾的表点符号为句号“。”、感叹号“！”，或者问号“？”。如果一个列表行不包含一个完整的中文句子，使用分号“；”。</li>
 </ol>
 <h3 id="_5">添加新页面</h3>
+<p>如果您需要为当前的文档添加一个新的页面，需要执行如下的 2 步操作：</p>
 <ol>
 <li>在 <code>docs/</code> 下创建对应的 <code>.md</code> 文件；</li>
 <li>在 <code>mkdocs.yml</code> 的 <code>nav</code> 中添加条目。</li>
@@ -1121,7 +1125,7 @@
 <p><code>.github/workflows/deploy-docs.yml</code> 在以下条件满足时自动触发：</p>
 <ul>
 <li>推送到 <code>dev</code> 分支（<code>main</code> 是自动同步的发布分支，不直接接收推送）</li>
-<li>且变更涉及：<code>docs/**</code>、<code>mkdocs.yml</code>、<code>astrbot_plugin_dida_improved/**/*.py</code>、<code>requirements.txt</code></li>
+<li>且变更涉及：<code>docs/**</code>、<code>mkdocs.yml</code>、<code>**/*.py</code>、<code>requirements.txt</code></li>
 </ul>
 <p>执行步骤：</p>
 <ol>

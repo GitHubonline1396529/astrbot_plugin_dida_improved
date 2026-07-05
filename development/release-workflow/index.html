@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://yourname.github.io/astrbot_plugin_dida_improved/development/release-workflow/">
+        <link rel="canonical" href="https://githubonline1396529.github.io/astrbot_plugin_dida_improved/development/release-workflow/">
       
       
         <link rel="prev" href="../docs-workflow/">
@@ -168,7 +168,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/YourName/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -214,7 +214,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/YourName/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -1151,7 +1151,7 @@
 
 <h1 id="_1">发布流程</h1>
 <h2 id="_2">背景</h2>
-<p>AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载源码（ZIP 归档），而不使用 GitHub Releases 的发布包。这意味着默认分支上的<strong>所有文件</strong>都会被包含在下载包中，无论它们是否对插件运行有用。</p>
+<p>AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载源码 (ZIP 归档)，而不使用 GitHub Releases 的发布包。这意味着默认分支上的 <strong>所有文件</strong> 都会被包含在下载包中，无论它们是否对插件运行有用。</p>
 <p>与此同时，本项目中存在大量仅在开发阶段需要的文件，包括但不限于：</p>
 <ul>
 <li>文档源码（<code>docs/</code> 目录、<code>mkdocs.yml</code>）</li>
@@ -1161,23 +1161,21 @@
 <li>仅用于 <code>pytest</code> 包导入的 <code>__init__.py</code></li>
 <li>AI 辅助开发参考（<code>AGENTS.md</code>）</li>
 </ul>
-<p>这些文件不应出现在最终用户下载的插件包中。</p>
+<p>这些文件不应出现在 <code>main</code> 分支的下载包中（因为它们对插件运行无意义），但应当完整出现在 <code>dev</code> 分支的下载包中——协作者需要它们来完成开发工作流。</p>
 <h2 id="_3">分支策略</h2>
 <p>为解决上述问题，我们采用双分支策略管理代码：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>远程 GitHub 仓库
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── main   ← 发布分支（仅包含 12 个运行时必需文件）
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└── dev    ← 开发分支（包含全部源文件，包括测试、文档等）
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>本地开发环境
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└── dev ← 唯一本地分支
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>     ├── feat/xxx  （特性分支）
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>     ├── fix/xxx   （修复分支）
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>     └── ...
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>日常开发在 dev 上进行；main 分支不创建于本地，仅由 GitHub Actions
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>在发布时自动同步。
-</code></pre></div>
-<p>这里的命名策略与直觉相反：</p>
+<p>远程 GitHub 仓库：</p>
+<ul>
+<li><code>main</code>：发布分支（仅包含 12 个运行时必需文件）；</li>
+<li><code>dev</code>：开发分支（包含全部源文件，包括测试、文档等）。</li>
+</ul>
+<p>本地开发环境下，<code>dev</code> 为唯一本地分支，包括：</p>
+<ul>
+<li><code>feat/xxx</code> ——特性分支；</li>
+<li><code>fix/xxx</code> ——修复分支；</li>
+<li>……</li>
+</ul>
+<p>日常开发在 <code>dev</code> 上进行；<code>main</code> 分支不创建于本地，仅由 GitHub Actions 在发布时自动同步。这里的命名策略与直觉相反：</p>
 <ul>
 <li><strong><code>main</code></strong> 实际上是发布分支，只放插件运行所必需的最小文件集合。</li>
 <li><strong><code>dev</code></strong> 实际上是开发的主分支，所有工作都在此进行。</li>
@@ -1245,22 +1243,16 @@
 </table>
 <h2 id="_5">技术实现</h2>
 <h3 id="gitattributes">第一层防护：<code>.gitattributes</code></h3>
-<p>在 <code>dev</code> 分支根目录下的 <code>.gitattributes</code> 文件中，所有开发专用文件都标记为 <code>export-ignore</code>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.gitattributes    export-ignore
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>.env              export-ignore
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>AGENTS.md         export-ignore
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>docs/             export-ignore
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mkdocs.yml        export-ignore
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pyproject.toml    export-ignore
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>requirements-dev.txt export-ignore
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>tests/            export-ignore
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>__init__.py       export-ignore
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>.github/          export-ignore
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>.vscode/          export-ignore
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>data/             export-ignore
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>site/             export-ignore
+<p><code>dev</code> 分支使用 <code>.gitattributes</code> 排除两项内容：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>.gitattributes    export-ignore
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>.env              export-ignore
 </code></pre></div>
-<p>当有人通过 GitHub 的 ZIP 下载功能获取 <code>dev</code> 分支的代码时，被标记的文件会被自动排除。这是一道双保险，即使有人错误地从 <code>dev</code> 分支下载，也不会拿到开发文件。</p>
+<ul>
+<li><strong><code>.gitattributes</code> 自身</strong>：标准做法，不在下载包中携带导出规则文件。</li>
+<li><strong><code>.env</code></strong>：包含 Dida365 Access Token 等凭据。此文件在 <code>.gitignore</code> 中已有排除，<code>export-ignore</code> 作为双重保险；仅用于集成测试，日常开发和用户运行都不需要。</li>
+</ul>
+<p>其余所有文件（文档源码 <code>docs/</code>、测试套件 <code>tests/</code>、CI 配置 <code>.github/</code> 等）均<strong>保留在下载包中</strong>，以确保协作者下载 <code>dev</code> 分支后可以立即开展完整的开发工作流。</p>
+<p>之所以这样做，是因为 <code>dev</code> 与 <code>main</code> 的设计目标不同：<code>main</code> 面向最终用户（只需最小运行文件），<code>dev</code> 面向协作者（需要完整的开发环境）。</p>
 <h3 id="github-actions">第二层防护：GitHub Actions 自动同步</h3>
 <p>真正的发布流程由 <code>sync-main-on-tag.yml</code> 工作流自动完成。该工作流在推送到 <code>dev</code> 分支的 <code>v*</code> 标签时触发。</p>
 <p>触发后的执行逻辑：</p>
@@ -1277,31 +1269,31 @@
 <h3 id="_6">远程仓库防护</h3>
 <p>为防止意外推送 <code>main</code> 分支，在 GitHub 仓库设置中配置了分支保护规则：</p>
 <ul>
-<li>分支名：<code>main</code></li>
-<li>"Restrict who can push to matching branches" — 已启用</li>
-<li>仅允许 GitHub Actions（通过 PAT）推送</li>
+<li>分支名：<code>main</code>；</li>
+<li>"Restrict who can push to matching branches" — 已启用；</li>
+<li>仅允许 GitHub Actions（通过 PAT）推送。</li>
 </ul>
 <p>因此，执行 <code>git push origin main</code> 会被 GitHub 直接拒绝。</p>
 <h2 id="_7">发布流程</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. 进入 dev 分支</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>dev
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 2. 更新 metadata.yaml 中的版本号</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">#    手动编辑 version 字段，例如 v0.1.0 → v0.2.0</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 3. 提交版本变更</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>git<span class="w"> </span>add<span class="w"> </span>metadata.yaml
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: bump version to v0.2.0&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># 4. 打标签（标签名必须为 v 开头）</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>git<span class="w"> </span>tag<span class="w"> </span>v0.2.0
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># 5. 推送标签（触发 GitHub Actions 自动同步到 main）</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.2.0
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># 可选：同时推送 dev 分支的最新提交</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>dev
+<p><strong>1. 进入 dev 分支</strong>：确保当前工作目录在 <code>dev</code> 分支上，所有后续操作都基于此分支进行。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>dev
 </code></pre></div>
+<p><strong>2. 更新 <code>metadata.yaml</code> 中的版本号</strong>：你需要手动编辑 <code>version</code> 字段，例如从 <code>v0.1.0</code> 改为 <code>v0.2.0</code>。</p>
+<p><strong>3. 提交版本变更</strong>：将版本号的修改提交到 <code>dev</code> 分支。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>add<span class="w"> </span>metadata.yaml
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: bump version to v0.2.0&quot;</span>
+</code></pre></div>
+<p><strong>4. 打标签</strong>：标签名<strong>必须</strong>以 <code>v</code> 开头，这是 GitHub Actions 工作流的触发条件。 </p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>tag<span class="w"> </span>v0.2.0
+</code></pre></div>
+<p><strong>5. 推送标签（触发 GitHub Actions 自动同步到 main）</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.2.0
+</code></pre></div>
+<p>推送标签后，GitHub Actions 工作流 <code>sync-main-on-tag.yml</code> 会自动执行，将发布文件同步到 <code>main</code> 分支。</p>
+<p><strong>可选：同时推送 dev 分支的最新提交</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>dev
+</code></pre></div>
+<p>如果希望远程 <code>dev</code> 分支也保持最新，可以一并推送。</p>
 <p>推送标签后，可以在 GitHub 仓库的 Actions 页面查看 <code>sync release to main</code> 工作流的执行状态。执行成功后，<code>main</code> 分支将自动更新为只包含 12 个发布文件的新快照。</p>
 <h2 id="_8">常见问题</h2>
 <h3 id="main-git-push">如果不小心对 <code>main</code> 执行了 <code>git push</code>？</h3>

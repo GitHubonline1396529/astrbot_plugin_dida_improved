@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://yourname.github.io/astrbot_plugin_dida_improved/configuration/">
+        <link rel="canonical" href="https://githubonline1396529.github.io/astrbot_plugin_dida_improved/configuration/">
       
       
         <link rel="prev" href="../installation/">
@@ -168,7 +168,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/YourName/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -214,7 +214,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/YourName/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved" title="前往仓库" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -1059,7 +1059,7 @@
 
 <h1 id="_1">配置</h1>
 <h2 id="_2">配置项</h2>
-<p>插件配置在 AstrBot WebUI 中管理，支持以下配置项：</p>
+<p>插件提供了如下的配置选项，其中 <code>access_token</code> 是一个必填项，如不填写，则项目将无法使用。</p>
 <table>
 <thead>
 <tr>
@@ -1106,42 +1106,45 @@
 <p>本指南参考了
 <a href="https://github.com/zhenyumi/astrbot_plugin_dida365">zhenyumi/astrbot_plugin_dida365</a> 的原版说明，原作者已写得非常认真而且详细了，而且每一步都有截图。这里真得感谢人家。你可以直接前往该仓库查看 (如果你去了的话，别忘了给人家的仓库点个小星星)。如果你不想跳转，下文也提供了一份完整的操作说明。</p>
 <h3 id="1">第 1 步：创建应用</h3>
-<p>打开 <a href="https://developer.dida365.com/manage">Dida365 开发者平台</a> 并登录。</p>
-<p>点击创建 App，填写应用名称。创建完成后你会看到两个关键信息：</p>
+<p>打开 <a href="https://developer.dida365.com/manage">Dida365 开发者平台</a> 并登录。当然，这需要你提前注册好你的 Dida 365 账号，可以使用邮箱注册。</p>
+<p>接下来，点击“创建 App”，填写应用名称 (这里建议您填写 <code>Astrbot</code>)。创建完成后你会看到两个关键信息：</p>
 <ul>
-<li><strong>Client ID</strong></li>
-<li><strong>Client Secret</strong></li>
+<li><strong>Client ID</strong>;</li>
+<li><strong>Client Secret</strong>。</li>
 </ul>
-<p>接着在应用配置中设置回调地址（Callback URL），例如：</p>
+<p>接着在应用配置中设置回调地址 (Callback URL)，例如：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>http://localhost:8000/callback
 </code></pre></div>
+<div class="admonition tips">
+<p class="admonition-title">设置回调地址</p>
 <p>这个地址只需能够接收 OAuth 回调即可，它不必是一个真正运行的服务器——你只需要从浏览器地址栏中复制出 <code>code</code> 参数。</p>
+</div>
 <h3 id="2">第 2 步：打开授权链接</h3>
-<p>在浏览器中访问以下地址（替换 <code>你的_CLIENT_ID</code>）：</p>
+<p>在浏览器中访问以下地址 (替换 <code>你的_CLIENT_ID</code>)：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>https://dida365.com/oauth/authorize?client_id=你的_CLIENT_ID&amp;response_type=code&amp;redirect_uri=http://localhost:8000/callback&amp;scope=tasks:read%20tasks:write&amp;state=123
 </code></pre></div>
 <p>用自己的 Dida365 账号登录并完成授权。这里请求了两个权限：</p>
 <ul>
-<li><code>tasks:read</code> — 读取任务</li>
-<li><code>tasks:write</code> — 写入任务</li>
+<li><code>tasks:read</code> — 读取任务；</li>
+<li><code>tasks:write</code> — 写入任务。</li>
 </ul>
 <h3 id="3-code">第 3 步：从回调地址中取出 code</h3>
 <p>授权成功后，浏览器会被重定向到你填写的回调地址，类似：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>http://localhost:8000/callback?code=ABC123&amp;state=123
 </code></pre></div>
-<p>从浏览器地址栏中复制出 <code>code</code> 参数的值（上例中的 <code>ABC123</code>）。</p>
+<p>从浏览器地址栏中复制出 <code>code</code> 参数的值 (上例中的 <code>ABC123</code>)。</p>
 <div class="admonition warning">
 <p class="admonition-title">code 有效期</p>
 <p>这个 <code>code</code> 通常只能使用一次，过期后需要重新授权。</p>
 </div>
 <h3 id="4-basic">第 4 步：生成 Basic 认证字符串</h3>
-<p>将你的 <code>ClientID:ClientSecret</code>（中间用冒号连接）进行 Base64 编码。</p>
-<p><strong>PowerShell：</strong></p>
+<p>将你的 <code>ClientID:ClientSecret</code> (中间用冒号连接) 进行 Base64 编码。</p>
+<p>对于 <strong>Windows</strong> 平台的用户，你可以使用如下的 <strong>PowerShell</strong> 命令：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$plain</span> <span class="p">=</span> <span class="s2">&quot;你的ClientID:你的ClientSecret&quot;</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$bytes</span> <span class="p">=</span> <span class="no">[System.Text.Encoding]</span><span class="p">::</span><span class="n">UTF8</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="nv">$plain</span><span class="p">)</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="no">[Convert]</span><span class="p">::</span><span class="n">ToBase64String</span><span class="p">(</span><span class="nv">$bytes</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>macOS / Linux：</strong></p>
+<p>而对于 <strong>macOS</strong> / <strong>Linux</strong> 的用户，你可以使用下面的 Bash 命令：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s&#39;</span><span class="w"> </span><span class="s1">&#39;你的ClientID:你的ClientSecret&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64
 </code></pre></div>
 <p>输出的字符串就是后续请求中 <code>Authorization: Basic ...</code> 里填的内容。</p>
@@ -1154,22 +1157,28 @@
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  <span class="p">-</span><span class="n">-data-urlencode</span> <span class="s2">&quot;code=你的code&quot;</span> <span class="p">`</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="p">-</span><span class="n">-data-urlencode</span> <span class="s2">&quot;redirect_uri=http://localhost:8000/callback&quot;</span>
 </code></pre></div>
+<div class="admonition tips">
+<p class="admonition-title">你可以直接复制这里的命令</p>
+<p>哦，对对对，我想起来了，Windows Terminal 复制黏贴多行终端文本的时候一直会出现粘贴困难的问题，文本末尾的换行符 <code>\n</code> 经常触发命令被直接执行。所以我这里帮你提前打好了一个 one line 的版本，你可以直接从这里复制过去粘贴执行。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">curl</span><span class="p">.</span><span class="n">exe</span> <span class="n">-X</span> <span class="n">POST</span> <span class="s2">&quot;https://dida365.com/oauth/token&quot;</span> <span class="n">-H</span> <span class="s2">&quot;Authorization: Basic 你的Base64结果&quot;</span> <span class="n">-H</span> <span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span> <span class="p">-</span><span class="n">-data-urlencode</span> <span class="s2">&quot;grant_type=authorization_code&quot;</span> <span class="p">-</span><span class="n">-data-urlencode</span> <span class="s2">&quot;code=你的code&quot;</span> <span class="p">-</span><span class="n">-data-urlencode</span> <span class="s2">&quot;redirect_uri=http://localhost:8000/callback&quot;</span>
+</code></pre></div>
+</div>
 <p><strong>macOS / Linux：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://dida365.com/oauth/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic 你的Base64结果&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;grant_type=authorization_code&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;code=你的code&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;redirect_uri=http://localhost:8000/callback&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://dida365.com/oauth/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic 你的Base64结果&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;grant_type=authorization_code&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;code=你的code&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;redirect_uri=http://localhost:8000/callback&quot;</span>
 </code></pre></div>
 <h3 id="6">第 6 步：获取结果</h3>
 <p>请求成功后，服务端会返回类似以下的 JSON：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;access_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIs...&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;token_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bearer&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;expires_in&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15551999</span><span class="p">,</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tasks:read tasks:write&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;access_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIs...&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;token_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bearer&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">&quot;expires_in&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15551999</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tasks:read tasks:write&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">}</span>
 </code></pre></div>
 <p>将 <code>access_token</code> 字段的值完整复制，填入插件配置的 <code>access_token</code> 项中。</p>
 <div class="admonition danger">
