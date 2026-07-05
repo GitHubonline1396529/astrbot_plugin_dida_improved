@@ -13,7 +13,7 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 - 仅用于 `pytest` 包导入的 `__init__.py`
 - AI 辅助开发参考（`AGENTS.md`）
 
-这些文件不应出现在最终用户下载的插件包中，因为用户实际上用不到。而且 Astrbot 的插件规范也不允许这些非必要的内容存在。
+这些文件不应出现在 `main` 分支的下载包中（因为它们对插件运行无意义），但应当完整出现在 `dev` 分支的下载包中——协作者需要它们来完成开发工作流。
 
 ## 分支策略
 
@@ -60,25 +60,19 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 ### 第一层防护：`.gitattributes`
 
-在 `dev` 分支根目录下的 `.gitattributes` 文件中，所有开发专用文件都标记为 `export-ignore`：
+`dev` 分支使用 `.gitattributes` 排除两项内容：
 
 ```gitattributes
 .gitattributes    export-ignore
 .env              export-ignore
-AGENTS.md         export-ignore
-docs/             export-ignore
-mkdocs.yml        export-ignore
-pyproject.toml    export-ignore
-requirements-dev.txt export-ignore
-tests/            export-ignore
-__init__.py       export-ignore
-.github/          export-ignore
-.vscode/          export-ignore
-data/             export-ignore
-site/             export-ignore
 ```
 
-当有人通过 GitHub 的 ZIP 下载功能获取 `dev` 分支的代码时，被标记的文件会被自动排除。这是一道双保险，即使有人错误地从 `dev` 分支下载，也不会拿到开发文件。
+- **`.gitattributes` 自身**：标准做法，不在下载包中携带导出规则文件。
+- **`.env`**：包含 Dida365 Access Token 等凭据。此文件在 `.gitignore` 中已有排除，`export-ignore` 作为双重保险；仅用于集成测试，日常开发和用户运行都不需要。
+
+其余所有文件（文档源码 `docs/`、测试套件 `tests/`、CI 配置 `.github/` 等）均**保留在下载包中**，以确保协作者下载 `dev` 分支后可以立即开展完整的开发工作流。
+
+之所以这样做，是因为 `dev` 与 `main` 的设计目标不同：`main` 面向最终用户（只需最小运行文件），`dev` 面向协作者（需要完整的开发环境）。
 
 ### 第二层防护：GitHub Actions 自动同步
 
