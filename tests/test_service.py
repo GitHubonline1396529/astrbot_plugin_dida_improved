@@ -606,3 +606,103 @@ class TestUpdateTaskDetails:
         assert payload.get("title") == "T"
         assert payload.get("priority") == 3
         assert payload.get("tags") == ["a"]
+
+
+class TestCreateTask:
+    async def test_success_with_title_only(self, service, mock_client):
+        created = DidaTask(id="t1", project_id="p1", title="New task")
+        mock_client.create_task = AsyncMock(return_value=created)
+
+        result = await service.create_task(title="New task")
+
+        assert "t1" in result
+        assert "New task" in result
+        mock_client.create_task.assert_awaited_once_with({"title": "New task"})
+
+    async def test_success_with_project_id(self, service, mock_client):
+        created = DidaTask(id="t1", project_id="p1", title="New task")
+        mock_client.create_task = AsyncMock(return_value=created)
+
+        result = await service.create_task(title="New task", project_id="p1")
+
+        assert "t1" in result
+        mock_client.create_task.assert_awaited_once_with(
+            {"title": "New task", "projectId": "p1"}
+        )
+
+    async def test_success_with_all_fields(self, service, mock_client):
+        created = DidaTask(id="t1", project_id="p1", title="New task")
+        mock_client.create_task = AsyncMock(return_value=created)
+
+        result = await service.create_task(
+            title="New task",
+            project_id="p1",
+            content="Notes",
+            priority=3,
+            tags="work,urgent",
+            due_date="2026-07-10T18:00:00+08:00",
+        )
+
+        assert isinstance(result, str)
+        mock_client.create_task.assert_awaited_once_with(
+            {
+                "title": "New task",
+                "projectId": "p1",
+                "content": "Notes",
+                "priority": 3,
+                "tags": ["work", "urgent"],
+                "dueDate": "2026-07-10T18:00:00+08:00",
+            }
+        )
+
+    async def test_empty_title_raises(self, service, mock_client):
+        with pytest.raises(DidaValidationError, match="cannot be empty"):
+            await service.create_task(title="")
+
+    async def test_whitespace_title_raises(self, service, mock_client):
+        with pytest.raises(DidaValidationError, match="cannot be empty"):
+            await service.create_task(title="   ")
+
+
+class TestCompleteTask:
+    async def test_success(self, service, mock_client):
+        task = DidaTask(id="t1", project_id="p1", title="Buy milk")
+        found = DidaTaskWithProject(
+            project_id="p1", project_name="Work", task=task
+        )
+        service.find_task_by_id = AsyncMock(return_value=found)
+        mock_client.complete_task = AsyncMock()
+
+        result = await service.complete_task("t1")
+
+        assert "t1" in result
+        assert "completed" in result
+        mock_client.complete_task.assert_awaited_once_with("p1", "t1")
+
+    async def test_not_found_raises(self, service, mock_client):
+        service.find_task_by_id = AsyncMock(return_value=None)
+
+        with pytest.raises(DidaValidationError, match="not found"):
+            await service.complete_task("nonexistent")
+
+
+class TestDeleteTask:
+    async def test_success(self, service, mock_client):
+        task = DidaTask(id="t1", project_id="p1", title="Buy milk")
+        found = DidaTaskWithProject(
+            project_id="p1", project_name="Work", task=task
+        )
+        service.find_task_by_id = AsyncMock(return_value=found)
+        mock_client.delete_task = AsyncMock()
+
+        result = await service.delete_task("t1")
+
+        assert "t1" in result
+        assert "deleted" in result
+        mock_client.delete_task.assert_awaited_once_with("p1", "t1")
+
+    async def test_not_found_raises(self, service, mock_client):
+        service.find_task_by_id = AsyncMock(return_value=None)
+
+        with pytest.raises(DidaValidationError, match="not found"):
+            await service.delete_task("nonexistent")

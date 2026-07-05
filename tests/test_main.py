@@ -116,7 +116,9 @@ class TestListDidaProjectsLlm:
 
 class TestListDidaTasksLlm:
     async def test_today_filter(self, plugin):
-        result = await plugin.list_dida_tasks_llm(MagicMock(), filter="today")
+        result = await plugin.list_dida_tasks_llm(
+            MagicMock(), task_filter="today"
+        )
         assert isinstance(result, str)
 
     async def test_default_filter(self, plugin):
@@ -125,8 +127,38 @@ class TestListDidaTasksLlm:
 
     async def test_unfinished_filter(self, plugin):
         result = await plugin.list_dida_tasks_llm(
-            MagicMock(), filter="unfinished"
+            MagicMock(), task_filter="unfinished"
         )
+        assert isinstance(result, str)
+
+
+class TestCreateDidaTaskLlm:
+    async def test_valid_title(self, plugin):
+        result = await plugin.create_dida_task_llm(
+            MagicMock(), title="New task"
+        )
+        assert isinstance(result, str)
+
+    async def test_empty_title(self, plugin):
+        result = await plugin.create_dida_task_llm(MagicMock(), title="")
+        assert isinstance(result, str)
+
+    async def test_invalid_priority(self, plugin):
+        result = await plugin.create_dida_task_llm(
+            MagicMock(), title="T", priority="bogus"
+        )
+        assert "Invalid priority" in result
+
+
+class TestCompleteDidaTaskLlm:
+    async def test_valid_task_id(self, plugin):
+        result = await plugin.complete_dida_task_llm(MagicMock(), task_id="t1")
+        assert isinstance(result, str)
+
+
+class TestDeleteDidaTaskLlm:
+    async def test_valid_task_id(self, plugin):
+        result = await plugin.delete_dida_task_llm(MagicMock(), task_id="t1")
         assert isinstance(result, str)
 
 
