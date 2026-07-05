@@ -10,7 +10,7 @@ astrbot_plugin_dida_improved/
 ├── time_utils.py     # Timezone-aware datetime utilities
 ├── __init__.py       # Package marker for test imports
 ├── tests/            # Test suite
-│   ├── conftest.py   # Shared fixtures and sys.path setup
+│   ├── conftest.py   # Shared fixtures and sys.path setup (reads ASTRBOT_CORE_PATH from .env)
 │   ├── test_models.py
 │   ├── test_exceptions.py
 │   ├── test_time_utils.py
@@ -72,7 +72,7 @@ messages.
 
 ```bash
 ruff format . && ruff check .
-pytest -v                              # run unit tests (no API token needed)
+pytest -v                              # run unit tests (requires ASTRBOT_CORE_PATH in .env)
 mkdocs build                           # build docs to site/
 mkdocs serve                           # preview at http://localhost:8000
 mkdocs gh-deploy                       # deploy to GitHub Pages
@@ -97,5 +97,5 @@ Push a `v*` tag on `dev` → GitHub Actions syncs release files to `main`.
 
 1. Inbox fetched separately from project tasks via `/project/inbox/data`.
 2. All task listing combines results from all projects + inbox.
-3. LLM Function Tools registered in `main.py::__init__`.
+3. LLM Function Tools registered via `@filter.llm_tool()` decorators in `main.py`.
 4. Error handling centralized in `DidaService.explain_error()`.

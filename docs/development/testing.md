@@ -55,7 +55,7 @@ pip install -r requirements-dev.txt
 插件的源码使用了相对导入（`from .client import DidaClient`、`from .models import ...`），而测试代码需要从项目外部导入这些模块。因此 `tests/conftest.py` 中做了两件事：
 
 1. 将项目的父目录加入 `sys.path`，使 `from astrbot_plugin_dida_improved.xxx import` 可解析
-2. 将 AstrBot core 目录加入 `sys.path`，因为源码中引用了 `astrbot.api` 中的类和函数
+2. 通过 `ASTRBOT_CORE_PATH` 环境变量获取 AstrBot core 的路径并加入 `sys.path`，因为源码中引用了 `astrbot.api` 中的类和函数。该变量从项目根目录的 `.env` 文件中读取（详见下方的 `.env` 配置示例）
 
 ---
 
@@ -87,11 +87,15 @@ pytest tests/integration/ -v
 集成测试需要 Dida365 Open API Access Token。Token 通过环境变量 `DIDA_ACCESS_TOKEN` 传入，也可在项目根目录创建 `.env` 文件：
 
 ```
+# AstrBot core 源码目录（运行测试必需）
+ASTRBOT_CORE_PATH=/path/to/AstrBot/core
+
+# Dida365 Access Token（集成测试需要）
 DIDA_ACCESS_TOKEN=your_token_here
 DIDA_BASE_URL=https://api.dida365.com/open/v1
 ```
 
-`.env` 文件已在 `.gitignore` 中，不会提交到版本控制系统。
+`.env` 文件已在 `.gitignore` 中，不会提交到版本控制系统。项目提供了一个 `.env.example` 文件作为模板。
 
 ### 跳过集成测试
 

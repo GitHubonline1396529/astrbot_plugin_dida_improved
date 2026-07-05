@@ -1,17 +1,37 @@
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
 import pytest
+from dotenv import load_dotenv
+
+load_dotenv()
 
 _project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_project_root.parent))
 
 # Add AstrBot core to path so the plugin can import astrbot.api.*
-_astrbot_core = Path(r"D:\Programs\AstrBot\core")
-if _astrbot_core.exists():
+# The path is set via the ASTRBOT_CORE_PATH environment variable.
+# Create a .env file in the project root (see .env.example) with:
+#   ASTRBOT_CORE_PATH=/path/to/AstrBot/core
+_astrbot_core_env = os.environ.get("ASTRBOT_CORE_PATH")
+if _astrbot_core_env:
+    _astrbot_core = Path(_astrbot_core_env)
+    if not _astrbot_core.exists():
+        raise RuntimeError(
+            f"ASTRBOT_CORE_PATH={_astrbot_core_env} does not exist. "
+            "Please check your .env file."
+        )
     sys.path.insert(0, str(_astrbot_core))
+else:
+    raise RuntimeError(
+        "ASTRBOT_CORE_PATH is not set. "
+        "Create a .env file in the project root with:\n"
+        "    ASTRBOT_CORE_PATH=/path/to/AstrBot/core\n"
+        "See .env.example for a template."
+    )
 
 from astrbot_plugin_dida_improved.models import (  # noqa: E402
     DidaPluginSettings,
