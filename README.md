@@ -24,7 +24,7 @@
 2. 在 WebUI 中重载插件，或者直接重启 AstrBot；
 3. 在插件配置中至少应当填写您的 `access_token`。
 
-> [!NOTE] 关于 Astrbot 的运行时目录所在的位置
+> [!NOTE]
 > 
 > 需要注意的是，由于安装方式的不同，运行时目录可能略有区别。具体的路径请参阅 [Astrbot 官方文档中有关部署方法的部分](https://docs.astrbot.app/deploy/astrbot/package.html)。
 
