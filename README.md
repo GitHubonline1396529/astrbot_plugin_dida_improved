@@ -67,7 +67,10 @@
 |----------|------|
 | `list_dida_projects` | 列出所有滴答清单项目 (含收集箱) |
 | `list_dida_tasks` | 查询任务列表，支持筛选 |
+| `create_dida_task` | 创建新任务 |
+| `complete_dida_task` | 完成任务 |
 | `update_dida_task` | 更新任务的任意字段 (标题、备注、截止日期、优先级等) |
+| `delete_dida_task` | 删除任务 |
 
 在对话中直接说“帮我创建一个任务”或“我的待办有哪些”即可触发。
 

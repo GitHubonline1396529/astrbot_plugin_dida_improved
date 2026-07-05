@@ -47,7 +47,31 @@ Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime(
 
 ### 5. LLM Function Tool 注册
 
-在 `main.py` 的 `__init__` 中注册 LLM 工具，使插件在支持 LLM 的会话中可通过自然语言调用。
+通过 `@filter.llm_tool(name=...)` 装饰器在类定义阶段注册 LLM 工具。装饰器解析方法的 Google 风格
+docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-calling schema。注册后的工具会加入全局
+`llm_tools.func_list`，由 `PluginManager.load()` 在插件实例化后绑定 handler 并激活。
+
+需要注意的是，LLM 工具的**方法参数名不应与 AstrBot 模块名冲突**（如避免使用 `filter` 作为参数名，
+因为它也是 `astrbot.api.event` 导出的模块名），否则可能导致注册被静默跳过。
+
+### 6. 文档与代码同步策略
+
+插件的功能描述在三个层面间传播，任何新增或修改都应保持三者一致：
+
+1. **元数据层** — `metadata.yaml` 和 `README.md` 声明的高级功能列表；
+2. **客户端层** — `client.py` 中 `DidaClient` 的 HTTP 方法；
+3. **工具入口层** — `main.py` 中 `@filter.llm_tool` 装饰的 LLM 工具。
+
+每新增一个 LLM 工具，需同步更新以下 6 处，缺一不可：
+
+| 序号 | 文件 | 需确认的内容 |
+|------|------|-------------|
+| 1 | `client.py` | HTTP 方法已存在；若否，先在此层添加 |
+| 2 | `service.py` | 业务编排方法已实现 |
+| 3 | `main.py` | `@filter.llm_tool` 装饰器已添加，参数名不与 AstrBot 模块冲突 |
+| 4 | `docs/usage/llm-tools.md` | 工具说明、参数描述、使用示例已更新 |
+| 5 | `README.md` | LLM 工具表格已同步 |
+| 6 | `tests/test_main.py` | 新增工具的 return 行为有测试覆盖 |
 
 ## Dida365 API 技术细节
 

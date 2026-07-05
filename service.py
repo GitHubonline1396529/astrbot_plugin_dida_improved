@@ -534,6 +534,90 @@ class DidaService:
             f"Changed fields: {', '.join(changed)}"
         )
 
+    async def create_task(
+        self,
+        title: str,
+        project_id: str | None = None,
+        content: str | None = None,
+        priority: int | None = None,
+        tags: str | None = None,
+        due_date: str | None = None,
+    ) -> str:
+        """Create a new task in Dida365.
+
+        Args:
+            title: Task title (required).
+            project_id: Target project ID. Defaults to the configured
+                default_project if not provided.
+            content: Task notes / description.
+            priority: Priority level (0=none, 1=low, 3=medium, 5=high).
+            tags: Comma-separated tag names (e.g. "work,urgent").
+            due_date: Due date in ISO format or Dida365 API format.
+
+        Returns:
+            Formatted success message with the created task info.
+
+        Raises:
+            DidaValidationError: If title is empty.
+        """
+        if not title.strip():
+            raise DidaValidationError("Task title cannot be empty.")
+
+        pid = project_id or self.settings.default_project or ""
+        payload: dict[str, Any] = {"title": title.strip()}
+        if pid:
+            payload["projectId"] = pid
+        if content:
+            payload["content"] = content
+        if priority is not None:
+            payload["priority"] = priority
+        if due_date:
+            payload["dueDate"] = due_date
+        if tags:
+            payload["tags"] = [t.strip() for t in tags.split(",") if t.strip()]
+
+        created = await self.client.create_task(payload)
+        return (
+            f"Task [{created.id}] {created.title} created successfully.\n"
+            f"Project: {created.project_id or '(Inbox)'}"
+        )
+
+    async def complete_task(self, task_id: str) -> str:
+        """Mark a task as completed.
+
+        Args:
+            task_id: The task ID to complete.
+
+        Returns:
+            Formatted success message.
+
+        Raises:
+            DidaValidationError: If the task is not found.
+        """
+        found = await self.find_task_by_id(task_id)
+        if not found:
+            raise DidaValidationError(f"Task {task_id} not found.")
+        await self.client.complete_task(found.project_id, task_id)
+        return f"Task [{task_id}] {found.task.title} marked as completed."
+
+    async def delete_task(self, task_id: str) -> str:
+        """Delete a task permanently.
+
+        Args:
+            task_id: The task ID to delete.
+
+        Returns:
+            Formatted success message.
+
+        Raises:
+            DidaValidationError: If the task is not found.
+        """
+        found = await self.find_task_by_id(task_id)
+        if not found:
+            raise DidaValidationError(f"Task {task_id} not found.")
+        await self.client.delete_task(found.project_id, task_id)
+        return f"Task [{task_id}] {found.task.title} deleted."
+
     @staticmethod
     def _task_to_raw(task: DidaTask) -> dict[str, Any]:
         """Reconstruct an API-style dict from a DidaTask instance.

@@ -15,7 +15,7 @@ from .service import DidaService
     "astrbot_plugin_dida_improved",
     "Githubonline1396529",
     "Dida365 Improved - Inbox support and full task management",
-    "0.0.1-beta",
+    "0.1.0-beta",
 )
 class DidaImprovedPlugin(Star):
     """Dida365 improved plugin for AstrBot."""
@@ -99,15 +99,15 @@ class DidaImprovedPlugin(Star):
 
     @filter.llm_tool(name="list_dida_tasks")
     async def list_dida_tasks_llm(
-        self, event: AstrMessageEvent, filter: str = "unfinished"
+        self, event: AstrMessageEvent, task_filter: str = "unfinished"
     ):
         """Query Dida365 tasks with optional filtering.
 
         Args:
-            filter (string): Filter condition. "today" for tasks due
+            task_filter (string): Filter condition. "today" for tasks due
                 today, "unfinished" for all incomplete tasks (default).
         """
-        if filter == "today":
+        if task_filter == "today":
             return await self._run_service(
                 lambda service: service.list_today_tasks_summary()
             )
@@ -147,4 +147,83 @@ class DidaImprovedPlugin(Star):
             return "updates_json must be a JSON object, not an array or scalar."
         return await self._run_service(
             lambda service: service.update_task_details(task_id, updates)
+        )
+
+    @filter.llm_tool(name="create_dida_task")
+    async def create_dida_task_llm(
+        self,
+        event: AstrMessageEvent,
+        title: str,
+        project_id: str = "",
+        content: str = "",
+        priority: str = "",
+        tags: str = "",
+        due_date: str = "",
+    ):
+        """Create a new task in Dida365.
+
+        Args:
+            title (string): Task title (required).
+            project_id (string): Target project ID. Leave empty to use
+                the configured default project or Inbox.
+            content (string): Task notes or description.
+            priority (string): Priority level: "none" (0), "low" (1),
+                "medium" (3), or "high" (5).
+            tags (string): Comma-separated tag names,
+                e.g. "work,urgent".
+            due_date (string): Due date in ISO format,
+                e.g. "2026-07-10T18:00:00+08:00".
+        """
+        priority_map = {
+            "none": 0,
+            "low": 1,
+            "medium": 3,
+            "high": 5,
+        }
+        prio = None
+        if priority.strip():
+            lower = priority.strip().lower()
+            prio = priority_map.get(lower)
+            if prio is None:
+                try:
+                    prio = int(priority.strip())
+                except ValueError:
+                    return (
+                        f"Invalid priority '{priority}'. "
+                        f"Use 'none', 'low', 'medium', 'high', or 0/1/3/5."
+                    )
+
+        return await self._run_service(
+            lambda service: service.create_task(
+                title=title,
+                project_id=project_id.strip() or None,
+                content=content.strip() or None,
+                priority=prio,
+                tags=tags.strip() or None,
+                due_date=due_date.strip() or None,
+            )
+        )
+
+    @filter.llm_tool(name="complete_dida_task")
+    async def complete_dida_task_llm(
+        self, event: AstrMessageEvent, task_id: str
+    ):
+        """Mark a Dida365 task as completed.
+
+        Args:
+            task_id (string): The ID of the task to complete.
+        """
+        return await self._run_service(
+            lambda service: service.complete_task(task_id)
+        )
+
+    @filter.llm_tool(name="delete_dida_task")
+    async def delete_dida_task_llm(self, event: AstrMessageEvent, task_id: str):
+        """Delete a Dida365 task permanently.
+
+        Args:
+            task_id (string): The ID of the task to delete.
+        """
+        return await self._run_service(
+            lambda service: service.delete_task(task_id)
         )
