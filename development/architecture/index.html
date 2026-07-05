@@ -666,6 +666,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 文档与代码同步策略
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1041,6 +1052,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 文档与代码同步策略
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1142,7 +1164,60 @@
 <h3 id="4">4. 错误处理</h3>
 <p>所有 Dida365 API 错误通过 <code>DidaClient._request()</code> 方法集中处理，转换为特定的异常类型 (<code>DidaAuthenticationError</code>、<code>DidaNotFoundError</code>、<code>DidaApiError</code>、<code>DidaNetworkError</code>) 。<code>DidaService.explain_error()</code> 将这些异常转换为用户友好的中文消息。</p>
 <h3 id="5-llm-function-tool">5. LLM Function Tool 注册</h3>
-<p>在 <code>main.py</code> 的 <code>__init__</code> 中注册 LLM 工具，使插件在支持 LLM 的会话中可通过自然语言调用。</p>
+<p>通过 <code>@filter.llm_tool(name=...)</code> 装饰器在类定义阶段注册 LLM 工具。装饰器解析方法的 Google 风格
+docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-calling schema。注册后的工具会加入全局
+<code>llm_tools.func_list</code>，由 <code>PluginManager.load()</code> 在插件实例化后绑定 handler 并激活。</p>
+<p>需要注意的是，LLM 工具的<strong>方法参数名不应与 AstrBot 模块名冲突</strong>（如避免使用 <code>filter</code> 作为参数名，
+因为它也是 <code>astrbot.api.event</code> 导出的模块名），否则可能导致注册被静默跳过。</p>
+<h3 id="6">6. 文档与代码同步策略</h3>
+<p>插件的功能描述在三个层面间传播，任何新增或修改都应保持三者一致：</p>
+<ol>
+<li><strong>元数据层</strong> — <code>metadata.yaml</code> 和 <code>README.md</code> 声明的高级功能列表；</li>
+<li><strong>客户端层</strong> — <code>client.py</code> 中 <code>DidaClient</code> 的 HTTP 方法；</li>
+<li><strong>工具入口层</strong> — <code>main.py</code> 中 <code>@filter.llm_tool</code> 装饰的 LLM 工具。</li>
+</ol>
+<p>每新增一个 LLM 工具，需同步更新以下 6 处，缺一不可：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>文件</th>
+<th>需确认的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>client.py</code></td>
+<td>HTTP 方法已存在；若否，先在此层添加</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>service.py</code></td>
+<td>业务编排方法已实现</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>main.py</code></td>
+<td><code>@filter.llm_tool</code> 装饰器已添加，参数名不与 AstrBot 模块冲突</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>docs/usage/llm-tools.md</code></td>
+<td>工具说明、参数描述、使用示例已更新</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>README.md</code></td>
+<td>LLM 工具表格已同步</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>tests/test_main.py</code></td>
+<td>新增工具的 return 行为有测试覆盖</td>
+</tr>
+</tbody>
+</table>
 <h2 id="dida365-api">Dida365 API 技术细节</h2>
 <table>
 <thead>

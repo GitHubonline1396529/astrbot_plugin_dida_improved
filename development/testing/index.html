@@ -1390,7 +1390,7 @@
 <p>插件的源码使用了相对导入（<code>from .client import DidaClient</code>、<code>from .models import ...</code>），而测试代码需要从项目外部导入这些模块。因此 <code>tests/conftest.py</code> 中做了两件事：</p>
 <ol>
 <li>将项目的父目录加入 <code>sys.path</code>，使 <code>from astrbot_plugin_dida_improved.xxx import</code> 可解析</li>
-<li>将 AstrBot core 目录加入 <code>sys.path</code>，因为源码中引用了 <code>astrbot.api</code> 中的类和函数</li>
+<li>通过 <code>ASTRBOT_CORE_PATH</code> 环境变量获取 AstrBot core 的路径并加入 <code>sys.path</code>，因为源码中引用了 <code>astrbot.api</code> 中的类和函数。该变量从项目根目录的 <code>.env</code> 文件中读取（详见下方的 <code>.env</code> 配置示例）</li>
 </ol>
 <hr />
 <h2 id="_8">运行测试</h2>
@@ -1408,10 +1408,14 @@
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">pytest</span> <span class="n">tests</span><span class="p">/</span><span class="n">integration</span><span class="p">/</span> <span class="n">-v</span>
 </code></pre></div>
 <p>集成测试需要 Dida365 Open API Access Token。Token 通过环境变量 <code>DIDA_ACCESS_TOKEN</code> 传入，也可在项目根目录创建 <code>.env</code> 文件：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>DIDA_ACCESS_TOKEN=your_token_here
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>DIDA_BASE_URL=https://api.dida365.com/open/v1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># AstrBot core 源码目录（运行测试必需）
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ASTRBOT_CORE_PATH=/path/to/AstrBot/core
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># Dida365 Access Token（集成测试需要）
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>DIDA_ACCESS_TOKEN=your_token_here
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>DIDA_BASE_URL=https://api.dida365.com/open/v1
 </code></pre></div>
-<p><code>.env</code> 文件已在 <code>.gitignore</code> 中，不会提交到版本控制系统。</p>
+<p><code>.env</code> 文件已在 <code>.gitignore</code> 中，不会提交到版本控制系统。项目提供了一个 <code>.env.example</code> 文件作为模板。</p>
 <h3 id="_11">跳过集成测试</h3>
 <p>集成测试通过 <code>@pytest.mark.skipif</code> 守卫：当 <code>DIDA_ACCESS_TOKEN</code> 未设置时自动跳过。这是默认行为，不影响日常开发。</p>
 <hr />
