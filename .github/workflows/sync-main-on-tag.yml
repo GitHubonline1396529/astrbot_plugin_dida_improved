@@ -25,6 +25,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git checkout --orphan release-temp
+          git rm -rf --cached .
           git add main.py client.py service.py models.py exceptions.py time_utils.py \
                   _conf_schema.json metadata.yaml requirements.txt README.md LICENSE \
                   .gitignore
