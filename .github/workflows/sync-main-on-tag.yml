@@ -30,4 +30,4 @@ jobs:
                   .gitignore
           git commit -m "release: ${TAG_NAME}"
           git branch -f main release-temp
-          git push https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/GitHubonline1396529/astrbot_plugin_dida_improved.git main --force
+          git push https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/${{ github.repository }}.git main --force
