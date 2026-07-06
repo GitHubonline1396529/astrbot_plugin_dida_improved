@@ -1166,7 +1166,7 @@
 <p>为解决上述问题，我们采用双分支策略管理代码：</p>
 <p>远程 GitHub 仓库：</p>
 <ul>
-<li><code>main</code>：发布分支（仅包含 12 个运行时必需文件）；</li>
+<li><code>main</code>：发布分支（仅包含 13 个运行时必需文件）；</li>
 <li><code>dev</code>：开发分支（包含全部源文件，包括测试、文档等）。</li>
 </ul>
 <p>本地开发环境下，<code>dev</code> 为唯一本地分支，包括：</p>
@@ -1182,7 +1182,7 @@
 </ul>
 <p>之所以如此命名，是因为 AstrBot 的插件下载机制读取的是 GitHub 仓库的默认分支。将 <code>main</code> 设为默认分支，并让它只包含发布文件，可以确保用户下载的永远是干净的插件包。</p>
 <h3 id="_4">发布文件清单</h3>
-<p>以下 12 个文件是插件运行的必要条件，也是 <code>main</code> 分支的全部内容：</p>
+<p>以下 13 个文件是插件运行的必要条件，也是 <code>main</code> 分支的全部内容：</p>
 <table>
 <thead>
 <tr>
@@ -1191,6 +1191,10 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>logo.png</code></td>
+<td>插件入口图标</td>
+</tr>
 <tr>
 <td><code>main.py</code></td>
 <td>插件入口：命令处理器和 LLM 工具注册</td>
@@ -1259,7 +1263,7 @@
 <ol>
 <li>检出标签所指向的 <code>dev</code> 分支提交</li>
 <li><code>git checkout --orphan release-temp</code> — 创建一个没有历史的新分支</li>
-<li><code>git add</code> 上述 12 个发布文件 — 仅暂存运行时必需的文件</li>
+<li><code>git add</code> 上述 13 个发布文件 — 仅暂存运行时必需的文件</li>
 <li><code>git commit -m "release: v*"</code> — 提交只包含发布文件的快照</li>
 <li><code>git branch -f main release-temp</code> — 用这个快照替换 <code>main</code> 分支</li>
 <li><code>git push origin main --force</code> — 强制推送到远程</li>
@@ -1294,7 +1298,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>dev
 </code></pre></div>
 <p>如果希望远程 <code>dev</code> 分支也保持最新，可以一并推送。</p>
-<p>推送标签后，可以在 GitHub 仓库的 Actions 页面查看 <code>sync release to main</code> 工作流的执行状态。执行成功后，<code>main</code> 分支将自动更新为只包含 12 个发布文件的新快照。</p>
+<p>推送标签后，可以在 GitHub 仓库的 Actions 页面查看 <code>sync release to main</code> 工作流的执行状态。执行成功后，<code>main</code> 分支将自动更新为只包含 13 个发布文件的新快照。</p>
 <h2 id="_8">常见问题</h2>
 <h3 id="main-git-push">如果不小心对 <code>main</code> 执行了 <code>git push</code>？</h3>
 <p>GitHub 的分支保护规则会直接拒绝推送：<code>remote: error: GH006: Protected branch update failed for refs/heads/main.</code></p>
