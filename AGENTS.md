@@ -2,6 +2,7 @@
 
 ```
 astrbot_plugin_dida_improved/
+├── logo.png          # Plugin icon
 ├── main.py           # Plugin entry point: command handlers and LLM tool registration
 ├── client.py         # Dida365 Open API HTTP client
 ├── service.py        # Business logic layer (queries, formatting, error handling)

@@ -28,7 +28,7 @@ jobs:
           git rm -rf --cached .
           git add main.py client.py service.py models.py exceptions.py time_utils.py \
                   _conf_schema.json metadata.yaml requirements.txt README.md LICENSE \
-                  .gitignore
+                  .gitignore logo.png
           git commit -m "release: ${TAG_NAME}"
           git branch -f main release-temp
           git push https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/${{ github.repository }}.git main --force

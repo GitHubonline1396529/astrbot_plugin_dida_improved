@@ -21,7 +21,7 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 远程 GitHub 仓库：
 
-- `main`：发布分支（仅包含 12 个运行时必需文件）；
+- `main`：发布分支（仅包含 13 个运行时必需文件）；
 - `dev`：开发分支（包含全部源文件，包括测试、文档等）。
 
 本地开发环境下，`dev` 为唯一本地分支，包括：
@@ -39,10 +39,11 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 ### 发布文件清单
 
-以下 12 个文件是插件运行的必要条件，也是 `main` 分支的全部内容：
+以下 13 个文件是插件运行的必要条件，也是 `main` 分支的全部内容：
 
 | 文件 | 用途 |
 |------|------|
+| `logo.png` | 插件入口图标 |
 | `main.py` | 插件入口：命令处理器和 LLM 工具注册 |
 | `client.py` | Dida365 Open API HTTP 客户端 |
 | `service.py` | 业务逻辑层 |
@@ -82,7 +83,7 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 1. 检出标签所指向的 `dev` 分支提交
 2. `git checkout --orphan release-temp` — 创建一个没有历史的新分支
-3. `git add` 上述 12 个发布文件 — 仅暂存运行时必需的文件
+3. `git add` 上述 13 个发布文件 — 仅暂存运行时必需的文件
 4. `git commit -m "release: v*"` — 提交只包含发布文件的快照
 5. `git branch -f main release-temp` — 用这个快照替换 `main` 分支
 6. `git push origin main --force` — 强制推送到远程
@@ -140,7 +141,7 @@ git push origin dev
 
 如果希望远程 `dev` 分支也保持最新，可以一并推送。
 
-推送标签后，可以在 GitHub 仓库的 Actions 页面查看 `sync release to main` 工作流的执行状态。执行成功后，`main` 分支将自动更新为只包含 12 个发布文件的新快照。
+推送标签后，可以在 GitHub 仓库的 Actions 页面查看 `sync release to main` 工作流的执行状态。执行成功后，`main` 分支将自动更新为只包含 13 个发布文件的新快照。
 
 ## 常见问题
 

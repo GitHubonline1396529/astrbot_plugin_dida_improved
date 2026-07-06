@@ -100,6 +100,7 @@
 
 ```
 astrbot_plugin_dida_improved/
+├── logo.png          # 插件图标
 ├── main.py           # 插件入口：命令处理器和 LLM 工具注册
 ├── client.py         # Dida365 Open API HTTP 客户端
 ├── service.py        # 业务逻辑层 (查询、格式化、错误处理) 
