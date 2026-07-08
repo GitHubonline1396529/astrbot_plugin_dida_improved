@@ -173,12 +173,16 @@ class DidaService:
     async def _collect_all_tasks(self) -> list[DidaTaskWithProject]:
         """Collect tasks from all projects and inbox.
 
+        Note:
+            This method does **not** early-return when ``list_projects()``
+            returns an empty list. Inbox tasks are fetched independently
+            via ``get_inbox_tasks()`` and must still be collected even
+            when the user has no named projects.
+
         Returns:
             Combined list of all tasks with project context.
         """
         projects = await self.client.list_projects()
-        if not projects:
-            return []
 
         active_projects = [p for p in projects if p.id]
         results = await asyncio.gather(
