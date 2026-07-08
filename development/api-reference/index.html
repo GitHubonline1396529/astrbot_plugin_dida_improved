@@ -3086,11 +3086,7 @@ a new one is created from the settings.</p>
 
             <details class="mkdocstrings-source">
               <summary>源代码位于： <code>service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-585">585</a></span>
-<span class="normal"><a href="#__codelineno-0-586">586</a></span>
-<span class="normal"><a href="#__codelineno-0-587">587</a></span>
-<span class="normal"><a href="#__codelineno-0-588">588</a></span>
-<span class="normal"><a href="#__codelineno-0-589">589</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-589">589</a></span>
 <span class="normal"><a href="#__codelineno-0-590">590</a></span>
 <span class="normal"><a href="#__codelineno-0-591">591</a></span>
 <span class="normal"><a href="#__codelineno-0-592">592</a></span>
@@ -3102,23 +3098,27 @@ a new one is created from the settings.</p>
 <span class="normal"><a href="#__codelineno-0-598">598</a></span>
 <span class="normal"><a href="#__codelineno-0-599">599</a></span>
 <span class="normal"><a href="#__codelineno-0-600">600</a></span>
-<span class="normal"><a href="#__codelineno-0-601">601</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-585" name="__codelineno-0-585"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">complete_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-586" name="__codelineno-0-586"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Mark a task as completed.</span>
-<a id="__codelineno-0-587" name="__codelineno-0-587"></a>
-<a id="__codelineno-0-588" name="__codelineno-0-588"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-589" name="__codelineno-0-589"></a><span class="sd">        task_id: The task ID to complete.</span>
-<a id="__codelineno-0-590" name="__codelineno-0-590"></a>
-<a id="__codelineno-0-591" name="__codelineno-0-591"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-592" name="__codelineno-0-592"></a><span class="sd">        Formatted success message.</span>
-<a id="__codelineno-0-593" name="__codelineno-0-593"></a>
-<a id="__codelineno-0-594" name="__codelineno-0-594"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-595" name="__codelineno-0-595"></a><span class="sd">        DidaValidationError: If the task is not found.</span>
-<a id="__codelineno-0-596" name="__codelineno-0-596"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-597" name="__codelineno-0-597"></a>    <span class="n">found</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_task_by_id</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
-<a id="__codelineno-0-598" name="__codelineno-0-598"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
-<a id="__codelineno-0-599" name="__codelineno-0-599"></a>        <span class="k">raise</span> <span class="n">DidaValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task </span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-600" name="__codelineno-0-600"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">complete_task</span><span class="p">(</span><span class="n">found</span><span class="o">.</span><span class="n">project_id</span><span class="p">,</span> <span class="n">task_id</span><span class="p">)</span>
-<a id="__codelineno-0-601" name="__codelineno-0-601"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Task [</span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> marked as completed.&quot;</span>
+<span class="normal"><a href="#__codelineno-0-601">601</a></span>
+<span class="normal"><a href="#__codelineno-0-602">602</a></span>
+<span class="normal"><a href="#__codelineno-0-603">603</a></span>
+<span class="normal"><a href="#__codelineno-0-604">604</a></span>
+<span class="normal"><a href="#__codelineno-0-605">605</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-589" name="__codelineno-0-589"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">complete_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-590" name="__codelineno-0-590"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Mark a task as completed.</span>
+<a id="__codelineno-0-591" name="__codelineno-0-591"></a>
+<a id="__codelineno-0-592" name="__codelineno-0-592"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-593" name="__codelineno-0-593"></a><span class="sd">        task_id: The task ID to complete.</span>
+<a id="__codelineno-0-594" name="__codelineno-0-594"></a>
+<a id="__codelineno-0-595" name="__codelineno-0-595"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-596" name="__codelineno-0-596"></a><span class="sd">        Formatted success message.</span>
+<a id="__codelineno-0-597" name="__codelineno-0-597"></a>
+<a id="__codelineno-0-598" name="__codelineno-0-598"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-599" name="__codelineno-0-599"></a><span class="sd">        DidaValidationError: If the task is not found.</span>
+<a id="__codelineno-0-600" name="__codelineno-0-600"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-601" name="__codelineno-0-601"></a>    <span class="n">found</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_task_by_id</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+<a id="__codelineno-0-602" name="__codelineno-0-602"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+<a id="__codelineno-0-603" name="__codelineno-0-603"></a>        <span class="k">raise</span> <span class="n">DidaValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task </span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-604" name="__codelineno-0-604"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">complete_task</span><span class="p">(</span><span class="n">found</span><span class="o">.</span><span class="n">project_id</span><span class="p">,</span> <span class="n">task_id</span><span class="p">)</span>
+<a id="__codelineno-0-605" name="__codelineno-0-605"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Task [</span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> marked as completed.&quot;</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3305,11 +3305,7 @@ default_project if not provided.</p>
 
             <details class="mkdocstrings-source">
               <summary>源代码位于： <code>service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-537">537</a></span>
-<span class="normal"><a href="#__codelineno-0-538">538</a></span>
-<span class="normal"><a href="#__codelineno-0-539">539</a></span>
-<span class="normal"><a href="#__codelineno-0-540">540</a></span>
-<span class="normal"><a href="#__codelineno-0-541">541</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-541">541</a></span>
 <span class="normal"><a href="#__codelineno-0-542">542</a></span>
 <span class="normal"><a href="#__codelineno-0-543">543</a></span>
 <span class="normal"><a href="#__codelineno-0-544">544</a></span>
@@ -3351,53 +3347,57 @@ default_project if not provided.</p>
 <span class="normal"><a href="#__codelineno-0-580">580</a></span>
 <span class="normal"><a href="#__codelineno-0-581">581</a></span>
 <span class="normal"><a href="#__codelineno-0-582">582</a></span>
-<span class="normal"><a href="#__codelineno-0-583">583</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-537" name="__codelineno-0-537"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_task</span><span class="p">(</span>
-<a id="__codelineno-0-538" name="__codelineno-0-538"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-539" name="__codelineno-0-539"></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-540" name="__codelineno-0-540"></a>    <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-541" name="__codelineno-0-541"></a>    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-542" name="__codelineno-0-542"></a>    <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-543" name="__codelineno-0-543"></a>    <span class="n">tags</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-544" name="__codelineno-0-544"></a>    <span class="n">due_date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-545" name="__codelineno-0-545"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-546" name="__codelineno-0-546"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new task in Dida365.</span>
-<a id="__codelineno-0-547" name="__codelineno-0-547"></a>
-<a id="__codelineno-0-548" name="__codelineno-0-548"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-549" name="__codelineno-0-549"></a><span class="sd">        title: Task title (required).</span>
-<a id="__codelineno-0-550" name="__codelineno-0-550"></a><span class="sd">        project_id: Target project ID. Defaults to the configured</span>
-<a id="__codelineno-0-551" name="__codelineno-0-551"></a><span class="sd">            default_project if not provided.</span>
-<a id="__codelineno-0-552" name="__codelineno-0-552"></a><span class="sd">        content: Task notes / description.</span>
-<a id="__codelineno-0-553" name="__codelineno-0-553"></a><span class="sd">        priority: Priority level (0=none, 1=low, 3=medium, 5=high).</span>
-<a id="__codelineno-0-554" name="__codelineno-0-554"></a><span class="sd">        tags: Comma-separated tag names (e.g. &quot;work,urgent&quot;).</span>
-<a id="__codelineno-0-555" name="__codelineno-0-555"></a><span class="sd">        due_date: Due date in ISO format or Dida365 API format.</span>
-<a id="__codelineno-0-556" name="__codelineno-0-556"></a>
-<a id="__codelineno-0-557" name="__codelineno-0-557"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-558" name="__codelineno-0-558"></a><span class="sd">        Formatted success message with the created task info.</span>
-<a id="__codelineno-0-559" name="__codelineno-0-559"></a>
-<a id="__codelineno-0-560" name="__codelineno-0-560"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-561" name="__codelineno-0-561"></a><span class="sd">        DidaValidationError: If title is empty.</span>
-<a id="__codelineno-0-562" name="__codelineno-0-562"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-563" name="__codelineno-0-563"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-<a id="__codelineno-0-564" name="__codelineno-0-564"></a>        <span class="k">raise</span> <span class="n">DidaValidationError</span><span class="p">(</span><span class="s2">&quot;Task title cannot be empty.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-565" name="__codelineno-0-565"></a>
-<a id="__codelineno-0-566" name="__codelineno-0-566"></a>    <span class="n">pid</span> <span class="o">=</span> <span class="n">project_id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">default_project</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
-<a id="__codelineno-0-567" name="__codelineno-0-567"></a>    <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">()}</span>
-<a id="__codelineno-0-568" name="__codelineno-0-568"></a>    <span class="k">if</span> <span class="n">pid</span><span class="p">:</span>
-<a id="__codelineno-0-569" name="__codelineno-0-569"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;projectId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pid</span>
-<a id="__codelineno-0-570" name="__codelineno-0-570"></a>    <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
-<a id="__codelineno-0-571" name="__codelineno-0-571"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">content</span>
-<a id="__codelineno-0-572" name="__codelineno-0-572"></a>    <span class="k">if</span> <span class="n">priority</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-573" name="__codelineno-0-573"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;priority&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">priority</span>
-<a id="__codelineno-0-574" name="__codelineno-0-574"></a>    <span class="k">if</span> <span class="n">due_date</span><span class="p">:</span>
-<a id="__codelineno-0-575" name="__codelineno-0-575"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;dueDate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">due_date</span>
-<a id="__codelineno-0-576" name="__codelineno-0-576"></a>    <span class="k">if</span> <span class="n">tags</span><span class="p">:</span>
-<a id="__codelineno-0-577" name="__codelineno-0-577"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;tags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-<a id="__codelineno-0-578" name="__codelineno-0-578"></a>
-<a id="__codelineno-0-579" name="__codelineno-0-579"></a>    <span class="n">created</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-<a id="__codelineno-0-580" name="__codelineno-0-580"></a>    <span class="k">return</span> <span class="p">(</span>
-<a id="__codelineno-0-581" name="__codelineno-0-581"></a>        <span class="sa">f</span><span class="s2">&quot;Task [</span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> created successfully.</span><span class="se">\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-582" name="__codelineno-0-582"></a>        <span class="sa">f</span><span class="s2">&quot;Project: </span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">project_id</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;(Inbox)&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-583" name="__codelineno-0-583"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-583">583</a></span>
+<span class="normal"><a href="#__codelineno-0-584">584</a></span>
+<span class="normal"><a href="#__codelineno-0-585">585</a></span>
+<span class="normal"><a href="#__codelineno-0-586">586</a></span>
+<span class="normal"><a href="#__codelineno-0-587">587</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-541" name="__codelineno-0-541"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_task</span><span class="p">(</span>
+<a id="__codelineno-0-542" name="__codelineno-0-542"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-543" name="__codelineno-0-543"></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-544" name="__codelineno-0-544"></a>    <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-545" name="__codelineno-0-545"></a>    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-546" name="__codelineno-0-546"></a>    <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-547" name="__codelineno-0-547"></a>    <span class="n">tags</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-548" name="__codelineno-0-548"></a>    <span class="n">due_date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-549" name="__codelineno-0-549"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-550" name="__codelineno-0-550"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new task in Dida365.</span>
+<a id="__codelineno-0-551" name="__codelineno-0-551"></a>
+<a id="__codelineno-0-552" name="__codelineno-0-552"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-553" name="__codelineno-0-553"></a><span class="sd">        title: Task title (required).</span>
+<a id="__codelineno-0-554" name="__codelineno-0-554"></a><span class="sd">        project_id: Target project ID. Defaults to the configured</span>
+<a id="__codelineno-0-555" name="__codelineno-0-555"></a><span class="sd">            default_project if not provided.</span>
+<a id="__codelineno-0-556" name="__codelineno-0-556"></a><span class="sd">        content: Task notes / description.</span>
+<a id="__codelineno-0-557" name="__codelineno-0-557"></a><span class="sd">        priority: Priority level (0=none, 1=low, 3=medium, 5=high).</span>
+<a id="__codelineno-0-558" name="__codelineno-0-558"></a><span class="sd">        tags: Comma-separated tag names (e.g. &quot;work,urgent&quot;).</span>
+<a id="__codelineno-0-559" name="__codelineno-0-559"></a><span class="sd">        due_date: Due date in ISO format or Dida365 API format.</span>
+<a id="__codelineno-0-560" name="__codelineno-0-560"></a>
+<a id="__codelineno-0-561" name="__codelineno-0-561"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-562" name="__codelineno-0-562"></a><span class="sd">        Formatted success message with the created task info.</span>
+<a id="__codelineno-0-563" name="__codelineno-0-563"></a>
+<a id="__codelineno-0-564" name="__codelineno-0-564"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-565" name="__codelineno-0-565"></a><span class="sd">        DidaValidationError: If title is empty.</span>
+<a id="__codelineno-0-566" name="__codelineno-0-566"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-567" name="__codelineno-0-567"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+<a id="__codelineno-0-568" name="__codelineno-0-568"></a>        <span class="k">raise</span> <span class="n">DidaValidationError</span><span class="p">(</span><span class="s2">&quot;Task title cannot be empty.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-569" name="__codelineno-0-569"></a>
+<a id="__codelineno-0-570" name="__codelineno-0-570"></a>    <span class="n">pid</span> <span class="o">=</span> <span class="n">project_id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">default_project</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-571" name="__codelineno-0-571"></a>    <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">()}</span>
+<a id="__codelineno-0-572" name="__codelineno-0-572"></a>    <span class="k">if</span> <span class="n">pid</span><span class="p">:</span>
+<a id="__codelineno-0-573" name="__codelineno-0-573"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;projectId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pid</span>
+<a id="__codelineno-0-574" name="__codelineno-0-574"></a>    <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
+<a id="__codelineno-0-575" name="__codelineno-0-575"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">content</span>
+<a id="__codelineno-0-576" name="__codelineno-0-576"></a>    <span class="k">if</span> <span class="n">priority</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-577" name="__codelineno-0-577"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;priority&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">priority</span>
+<a id="__codelineno-0-578" name="__codelineno-0-578"></a>    <span class="k">if</span> <span class="n">due_date</span><span class="p">:</span>
+<a id="__codelineno-0-579" name="__codelineno-0-579"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;dueDate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">due_date</span>
+<a id="__codelineno-0-580" name="__codelineno-0-580"></a>    <span class="k">if</span> <span class="n">tags</span><span class="p">:</span>
+<a id="__codelineno-0-581" name="__codelineno-0-581"></a>        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;tags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+<a id="__codelineno-0-582" name="__codelineno-0-582"></a>
+<a id="__codelineno-0-583" name="__codelineno-0-583"></a>    <span class="n">created</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<a id="__codelineno-0-584" name="__codelineno-0-584"></a>    <span class="k">return</span> <span class="p">(</span>
+<a id="__codelineno-0-585" name="__codelineno-0-585"></a>        <span class="sa">f</span><span class="s2">&quot;Task [</span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> created successfully.</span><span class="se">\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-586" name="__codelineno-0-586"></a>        <span class="sa">f</span><span class="s2">&quot;Project: </span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">project_id</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;(Inbox)&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-587" name="__codelineno-0-587"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3503,11 +3503,7 @@ default_project if not provided.</p>
 
             <details class="mkdocstrings-source">
               <summary>源代码位于： <code>service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-603">603</a></span>
-<span class="normal"><a href="#__codelineno-0-604">604</a></span>
-<span class="normal"><a href="#__codelineno-0-605">605</a></span>
-<span class="normal"><a href="#__codelineno-0-606">606</a></span>
-<span class="normal"><a href="#__codelineno-0-607">607</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-607">607</a></span>
 <span class="normal"><a href="#__codelineno-0-608">608</a></span>
 <span class="normal"><a href="#__codelineno-0-609">609</a></span>
 <span class="normal"><a href="#__codelineno-0-610">610</a></span>
@@ -3519,23 +3515,27 @@ default_project if not provided.</p>
 <span class="normal"><a href="#__codelineno-0-616">616</a></span>
 <span class="normal"><a href="#__codelineno-0-617">617</a></span>
 <span class="normal"><a href="#__codelineno-0-618">618</a></span>
-<span class="normal"><a href="#__codelineno-0-619">619</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-603" name="__codelineno-0-603"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-604" name="__codelineno-0-604"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete a task permanently.</span>
-<a id="__codelineno-0-605" name="__codelineno-0-605"></a>
-<a id="__codelineno-0-606" name="__codelineno-0-606"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-607" name="__codelineno-0-607"></a><span class="sd">        task_id: The task ID to delete.</span>
-<a id="__codelineno-0-608" name="__codelineno-0-608"></a>
-<a id="__codelineno-0-609" name="__codelineno-0-609"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-610" name="__codelineno-0-610"></a><span class="sd">        Formatted success message.</span>
-<a id="__codelineno-0-611" name="__codelineno-0-611"></a>
-<a id="__codelineno-0-612" name="__codelineno-0-612"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-613" name="__codelineno-0-613"></a><span class="sd">        DidaValidationError: If the task is not found.</span>
-<a id="__codelineno-0-614" name="__codelineno-0-614"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-615" name="__codelineno-0-615"></a>    <span class="n">found</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_task_by_id</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
-<a id="__codelineno-0-616" name="__codelineno-0-616"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
-<a id="__codelineno-0-617" name="__codelineno-0-617"></a>        <span class="k">raise</span> <span class="n">DidaValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task </span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-618" name="__codelineno-0-618"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">delete_task</span><span class="p">(</span><span class="n">found</span><span class="o">.</span><span class="n">project_id</span><span class="p">,</span> <span class="n">task_id</span><span class="p">)</span>
-<a id="__codelineno-0-619" name="__codelineno-0-619"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Task [</span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> deleted.&quot;</span>
+<span class="normal"><a href="#__codelineno-0-619">619</a></span>
+<span class="normal"><a href="#__codelineno-0-620">620</a></span>
+<span class="normal"><a href="#__codelineno-0-621">621</a></span>
+<span class="normal"><a href="#__codelineno-0-622">622</a></span>
+<span class="normal"><a href="#__codelineno-0-623">623</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-607" name="__codelineno-0-607"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-608" name="__codelineno-0-608"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete a task permanently.</span>
+<a id="__codelineno-0-609" name="__codelineno-0-609"></a>
+<a id="__codelineno-0-610" name="__codelineno-0-610"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-611" name="__codelineno-0-611"></a><span class="sd">        task_id: The task ID to delete.</span>
+<a id="__codelineno-0-612" name="__codelineno-0-612"></a>
+<a id="__codelineno-0-613" name="__codelineno-0-613"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-614" name="__codelineno-0-614"></a><span class="sd">        Formatted success message.</span>
+<a id="__codelineno-0-615" name="__codelineno-0-615"></a>
+<a id="__codelineno-0-616" name="__codelineno-0-616"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-617" name="__codelineno-0-617"></a><span class="sd">        DidaValidationError: If the task is not found.</span>
+<a id="__codelineno-0-618" name="__codelineno-0-618"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-619" name="__codelineno-0-619"></a>    <span class="n">found</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_task_by_id</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+<a id="__codelineno-0-620" name="__codelineno-0-620"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+<a id="__codelineno-0-621" name="__codelineno-0-621"></a>        <span class="k">raise</span> <span class="n">DidaValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task </span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-622" name="__codelineno-0-622"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">delete_task</span><span class="p">(</span><span class="n">found</span><span class="o">.</span><span class="n">project_id</span><span class="p">,</span> <span class="n">task_id</span><span class="p">)</span>
+<a id="__codelineno-0-623" name="__codelineno-0-623"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Task [</span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> deleted.&quot;</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3618,11 +3618,7 @@ default_project if not provided.</p>
 
             <details class="mkdocstrings-source">
               <summary>源代码位于： <code>service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-466">466</a></span>
-<span class="normal"><a href="#__codelineno-0-467">467</a></span>
-<span class="normal"><a href="#__codelineno-0-468">468</a></span>
-<span class="normal"><a href="#__codelineno-0-469">469</a></span>
-<span class="normal"><a href="#__codelineno-0-470">470</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-470">470</a></span>
 <span class="normal"><a href="#__codelineno-0-471">471</a></span>
 <span class="normal"><a href="#__codelineno-0-472">472</a></span>
 <span class="normal"><a href="#__codelineno-0-473">473</a></span>
@@ -3630,19 +3626,23 @@ default_project if not provided.</p>
 <span class="normal"><a href="#__codelineno-0-475">475</a></span>
 <span class="normal"><a href="#__codelineno-0-476">476</a></span>
 <span class="normal"><a href="#__codelineno-0-477">477</a></span>
-<span class="normal"><a href="#__codelineno-0-478">478</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-466" name="__codelineno-0-466"></a><span class="nd">@staticmethod</span>
-<a id="__codelineno-0-467" name="__codelineno-0-467"></a><span class="k">def</span><span class="w"> </span><span class="nf">explain_error</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-468" name="__codelineno-0-468"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a plugin exception to a user-friendly message.</span>
-<a id="__codelineno-0-469" name="__codelineno-0-469"></a>
-<a id="__codelineno-0-470" name="__codelineno-0-470"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-471" name="__codelineno-0-471"></a><span class="sd">        error: The exception to explain.</span>
-<a id="__codelineno-0-472" name="__codelineno-0-472"></a>
-<a id="__codelineno-0-473" name="__codelineno-0-473"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-474" name="__codelineno-0-474"></a><span class="sd">        User-friendly error message.</span>
-<a id="__codelineno-0-475" name="__codelineno-0-475"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-476" name="__codelineno-0-476"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">DidaError</span><span class="p">):</span>
-<a id="__codelineno-0-477" name="__codelineno-0-477"></a>        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-<a id="__codelineno-0-478" name="__codelineno-0-478"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Unexpected Dida365 plugin error: </span><span class="si">{</span><span class="n">error</span><span class="si">!s}</span><span class="s2">&quot;</span>
+<span class="normal"><a href="#__codelineno-0-478">478</a></span>
+<span class="normal"><a href="#__codelineno-0-479">479</a></span>
+<span class="normal"><a href="#__codelineno-0-480">480</a></span>
+<span class="normal"><a href="#__codelineno-0-481">481</a></span>
+<span class="normal"><a href="#__codelineno-0-482">482</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-470" name="__codelineno-0-470"></a><span class="nd">@staticmethod</span>
+<a id="__codelineno-0-471" name="__codelineno-0-471"></a><span class="k">def</span><span class="w"> </span><span class="nf">explain_error</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-472" name="__codelineno-0-472"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a plugin exception to a user-friendly message.</span>
+<a id="__codelineno-0-473" name="__codelineno-0-473"></a>
+<a id="__codelineno-0-474" name="__codelineno-0-474"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-475" name="__codelineno-0-475"></a><span class="sd">        error: The exception to explain.</span>
+<a id="__codelineno-0-476" name="__codelineno-0-476"></a>
+<a id="__codelineno-0-477" name="__codelineno-0-477"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-478" name="__codelineno-0-478"></a><span class="sd">        User-friendly error message.</span>
+<a id="__codelineno-0-479" name="__codelineno-0-479"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-480" name="__codelineno-0-480"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">DidaError</span><span class="p">):</span>
+<a id="__codelineno-0-481" name="__codelineno-0-481"></a>        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<a id="__codelineno-0-482" name="__codelineno-0-482"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Unexpected Dida365 plugin error: </span><span class="si">{</span><span class="n">error</span><span class="si">!s}</span><span class="s2">&quot;</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3725,11 +3725,7 @@ default_project if not provided.</p>
 
             <details class="mkdocstrings-source">
               <summary>源代码位于： <code>service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-480">480</a></span>
-<span class="normal"><a href="#__codelineno-0-481">481</a></span>
-<span class="normal"><a href="#__codelineno-0-482">482</a></span>
-<span class="normal"><a href="#__codelineno-0-483">483</a></span>
-<span class="normal"><a href="#__codelineno-0-484">484</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-484">484</a></span>
 <span class="normal"><a href="#__codelineno-0-485">485</a></span>
 <span class="normal"><a href="#__codelineno-0-486">486</a></span>
 <span class="normal"><a href="#__codelineno-0-487">487</a></span>
@@ -3738,20 +3734,24 @@ default_project if not provided.</p>
 <span class="normal"><a href="#__codelineno-0-490">490</a></span>
 <span class="normal"><a href="#__codelineno-0-491">491</a></span>
 <span class="normal"><a href="#__codelineno-0-492">492</a></span>
-<span class="normal"><a href="#__codelineno-0-493">493</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-480" name="__codelineno-0-480"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_task_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DidaTaskWithProject</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-481" name="__codelineno-0-481"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a task by its ID across all projects and inbox.</span>
-<a id="__codelineno-0-482" name="__codelineno-0-482"></a>
-<a id="__codelineno-0-483" name="__codelineno-0-483"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-484" name="__codelineno-0-484"></a><span class="sd">        task_id: The task ID to find.</span>
-<a id="__codelineno-0-485" name="__codelineno-0-485"></a>
-<a id="__codelineno-0-486" name="__codelineno-0-486"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-487" name="__codelineno-0-487"></a><span class="sd">        The task with project context, or None if not found.</span>
-<a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-489" name="__codelineno-0-489"></a>    <span class="n">all_items</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_all_tasks</span><span class="p">()</span>
-<a id="__codelineno-0-490" name="__codelineno-0-490"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">all_items</span><span class="p">:</span>
-<a id="__codelineno-0-491" name="__codelineno-0-491"></a>        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">task_id</span><span class="p">:</span>
-<a id="__codelineno-0-492" name="__codelineno-0-492"></a>            <span class="k">return</span> <span class="n">item</span>
-<a id="__codelineno-0-493" name="__codelineno-0-493"></a>    <span class="k">return</span> <span class="kc">None</span>
+<span class="normal"><a href="#__codelineno-0-493">493</a></span>
+<span class="normal"><a href="#__codelineno-0-494">494</a></span>
+<span class="normal"><a href="#__codelineno-0-495">495</a></span>
+<span class="normal"><a href="#__codelineno-0-496">496</a></span>
+<span class="normal"><a href="#__codelineno-0-497">497</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-484" name="__codelineno-0-484"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_task_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DidaTaskWithProject</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-485" name="__codelineno-0-485"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a task by its ID across all projects and inbox.</span>
+<a id="__codelineno-0-486" name="__codelineno-0-486"></a>
+<a id="__codelineno-0-487" name="__codelineno-0-487"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="sd">        task_id: The task ID to find.</span>
+<a id="__codelineno-0-489" name="__codelineno-0-489"></a>
+<a id="__codelineno-0-490" name="__codelineno-0-490"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-491" name="__codelineno-0-491"></a><span class="sd">        The task with project context, or None if not found.</span>
+<a id="__codelineno-0-492" name="__codelineno-0-492"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-493" name="__codelineno-0-493"></a>    <span class="n">all_items</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_all_tasks</span><span class="p">()</span>
+<a id="__codelineno-0-494" name="__codelineno-0-494"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">all_items</span><span class="p">:</span>
+<a id="__codelineno-0-495" name="__codelineno-0-495"></a>        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">task_id</span><span class="p">:</span>
+<a id="__codelineno-0-496" name="__codelineno-0-496"></a>            <span class="k">return</span> <span class="n">item</span>
+<a id="__codelineno-0-497" name="__codelineno-0-497"></a>    <span class="k">return</span> <span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4422,11 +4422,7 @@ problematic <code>reminders</code> field, and POSTs the full object back.</p>
 
             <details class="mkdocstrings-source">
               <summary>源代码位于： <code>service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-495">495</a></span>
-<span class="normal"><a href="#__codelineno-0-496">496</a></span>
-<span class="normal"><a href="#__codelineno-0-497">497</a></span>
-<span class="normal"><a href="#__codelineno-0-498">498</a></span>
-<span class="normal"><a href="#__codelineno-0-499">499</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-499">499</a></span>
 <span class="normal"><a href="#__codelineno-0-500">500</a></span>
 <span class="normal"><a href="#__codelineno-0-501">501</a></span>
 <span class="normal"><a href="#__codelineno-0-502">502</a></span>
@@ -4462,47 +4458,51 @@ problematic <code>reminders</code> field, and POSTs the full object back.</p>
 <span class="normal"><a href="#__codelineno-0-532">532</a></span>
 <span class="normal"><a href="#__codelineno-0-533">533</a></span>
 <span class="normal"><a href="#__codelineno-0-534">534</a></span>
-<span class="normal"><a href="#__codelineno-0-535">535</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-495" name="__codelineno-0-495"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_task_details</span><span class="p">(</span>
-<a id="__codelineno-0-496" name="__codelineno-0-496"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">updates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-<a id="__codelineno-0-497" name="__codelineno-0-497"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-498" name="__codelineno-0-498"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Update a task&#39;s details via the fetch-merge-POST workflow.</span>
-<a id="__codelineno-0-499" name="__codelineno-0-499"></a>
-<a id="__codelineno-0-500" name="__codelineno-0-500"></a><span class="sd">    The Dida365 API requires the full task object on update. This method</span>
-<a id="__codelineno-0-501" name="__codelineno-0-501"></a><span class="sd">    fetches the complete task, merges in the requested updates, removes the</span>
-<a id="__codelineno-0-502" name="__codelineno-0-502"></a><span class="sd">    problematic ``reminders`` field, and POSTs the full object back.</span>
+<span class="normal"><a href="#__codelineno-0-535">535</a></span>
+<span class="normal"><a href="#__codelineno-0-536">536</a></span>
+<span class="normal"><a href="#__codelineno-0-537">537</a></span>
+<span class="normal"><a href="#__codelineno-0-538">538</a></span>
+<span class="normal"><a href="#__codelineno-0-539">539</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-499" name="__codelineno-0-499"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_task_details</span><span class="p">(</span>
+<a id="__codelineno-0-500" name="__codelineno-0-500"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">updates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<a id="__codelineno-0-501" name="__codelineno-0-501"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-502" name="__codelineno-0-502"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Update a task&#39;s details via the fetch-merge-POST workflow.</span>
 <a id="__codelineno-0-503" name="__codelineno-0-503"></a>
-<a id="__codelineno-0-504" name="__codelineno-0-504"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-505" name="__codelineno-0-505"></a><span class="sd">        task_id: The task ID to update.</span>
-<a id="__codelineno-0-506" name="__codelineno-0-506"></a><span class="sd">        updates: Dict of fields to update using Dida365 API camelCase keys</span>
-<a id="__codelineno-0-507" name="__codelineno-0-507"></a><span class="sd">            (e.g. ``{&quot;title&quot;: &quot;...&quot;, &quot;content&quot;: &quot;...&quot;, &quot;dueDate&quot;: &quot;...&quot;}``).</span>
-<a id="__codelineno-0-508" name="__codelineno-0-508"></a>
-<a id="__codelineno-0-509" name="__codelineno-0-509"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-510" name="__codelineno-0-510"></a><span class="sd">        Formatted success message listing changed fields.</span>
-<a id="__codelineno-0-511" name="__codelineno-0-511"></a>
-<a id="__codelineno-0-512" name="__codelineno-0-512"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-513" name="__codelineno-0-513"></a><span class="sd">        DidaValidationError: If the task is not found.</span>
-<a id="__codelineno-0-514" name="__codelineno-0-514"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-515" name="__codelineno-0-515"></a>    <span class="n">found</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_task_by_id</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
-<a id="__codelineno-0-516" name="__codelineno-0-516"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
-<a id="__codelineno-0-517" name="__codelineno-0-517"></a>        <span class="k">raise</span> <span class="n">DidaValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task </span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-518" name="__codelineno-0-518"></a>
-<a id="__codelineno-0-519" name="__codelineno-0-519"></a>    <span class="n">raw</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-520" name="__codelineno-0-520"></a>        <span class="nb">dict</span><span class="p">(</span><span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">raw</span><span class="p">)</span>
-<a id="__codelineno-0-521" name="__codelineno-0-521"></a>        <span class="k">if</span> <span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">raw</span>
-<a id="__codelineno-0-522" name="__codelineno-0-522"></a>        <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_to_raw</span><span class="p">(</span><span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="p">)</span>
-<a id="__codelineno-0-523" name="__codelineno-0-523"></a>    <span class="p">)</span>
-<a id="__codelineno-0-524" name="__codelineno-0-524"></a>
-<a id="__codelineno-0-525" name="__codelineno-0-525"></a>    <span class="n">raw</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">updates</span><span class="p">)</span>
-<a id="__codelineno-0-526" name="__codelineno-0-526"></a>
-<a id="__codelineno-0-527" name="__codelineno-0-527"></a>    <span class="n">raw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;reminders&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-504" name="__codelineno-0-504"></a><span class="sd">    The Dida365 API requires the full task object on update. This method</span>
+<a id="__codelineno-0-505" name="__codelineno-0-505"></a><span class="sd">    fetches the complete task, merges in the requested updates, removes the</span>
+<a id="__codelineno-0-506" name="__codelineno-0-506"></a><span class="sd">    problematic ``reminders`` field, and POSTs the full object back.</span>
+<a id="__codelineno-0-507" name="__codelineno-0-507"></a>
+<a id="__codelineno-0-508" name="__codelineno-0-508"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-509" name="__codelineno-0-509"></a><span class="sd">        task_id: The task ID to update.</span>
+<a id="__codelineno-0-510" name="__codelineno-0-510"></a><span class="sd">        updates: Dict of fields to update using Dida365 API camelCase keys</span>
+<a id="__codelineno-0-511" name="__codelineno-0-511"></a><span class="sd">            (e.g. ``{&quot;title&quot;: &quot;...&quot;, &quot;content&quot;: &quot;...&quot;, &quot;dueDate&quot;: &quot;...&quot;}``).</span>
+<a id="__codelineno-0-512" name="__codelineno-0-512"></a>
+<a id="__codelineno-0-513" name="__codelineno-0-513"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-514" name="__codelineno-0-514"></a><span class="sd">        Formatted success message listing changed fields.</span>
+<a id="__codelineno-0-515" name="__codelineno-0-515"></a>
+<a id="__codelineno-0-516" name="__codelineno-0-516"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-517" name="__codelineno-0-517"></a><span class="sd">        DidaValidationError: If the task is not found.</span>
+<a id="__codelineno-0-518" name="__codelineno-0-518"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-519" name="__codelineno-0-519"></a>    <span class="n">found</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_task_by_id</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+<a id="__codelineno-0-520" name="__codelineno-0-520"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+<a id="__codelineno-0-521" name="__codelineno-0-521"></a>        <span class="k">raise</span> <span class="n">DidaValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task </span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-522" name="__codelineno-0-522"></a>
+<a id="__codelineno-0-523" name="__codelineno-0-523"></a>    <span class="n">raw</span> <span class="o">=</span> <span class="p">(</span>
+<a id="__codelineno-0-524" name="__codelineno-0-524"></a>        <span class="nb">dict</span><span class="p">(</span><span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">raw</span><span class="p">)</span>
+<a id="__codelineno-0-525" name="__codelineno-0-525"></a>        <span class="k">if</span> <span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">raw</span>
+<a id="__codelineno-0-526" name="__codelineno-0-526"></a>        <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_to_raw</span><span class="p">(</span><span class="n">found</span><span class="o">.</span><span class="n">task</span><span class="p">)</span>
+<a id="__codelineno-0-527" name="__codelineno-0-527"></a>    <span class="p">)</span>
 <a id="__codelineno-0-528" name="__codelineno-0-528"></a>
-<a id="__codelineno-0-529" name="__codelineno-0-529"></a>    <span class="n">updated</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">update_task</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
+<a id="__codelineno-0-529" name="__codelineno-0-529"></a>    <span class="n">raw</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">updates</span><span class="p">)</span>
 <a id="__codelineno-0-530" name="__codelineno-0-530"></a>
-<a id="__codelineno-0-531" name="__codelineno-0-531"></a>    <span class="n">changed</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">updates</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">]</span>
-<a id="__codelineno-0-532" name="__codelineno-0-532"></a>    <span class="k">return</span> <span class="p">(</span>
-<a id="__codelineno-0-533" name="__codelineno-0-533"></a>        <span class="sa">f</span><span class="s2">&quot;Task [</span><span class="si">{</span><span class="n">updated</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">updated</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> updated successfully.</span><span class="se">\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-534" name="__codelineno-0-534"></a>        <span class="sa">f</span><span class="s2">&quot;Changed fields: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">changed</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-535" name="__codelineno-0-535"></a>    <span class="p">)</span>
+<a id="__codelineno-0-531" name="__codelineno-0-531"></a>    <span class="n">raw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;reminders&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-532" name="__codelineno-0-532"></a>
+<a id="__codelineno-0-533" name="__codelineno-0-533"></a>    <span class="n">updated</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">update_task</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
+<a id="__codelineno-0-534" name="__codelineno-0-534"></a>
+<a id="__codelineno-0-535" name="__codelineno-0-535"></a>    <span class="n">changed</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">updates</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">]</span>
+<a id="__codelineno-0-536" name="__codelineno-0-536"></a>    <span class="k">return</span> <span class="p">(</span>
+<a id="__codelineno-0-537" name="__codelineno-0-537"></a>        <span class="sa">f</span><span class="s2">&quot;Task [</span><span class="si">{</span><span class="n">updated</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">updated</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> updated successfully.</span><span class="se">\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-538" name="__codelineno-0-538"></a>        <span class="sa">f</span><span class="s2">&quot;Changed fields: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">changed</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-539" name="__codelineno-0-539"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
