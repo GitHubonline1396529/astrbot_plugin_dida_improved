@@ -1074,22 +1074,24 @@
 <h1 id="_1">文档工作流</h1>
 <h2 id="_2">工具栈</h2>
 <ul>
-<li><strong>MkDocs</strong> — 静态站点生成器</li>
-<li><strong>Material for MkDocs</strong> — 主题</li>
-<li><strong>mkdocstrings</strong> — 从 Python docstring 自动生成 API 参考</li>
-<li><strong>GitHub Actions</strong> — 自动构建和部署</li>
+<li><strong>MkDocs</strong> — 静态站点生成器；</li>
+<li><strong>Material for MkDocs</strong> — 主题；</li>
+<li><strong>mkdocstrings</strong> — 从 Python docstring 自动生成 API 参考；</li>
+<li><strong>GitHub Actions</strong> — 自动构建和部署。</li>
 </ul>
 <h2 id="_3">编写文档</h2>
 <p>所有文档源文件为 Markdown 格式，存放在 <code>docs/</code> 目录下。</p>
 <h3 id="_4">文档编写规范</h3>
 <p>文档的编写应当遵循如下的规范：</p>
 <ol>
-<li>使用标准的 Markdown 语法，如非必要，不引入兼容性更低的专有语法，但 MKDocs 原生的以 <code>!!!</code> 用作行头的 Callot / Alert 应当被保留。</li>
+<li>如非必要，不使用分隔符 <code>---</code>，这将降低最终生成的文档的版式连贯性。</li>
+<li>使用标准的 Markdown 语法，如非必要，不引入兼容性更低的专有语法，但 MkDocs 原生的以 <code>!!!</code> 用作行头的 Callout / Alert 应当被保留。</li>
 <li>对于每一个连贯的段落，不进行折行；当且仅当涉及将文本分割为 2 个独立的段落时，在文本之间插入 2 个折行。</li>
 <li>永远不使用 ASCII Art + 代码块的格式展示内容。</li>
 <li>中文和英文字符、中文和数字在正常表意的情况下，需留有 1 个空格的间距。</li>
-<li>中文文本中的括号请使用“空格 + 西文括号”，即：用 <code>（</code> 代替 <code>（</code>，用 <code>)</code> 代替 <code>）</code>。如果括号与中文标点符号相邻，例如 <code>！(</code> 或者 <code>)。</code>，则括号与标点符号之间不应存在空格。</li>
-<li>对于无序列表和有序列表，如果一个列表行包含多个以句号“。”、感叹号“！”、问号“？”结尾的句子，则结尾的表点符号为句号“。”、感叹号“！”，或者问号“？”。如果一个列表行不包含一个完整的中文句子，使用分号“；”。</li>
+<li>中文文本中的括号请使用"空格 + 西文括号"，即：用 <code>(</code> 代替 <code>（</code>，用 <code>)</code> 代替 <code>）</code>。如果括号与中文标点符号相邻，例如 <code>！(</code> 或者 <code>)。</code>，则括号与标点符号之间不应存在空格。</li>
+<li>对于无序列表和有序列表，如果一个列表行包含多个以句号"。"、感叹号"！"、问号"？"结尾的句子，则结尾的表点符号为句号"。"、感叹号"！"，或者问号"？"。如果一个列表行不包含一个完整的中文句子，使用分号"；"。</li>
+<li>如果涉及多级列表，则必须以四个空格为缩进，否则 MkDocs 无法正确渲染。</li>
 </ol>
 <h3 id="_5">添加新页面</h3>
 <p>如果您需要为当前的文档添加一个新的页面，需要执行如下的 2 步操作：</p>
@@ -1125,16 +1127,16 @@
 <h3 id="ci">CI 自动部署</h3>
 <p><code>.github/workflows/deploy-docs.yml</code> 在以下条件满足时自动触发：</p>
 <ul>
-<li>推送到 <code>dev</code> 分支（<code>main</code> 是自动同步的发布分支，不直接接收推送）</li>
-<li>且变更涉及：<code>docs/**</code>、<code>mkdocs.yml</code>、<code>**/*.py</code>、<code>requirements.txt</code></li>
+<li>推送到 <code>dev</code> 分支 (<code>main</code> 是自动同步的发布分支，不直接接收推送)；</li>
+<li>且变更涉及：<code>docs/**</code>、<code>mkdocs.yml</code>、<code>**/*.py</code>、<code>requirements.txt</code>。</li>
 </ul>
 <p>执行步骤：</p>
 <ol>
 <li>检出代码</li>
-<li>安装 Python 3.11</li>
-<li>安装 <code>mkdocs</code>、<code>mkdocs-material</code>、<code>mkdocstrings[python]</code></li>
-<li>执行 <code>mkdocs build</code></li>
-<li>执行 <code>mkdocs gh-deploy</code> 推送到 <code>gh-pages</code> 分支</li>
+<li>安装 Python 3.11；</li>
+<li>安装 <code>mkdocs</code>、<code>mkdocs-material</code>、<code>mkdocstrings[python]</code>；</li>
+<li>执行 <code>mkdocs build</code>；</li>
+<li>执行 <code>mkdocs gh-deploy</code> 推送到 <code>gh-pages</code> 分支。</li>
 </ol>
 
 

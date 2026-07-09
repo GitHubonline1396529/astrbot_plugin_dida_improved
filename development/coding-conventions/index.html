@@ -984,31 +984,39 @@
 <h1 id="_1">编码规范</h1>
 <h2 id="python">Python 风格</h2>
 <ul>
-<li>遵循 Google Python Style Guide 文档字符串格式（<code>Args:</code>、<code>Returns:</code>、<code>Raises:</code>）</li>
-<li>使用 <code>ruff</code> 进行格式化和 lint 检查</li>
-<li>行宽 80 列（在 <code>pyproject.toml</code> 中配置）</li>
-<li>每个模块顶部添加 <code>from __future__ import annotations</code></li>
+<li>遵循 Google Python Style Guide 文档字符串格式 (<code>Args:</code>、<code>Returns:</code>、<code>Raises:</code>)；</li>
+<li>使用 <code>ruff</code> 进行格式化和 lint 检查；</li>
+<li>行宽 80 列 (在 <code>pyproject.toml</code> 中配置)；</li>
+<li>每个模块顶部添加 <code>from __future__ import annotations</code>；</li>
 </ul>
 <h2 id="_2">代码规范</h2>
 <ul>
-<li>使用 <code>pathlib.Path</code> 处理文件路径，不使用原始字符串路径</li>
-<li>使用 <code>astrbot.api.logger</code> 进行日志记录</li>
-<li>使用 <code>httpx.AsyncClient</code> 进行 HTTP 请求</li>
-<li>优先使用 <code>dataclass(slots=True)</code> 作为数据容器</li>
-<li>为所有函数签名添加类型注解</li>
-<li>不添加不必要的注释，仅在逻辑不直观时才注释</li>
-<li>保持函数短小精悍，遵循 KISS 原则</li>
-<li>Python 源码全部使用英文，包括字符串字面量和日志文本</li>
+<li>使用 <code>pathlib.Path</code> 处理文件路径，不使用原始字符串路径；</li>
+<li>使用 <code>astrbot.api.logger</code> 进行日志记录；</li>
+<li>使用 <code>httpx.AsyncClient</code> 进行 HTTP 请求；</li>
+<li>优先使用 <code>dataclass(slots=True)</code> 作为数据容器；</li>
+<li>为所有函数签名添加类型注解；</li>
+<li>不添加不必要的注释，仅在逻辑不直观时才注释；</li>
+<li>保持函数短小精悍，遵循 KISS 原则；</li>
+<li>Python 源码全部使用英文，包括字符串字面量和日志文本。</li>
+</ul>
+<p>本项目的 docstring 注释非常重要，因为 MkDocs 会抽取 docstring，用于构建项目的 API 文档。本项目的</p>
+<ul>
+<li>基本语法基于 Markdown，而不是 reStructedText；</li>
+<li>为每个函数、方法和类添加 docstring，以一行简明扼要的功能说明开始，随后，取决于所实现功能的复杂程度，为模块添加一个段落的更为详细的说明 (可以没有)；</li>
+<li>docstring 应列出函数的输入、输出参数；</li>
+<li>需要额外向开发者指明的关键信息，用 Note 标记；</li>
+<li>See Also 可以被追加在 docstring 的末尾，用于索引或者类方法函数被关键性地调用的位置。</li>
 </ul>
 <h2 id="astrbot">AstrBot 插件规范</h2>
 <ul>
-<li>插件类必须继承自 <code>Star</code> 并位于 <code>main.py</code></li>
-<li>使用 <code>@register("plugin_name", ...)</code> 装饰器</li>
-<li>使用 <code>@filter.command()</code> 注册命令处理函数</li>
-<li>使用 <code>@filter.permission_type()</code> 控制访问权限</li>
-<li>通过 <code>yield event.plain_result(...)</code> 返回结果</li>
-<li>在 <code>__init__</code> 中接受 <code>config: AstrBotConfig</code> 获取插件配置</li>
-<li>配置通过 <code>_conf_schema.json</code> 在 WebUI 中自动渲染</li>
+<li>插件类必须继承自 <code>Star</code> 并位于 <code>main.py</code>；</li>
+<li>使用 <code>@register("plugin_name", ...)</code> 装饰器；</li>
+<li>使用 <code>@filter.command()</code> 注册命令处理函数；</li>
+<li>使用 <code>@filter.permission_type()</code> 控制访问权限；</li>
+<li>通过 <code>yield event.plain_result(...)</code> 返回结果；</li>
+<li>在 <code>__init__</code> 中接受 <code>config: AstrBotConfig</code> 获取插件配置；</li>
+<li>配置通过 <code>_conf_schema.json</code> 在 WebUI 中自动渲染。</li>
 </ul>
 <h2 id="_3">构建与验证</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ruff<span class="w"> </span>format<span class="w"> </span>.
@@ -1016,21 +1024,21 @@
 </code></pre></div>
 <h2 id="_4">测试规范</h2>
 <ul>
-<li>测试文件命名使用 <code>test_</code> 前缀，放在 <code>tests/</code> 目录下</li>
-<li>测试函数命名格式：<code>test_&lt;被测方法&gt;_&lt;场景&gt;</code>，如 <code>test_parse_api_datetime_z_suffix</code></li>
-<li>共享测试数据在 <code>tests/conftest.py</code> 中以 pytest fixture 集中管理</li>
-<li>边界值和异常数据在测试用例内现场构造，不放入共享 fixture</li>
-<li>异步测试不需要手动添加 <code>@pytest.mark.asyncio</code>，<code>pyproject.toml</code> 中已配置 <code>asyncio_mode = "auto"</code></li>
-<li>遵守与业务代码相同的代码风格：ruff 80 列格式、Google 风格 docstring、源码全部使用英文</li>
+<li>测试文件命名使用 <code>test_</code> 前缀，放在 <code>tests/</code> 目录下；</li>
+<li>测试函数命名格式：<code>test_&lt;被测方法&gt;_&lt;场景&gt;</code>，如 <code>test_parse_api_datetime_z_suffix</code>；</li>
+<li>共享测试数据在 <code>tests/conftest.py</code> 中以 pytest fixture 集中管理；</li>
+<li>边界值和异常数据在测试用例内现场构造，不放入共享 fixture；</li>
+<li>异步测试不需要手动添加 <code>@pytest.mark.asyncio</code>，<code>pyproject.toml</code> 中已配置 <code>asyncio_mode = "auto"</code>；</li>
+<li>遵守与业务代码相同的代码风格：ruff 80 列格式、Google 风格 docstring、源码全部使用英文。</li>
 </ul>
 <h2 id="_5">提交规范</h2>
 <p>本项目遵循 <a href="https://www.conventionalcommits.org/">Conventional Commits</a> 规范。</p>
 <p>格式：<code>type(scope): short description</code></p>
 <ul>
-<li><strong>全小写</strong> — 首字母不大写</li>
-<li><strong>末尾不加句号</strong></li>
-<li><strong>不使用 gitmoji</strong></li>
-<li><strong>使用英文</strong> — 与源码语言保持一致</li>
+<li><strong>全小写</strong> — 首字母不大写；</li>
+<li><strong>末尾不加句号</strong>；</li>
+<li><strong>不使用 gitmoji</strong>；</li>
+<li><strong>使用英文</strong> — 与源码语言保持一致。</li>
 </ul>
 <table>
 <thead>

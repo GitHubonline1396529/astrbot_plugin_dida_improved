@@ -695,6 +695,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        官方文档罗列的所有端口
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#api" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -711,7 +722,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         数据流
@@ -1081,6 +1092,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        官方文档罗列的所有端口
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#api" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1097,7 +1119,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         数据流
@@ -1132,9 +1154,9 @@
 <p>插件采用三层架构设计：</p>
 <ol>
 <li><strong>入口层</strong> — <code>main.py</code>：命令处理器和 LLM 工具注册；</li>
-<li><strong>业务逻辑层</strong> — <code>service.py</code>：查询编排、格式化、错误处理；</li>
+<li><strong>业务逻辑层</strong> — <code>service/</code> 包：查询编排、格式化、错误处理；</li>
 <li><strong>基础设施层</strong> — <code>client.py</code>：Dida365 Open API HTTP 客户端封装；</li>
-<li><strong>支撑模块</strong></li>
+<li><strong>支撑模块</strong>；</li>
 <li><code>models.py</code> — 数据模型；</li>
 <li><code>exceptions.py</code> — 异常层次；</li>
 <li><code>time_utils.py</code> — 时区工具。</li>
@@ -1143,7 +1165,14 @@
 <ul>
 <li><strong><code>main.py</code></strong> — 插件入口，继承 <code>Star</code> 类。注册 AstrBot 命令处理器和 LLM Function Tool。负责构建配置对象和依赖注入。</li>
 <li><strong><code>client.py</code></strong> — <code>DidaClient</code> 类封装了所有 Dida365 Open API 的 HTTP 调用。使用 <code>httpx.AsyncClient</code> 实现异步请求。</li>
-<li><strong><code>service.py</code></strong> — <code>DidaService</code> 类包含所有业务逻辑：任务收集、过滤、排序、格式化、任务更新（<code>update_task_details</code> 封装了 fetch-merge-POST 完整流程），以及错误消息的友好化处理。</li>
+<li><strong><code>service/</code> 包</strong> — 业务逻辑层，按业务域拆分为子模块；<ul>
+<li><code>service.py</code> — <code>DidaService</code> 核心类：构造、查询编排、公共 API 入口；</li>
+<li><code>task_ops.py</code> — 任务操作：创建、更新、完成、删除、移动、筛选、列出已完成；</li>
+<li><code>formatting.py</code> — 输出格式化 (纯函数)；</li>
+<li><code>comments.py</code> — 任务评论操作；</li>
+<li><code>_helpers.py</code> — 内部辅助函数 (时区处理、排序、状态判断)。</li>
+</ul>
+</li>
 <li><strong><code>models.py</code></strong> — 数据模型定义，使用 <code>dataclass(slots=True)</code>。</li>
 <li><strong><code>exceptions.py</code></strong> — 自定义异常层次，所有异常继承自 <code>DidaError</code>。</li>
 <li><strong><code>time_utils.py</code></strong> — 时区感知的日期时间工具函数。</li>
@@ -1157,18 +1186,18 @@
 <h3 id="3">3. 时区处理</h3>
 <p>Dida365 API 返回的日期时间可能不带时区信息。<code>parse_api_datetime()</code> 函数实现了：</p>
 <ul>
-<li>对带时区信息的时间戳进行正确的时区转换</li>
-<li>对不带时区的时间戳按配置的时区进行假设</li>
-<li>最终统一转换为目标时区</li>
+<li>对带时区信息的时间戳进行正确的时区转换；</li>
+<li>对不带时区的时间戳按配置的时区进行假设；</li>
+<li>最终统一转换为目标时区；</li>
 </ul>
 <h3 id="4">4. 错误处理</h3>
-<p>所有 Dida365 API 错误通过 <code>DidaClient._request()</code> 方法集中处理，转换为特定的异常类型 (<code>DidaAuthenticationError</code>、<code>DidaNotFoundError</code>、<code>DidaApiError</code>、<code>DidaNetworkError</code>) 。<code>DidaService.explain_error()</code> 将这些异常转换为用户友好的中文消息。</p>
+<p>所有 Dida365 API 错误通过 <code>DidaClient._request()</code> 方法集中处理，转换为特定的异常类型 (<code>DidaAuthenticationError</code>、<code>DidaNotFoundError</code>、<code>DidaApiError</code>、<code>DidaNetworkError</code>)。<code>DidaService.explain_error()</code> 将这些异常转换为用户友好的中文消息。</p>
 <h3 id="5-llm-function-tool">5. LLM Function Tool 注册</h3>
-<p>通过 <code>@filter.llm_tool(name=...)</code> 装饰器在类定义阶段注册 LLM 工具。装饰器解析方法的 Google 风格
-docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-calling schema。注册后的工具会加入全局
-<code>llm_tools.func_list</code>，由 <code>PluginManager.load()</code> 在插件实例化后绑定 handler 并激活。</p>
-<p>需要注意的是，LLM 工具的<strong>方法参数名不应与 AstrBot 模块名冲突</strong>（如避免使用 <code>filter</code> 作为参数名，
-因为它也是 <code>astrbot.api.event</code> 导出的模块名），否则可能导致注册被静默跳过。</p>
+<p>通过 <code>@filter.llm_tool(name=...)</code> 装饰器在类定义阶段注册 LLM 工具。装饰器解析方法的 Google 风格 docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-calling schema。注册后的工具会加入全局 <code>llm_tools.func_list</code>，由 <code>PluginManager.load()</code> 在插件实例化后绑定 handler 并激活。</p>
+<div class="admonition warning">
+<p class="admonition-title">方法参数名的潜在冲突</p>
+<p>需要注意的是，LLM 工具的<strong>方法参数名不应与 AstrBot 模块名冲突</strong> (如避免使用 <code>filter</code> 作为参数名，因为它也是 <code>astrbot.api.event</code> 导出的模块名)，否则可能导致注册被静默跳过！</p>
+</div>
 <h3 id="6">6. 文档与代码同步策略</h3>
 <p>插件的功能描述在三个层面间传播，任何新增或修改都应保持三者一致：</p>
 <ol>
@@ -1193,8 +1222,8 @@ docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-call
 </tr>
 <tr>
 <td>2</td>
-<td><code>service.py</code></td>
-<td>业务编排方法已实现</td>
+<td><code>service/service.py</code> 或 <code>service/task_ops.py</code> / <code>service/comments.py</code></td>
+<td>业务编排方法已实现 (视归属域而定)</td>
 </tr>
 <tr>
 <td>3</td>
@@ -1216,9 +1245,15 @@ docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-call
 <td><code>tests/test_main.py</code></td>
 <td>新增工具的 return 行为有测试覆盖</td>
 </tr>
+<tr>
+<td>7</td>
+<td><code>release-manifest.json</code></td>
+<td>若新增文件，需确认是否应加入发布清单</td>
+</tr>
 </tbody>
 </table>
 <h2 id="dida365-api">Dida365 API 技术细节</h2>
+<h3 id="_5">官方文档罗列的所有端口</h3>
 <table>
 <thead>
 <tr>
@@ -1232,6 +1267,11 @@ docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-call
 <td><code>/open/v1/project</code></td>
 <td>GET</td>
 <td>获取所有项目</td>
+</tr>
+<tr>
+<td><code>/open/v1/project/{id}</code></td>
+<td>GET</td>
+<td>按 ID 获取单个项目</td>
 </tr>
 <tr>
 <td><code>/open/v1/project/{id}/data</code></td>
@@ -1254,6 +1294,11 @@ docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-call
 <td>更新任务 (需 POST 完整对象)</td>
 </tr>
 <tr>
+<td><code>/open/v1/project/{id}/task/{id}</code></td>
+<td>GET</td>
+<td>获取单个任务</td>
+</tr>
+<tr>
 <td><code>/open/v1/project/{id}/task/{id}/complete</code></td>
 <td>POST</td>
 <td>完成任务</td>
@@ -1263,25 +1308,55 @@ docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-call
 <td>DELETE</td>
 <td>删除任务</td>
 </tr>
+<tr>
+<td><code>/open/v1/task/move</code></td>
+<td>POST</td>
+<td>移动任务</td>
+</tr>
+<tr>
+<td><code>/open/v1/task/filter</code></td>
+<td>POST</td>
+<td>高级筛选任务</td>
+</tr>
+<tr>
+<td><code>/open/v1/task/completed</code></td>
+<td>POST</td>
+<td>列出已完成任务</td>
+</tr>
+<tr>
+<td><code>/open/v1/project/{id}/task/{id}/comments</code></td>
+<td>GET</td>
+<td>获取任务评论</td>
+</tr>
+<tr>
+<td><code>/open/v1/project/{id}/task/{id}/comment</code></td>
+<td>POST</td>
+<td>添加评论</td>
+</tr>
+<tr>
+<td><code>/open/v1/project/{id}/task/{id}/comment/{cid}</code></td>
+<td>DELETE</td>
+<td>删除评论</td>
+</tr>
 </tbody>
 </table>
 <h3 id="api">API 调用注意事项</h3>
 <ol>
-<li><strong>认证</strong>：所有请求需要在 Header 中携带 <code>Authorization: Bearer {access_token}</code></li>
-<li><strong>Inbox 特殊处理</strong>：收集箱数据不能通过 <code>/project/{id}/data</code> 获取，必须使用 <code>/project/inbox/data</code>。收集箱的 <code>projectId</code> 为虚拟 ID (如 <code>inbox1014302018</code>) ，不能用于其他端点</li>
-<li><strong>reminders 字段</strong>：更新任务时如果包含 <code>reminders</code> 字段，服务端返回 HTTP 500。解决方案是先 GET 获取完整任务，移除 <code>reminders</code> 字段后再 POST 更新</li>
-<li><strong>任务更新是整体替换</strong>：<code>POST /task/{id}</code> 需要传入完整的任务对象，不能只传变更字段</li>
+<li><strong>认证</strong>：所有请求需要在 Header 中携带 <code>Authorization: Bearer {access_token}</code>；</li>
+<li><strong>Inbox 特殊处理</strong>：收集箱数据不能通过 <code>/project/{id}/data</code> 获取，必须使用 <code>/project/inbox/data</code>。收集箱的 <code>projectId</code> 为虚拟 ID (如 <code>inbox1014302018</code>)，不能用于其他端点；</li>
+<li><strong>reminders 字段</strong>：更新任务时如果包含 <code>reminders</code> 字段，服务端返回 HTTP 500。解决方案是先 GET 获取完整任务，移除 <code>reminders</code> 字段后再 POST 更新；</li>
+<li><strong>任务更新是整体替换</strong>：<code>POST /task/{id}</code> 需要传入完整的任务对象，不能只传变更字段。</li>
 </ol>
-<h2 id="_5">数据流</h2>
+<h2 id="_6">数据流</h2>
 <p>调用链：</p>
 <ol>
-<li>用户消息 → 命令处理器 (<code>main.py</code>) </li>
-<li>→ <code>DidaService</code> (<code>service.py</code>) </li>
-<li>→ <code>DidaClient</code> (<code>client.py</code>) </li>
-<li>→ <code>httpx.AsyncClient</code> → Dida365 API</li>
-<li>← 结构化响应返回</li>
-<li>← 格式化字符串返回</li>
-<li>← 返回结果给用户</li>
+<li>用户消息 → 命令处理器 (<code>main.py</code>)；</li>
+<li>→ <code>DidaService</code> (<code>service.py</code>)；</li>
+<li>→ <code>DidaClient</code> (<code>client.py</code>)；</li>
+<li>→ <code>httpx.AsyncClient</code> → Dida365 API；</li>
+<li>← 结构化响应返回；</li>
+<li>← 格式化字符串返回；</li>
+<li>← 返回结果给用户。</li>
 </ol>
 
 

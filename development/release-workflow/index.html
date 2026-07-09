@@ -1154,20 +1154,20 @@
 <p>AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载源码 (ZIP 归档)，而不使用 GitHub Releases 的发布包。这意味着默认分支上的 <strong>所有文件</strong> 都会被包含在下载包中，无论它们是否对插件运行有用。</p>
 <p>与此同时，本项目中存在大量仅在开发阶段需要的文件，包括但不限于：</p>
 <ul>
-<li>文档源码（<code>docs/</code> 目录、<code>mkdocs.yml</code>）</li>
-<li>测试套件（<code>tests/</code> 目录）</li>
-<li>开发依赖声明（<code>requirements-dev.txt</code>、<code>pyproject.toml</code>）</li>
-<li>CI/CD 工作流（<code>.github/</code> 目录）</li>
-<li>仅用于 <code>pytest</code> 包导入的 <code>__init__.py</code></li>
-<li>AI 辅助开发参考（<code>AGENTS.md</code>）</li>
+<li>文档源码 (<code>docs/</code> 目录、<code>mkdocs.yml</code>)；</li>
+<li>测试套件 (<code>tests/</code> 目录)；</li>
+<li>开发依赖声明 (<code>requirements-dev.txt</code>、<code>pyproject.toml</code>)；</li>
+<li>CI/CD 工作流 (<code>.github/</code> 目录)；</li>
+<li>仅用于 <code>pytest</code> 包导入的 <code>__init__.py</code>；</li>
+<li>AI 辅助开发参考 (<code>AGENTS.md</code>)。</li>
 </ul>
-<p>这些文件不应出现在 <code>main</code> 分支的下载包中（因为它们对插件运行无意义），但应当完整出现在 <code>dev</code> 分支的下载包中——协作者需要它们来完成开发工作流。</p>
+<p>这些文件不应出现在 <code>main</code> 分支的下载包中 (因为它们对插件运行无意义)，但应当完整出现在 <code>dev</code> 分支的下载包中——协作者需要它们来完成开发工作流。</p>
 <h2 id="_3">分支策略</h2>
 <p>为解决上述问题，我们采用双分支策略管理代码：</p>
 <p>远程 GitHub 仓库：</p>
 <ul>
-<li><code>main</code>：发布分支（仅包含 13 个运行时必需文件）；</li>
-<li><code>dev</code>：开发分支（包含全部源文件，包括测试、文档等）。</li>
+<li><code>main</code>：发布分支 (仅包含 13 个运行时必需文件)；</li>
+<li><code>dev</code>：开发分支 (包含全部源文件，包括测试、文档等)。</li>
 </ul>
 <p>本地开发环境下，<code>dev</code> 为唯一本地分支，包括：</p>
 <ul>
@@ -1182,11 +1182,11 @@
 </ul>
 <p>之所以如此命名，是因为 AstrBot 的插件下载机制读取的是 GitHub 仓库的默认分支。将 <code>main</code> 设为默认分支，并让它只包含发布文件，可以确保用户下载的永远是干净的插件包。</p>
 <h3 id="_4">发布文件清单</h3>
-<p>以下 13 个文件是插件运行的必要条件，也是 <code>main</code> 分支的全部内容：</p>
+<p>发布文件清单由 <code>release-manifest.json</code> 定义。当前清单包含以下文件/目录：</p>
 <table>
 <thead>
 <tr>
-<th>文件</th>
+<th>文件/目录</th>
 <th>用途</th>
 </tr>
 </thead>
@@ -1204,8 +1204,8 @@
 <td>Dida365 Open API HTTP 客户端</td>
 </tr>
 <tr>
-<td><code>service.py</code></td>
-<td>业务逻辑层</td>
+<td><code>service/</code></td>
+<td>业务逻辑层 (包目录)</td>
 </tr>
 <tr>
 <td><code>models.py</code></td>
@@ -1221,7 +1221,7 @@
 </tr>
 <tr>
 <td><code>_conf_schema.json</code></td>
-<td>插件配置 Schema（WebUI 自动渲染）</td>
+<td>插件配置 Schema (WebUI 自动渲染)</td>
 </tr>
 <tr>
 <td><code>metadata.yaml</code></td>
@@ -1241,10 +1241,13 @@
 </tr>
 <tr>
 <td><code>.gitignore</code></td>
-<td>Git 忽略规则（保持模板原样）</td>
+<td>Git 忽略规则 (保持模板原样)</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>如果需要新增/移除发布文件，修改 <code>release-manifest.json</code> 即可，无需编辑 CI 工作流。</p>
+</blockquote>
 <h2 id="_5">技术实现</h2>
 <h3 id="gitattributes">第一层防护：<code>.gitattributes</code></h3>
 <p><code>dev</code> 分支使用 <code>.gitattributes</code> 排除两项内容：</p>
@@ -1253,29 +1256,29 @@
 </code></pre></div>
 <ul>
 <li><strong><code>.gitattributes</code> 自身</strong>：标准做法，不在下载包中携带导出规则文件。</li>
-<li><strong><code>.env</code></strong>：包含 Dida365 Access Token 等凭据。此文件在 <code>.gitignore</code> 中已有排除，<code>export-ignore</code> 作为双重保险；仅用于集成测试，日常开发和用户运行都不需要。</li>
+<li><strong><code>.env</code></strong>：包含 Dida365 Access Token (仅集成测试使用)。此文件在 <code>.gitignore</code> 中已有排除，<code>export-ignore</code> 作为双重保险。</li>
 </ul>
-<p>其余所有文件（文档源码 <code>docs/</code>、测试套件 <code>tests/</code>、CI 配置 <code>.github/</code> 等）均<strong>保留在下载包中</strong>，以确保协作者下载 <code>dev</code> 分支后可以立即开展完整的开发工作流。</p>
-<p>之所以这样做，是因为 <code>dev</code> 与 <code>main</code> 的设计目标不同：<code>main</code> 面向最终用户（只需最小运行文件），<code>dev</code> 面向协作者（需要完整的开发环境）。</p>
+<p>其余所有文件 (文档源码 <code>docs/</code>、测试套件 <code>tests/</code>、CI 配置 <code>.github/</code> 等) 均<strong>保留在下载包中</strong>，以确保协作者下载 <code>dev</code> 分支后可以立即开展完整的开发工作流。</p>
+<p>之所以这样做，是因为 <code>dev</code> 与 <code>main</code> 的设计目标不同：<code>main</code> 面向最终用户 (只需最小运行文件)，<code>dev</code> 面向协作者 (需要完整的开发环境)。</p>
 <h3 id="github-actions">第二层防护：GitHub Actions 自动同步</h3>
 <p>真正的发布流程由 <code>sync-main-on-tag.yml</code> 工作流自动完成。该工作流在推送到 <code>dev</code> 分支的 <code>v*</code> 标签时触发。</p>
 <p>触发后的执行逻辑：</p>
 <ol>
-<li>检出标签所指向的 <code>dev</code> 分支提交</li>
-<li><code>git checkout --orphan release-temp</code> — 创建一个没有历史的新分支</li>
-<li><code>git add</code> 上述 13 个发布文件 — 仅暂存运行时必需的文件</li>
-<li><code>git commit -m "release: v*"</code> — 提交只包含发布文件的快照</li>
-<li><code>git branch -f main release-temp</code> — 用这个快照替换 <code>main</code> 分支</li>
-<li><code>git push origin main --force</code> — 强制推送到远程</li>
+<li>检出标签所指向的 <code>dev</code> 分支提交；</li>
+<li><code>git checkout --orphan release-temp</code> — 创建一个没有历史的新分支；</li>
+<li>读取 <code>release-manifest.json</code> 获取文件列表，<code>git add</code> 仅暂存运行时必需的文件；</li>
+<li><code>git commit -m "release: v*"</code> — 提交只包含发布文件的快照；</li>
+<li><code>git branch -f main release-temp</code> — 用这个快照替换 <code>main</code> 分支；</li>
+<li><code>git push origin main --force</code> — 强制推送到远程。</li>
 </ol>
 <p>由于使用了 <code>--orphan</code>，<code>main</code> 分支的每次发布都是一个独立的根提交，没有与 <code>dev</code> 共享的历史。这保证了 <code>main</code> 的纯净。</p>
-<p>推送时使用 Personal Access Token（<code>RELEASE_TOKEN</code> Secret）绕过 GitHub 分支保护规则，确保只有 GitHub Actions 可以写入 <code>main</code>。</p>
+<p>推送时使用 Personal Access Token (<code>RELEASE_TOKEN</code> Secret) 绕过 GitHub 分支保护规则，确保只有 GitHub Actions 可以写入 <code>main</code>。</p>
 <h3 id="_6">远程仓库防护</h3>
 <p>为防止意外推送 <code>main</code> 分支，在 GitHub 仓库设置中配置了分支保护规则：</p>
 <ul>
 <li>分支名：<code>main</code>；</li>
 <li>"Restrict who can push to matching branches" — 已启用；</li>
-<li>仅允许 GitHub Actions（通过 PAT）推送。</li>
+<li>仅允许 GitHub Actions (通过 PAT) 推送。</li>
 </ul>
 <p>因此，执行 <code>git push origin main</code> 会被 GitHub 直接拒绝。</p>
 <h2 id="_7">发布流程</h2>
@@ -1287,10 +1290,10 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>add<span class="w"> </span>metadata.yaml
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: bump version to v0.2.0&quot;</span>
 </code></pre></div>
-<p><strong>4. 打标签</strong>：标签名<strong>必须</strong>以 <code>v</code> 开头，这是 GitHub Actions 工作流的触发条件。 </p>
+<p><strong>4. 打标签</strong>：标签名<strong>必须</strong>以 <code>v</code> 开头，这是 GitHub Actions 工作流的触发条件。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>tag<span class="w"> </span>v0.2.0
 </code></pre></div>
-<p><strong>5. 推送标签（触发 GitHub Actions 自动同步到 main）</strong></p>
+<p>**5. 推送标签 (触发 GitHub Actions 自动同步到 main) **</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.2.0
 </code></pre></div>
 <p>推送标签后，GitHub Actions 工作流 <code>sync-main-on-tag.yml</code> 会自动执行，将发布文件同步到 <code>main</code> 分支。</p>
@@ -1305,7 +1308,7 @@
 <h3 id="main">如果本地不小心创建了 <code>main</code> 分支？</h3>
 <p>没有影响。<code>main</code> 仅存在于远程，且本地的 <code>main</code> 分支内容与远程不同。只需删除本地分支：<code>git branch -D main</code>。</p>
 <h3 id="release_token"><code>RELEASE_TOKEN</code> 是什么？</h3>
-<p>是一个 GitHub Fine-grained Personal Access Token，具有对仓库 <code>Contents: Write</code> 权限。它被存储在仓库的 Secrets 中（名称为 <code>RELEASE_TOKEN</code>），供 GitHub Actions 在推送 <code>main</code> 时认证使用。</p>
+<p>是一个 GitHub Fine-grained Personal Access Token，具有对仓库 <code>Contents: Write</code> 权限。它被存储在仓库的 Secrets 中 (名称为 <code>RELEASE_TOKEN</code>)，供 GitHub Actions 在推送 <code>main</code> 时认证使用。</p>
 <h3 id="main_1">为什么不在本地创建 <code>main</code> 分支？</h3>
 <p>避免误推。本地只有 <code>dev</code>，开发者没有机会执行 <code>git push origin main</code>。<code>main</code> 的维护完全交由 GitHub Actions 处理。</p>
 

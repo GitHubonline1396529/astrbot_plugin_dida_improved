@@ -917,15 +917,15 @@
 <h2 id="reminders-500">reminders 字段导致 500 错误</h2>
 <p>通过 API 更新任务时，不要包含 <code>reminders</code> 字段，否则服务端返回 HTTP 500。如需设置提醒，请在滴答清单 App 中手动操作。</p>
 <h2 id="projectid">收集箱任务 projectId</h2>
-<p>收集箱任务的 <code>projectId</code> 为虚拟 ID（如 <code>inbox1014302018</code>），不可用于其他 API 端点。</p>
+<p>收集箱任务的 <code>projectId</code> 为虚拟 ID (如 <code>inbox1014302018</code>)，不可用于其他 API 端点。</p>
 <h2 id="access-token">Access Token 过期</h2>
 <p>如果 <code>/dida_probe</code> 返回认证相关错误，说明 Access Token 可能已过期。请前往 <a href="https://developer.dida365.com">Dida365 Developer</a> 重新获取 Token 并更新插件配置。</p>
 <h2 id="_2">找不到项目或任务</h2>
 <p>确认：</p>
 <ol>
-<li>Access Token 对应的账号下确实有项目/任务</li>
-<li>项目未被归档或删除</li>
-<li>网络环境可以正常访问 <code>api.dida365.com</code></li>
+<li>Access Token 对应的账号下确实有项目/任务。</li>
+<li>项目未被归档或删除。</li>
+<li>网络环境可以正常访问 <code>api.dida365.com</code>。</li>
 </ol>
 
 
