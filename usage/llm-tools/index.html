@@ -1240,6 +1240,7 @@
 <p>还有哪些事情没有做</p>
 </blockquote>
 <p>LLM 会自动调用 <code>list_dida_tasks(filter="unfinished")</code> 返回所有未完成任务列表。</p>
+<p>两个查询均支持传入 <code>limit</code> 参数控制返回数量，默认值为 50，设为 0 则不截断。</p>
 <h3 id="_6">创建任务</h3>
 <blockquote>
 <p>帮我创建一个任务</p>
@@ -1305,7 +1306,8 @@
 <ul>
 <li><code>project_ids</code> — 逗号分隔的项目 ID；</li>
 <li><code>start_date</code> — ISO 格式的开始时间；</li>
-<li><code>end_date</code> — ISO 格式的结束时间。</li>
+<li><code>end_date</code> — ISO 格式的结束时间；</li>
+<li><code>limit</code> — 返回的最大条目数，默认 50，设为 0 则不截断。</li>
 </ul>
 <h3 id="_12">查看任务评论</h3>
 <blockquote>

@@ -1346,6 +1346,13 @@
 <li><strong>Inbox 特殊处理</strong>：收集箱数据不能通过 <code>/project/{id}/data</code> 获取，必须使用 <code>/project/inbox/data</code>。收集箱的 <code>projectId</code> 为虚拟 ID (如 <code>inbox1014302018</code>)，不能用于其他端点；</li>
 <li><strong>reminders 字段</strong>：更新任务时如果包含 <code>reminders</code> 字段，服务端返回 HTTP 500。解决方案是先 GET 获取完整任务，移除 <code>reminders</code> 字段后再 POST 更新；</li>
 <li><strong>任务更新是整体替换</strong>：<code>POST /task/{id}</code> 需要传入完整的任务对象，不能只传变更字段。</li>
+<li><strong><code>completedTime</code> 残留问题</strong>：任务的 <code>completedTime</code> 字段在任务被
+   <strong>完成后再取消完成（重新打开）</strong> 后不会清空，会残留旧的完成时间戳。
+   判断任务是否已完成<strong>必须依据 <code>status</code> 字段</strong>，不能单独依赖
+   <code>completedTime</code>。详见 <code>service/_helpers.is_completed()</code>。</li>
+<li><code>status=0</code> = 未完成（即使 <code>completedTime</code> 非空）</li>
+<li><code>status=1</code> = 已完成（部分端点使用）</li>
+<li><code>status=2</code> = 已完成（Open API 规范标准值）</li>
 </ol>
 <h2 id="_6">数据流</h2>
 <p>调用链：</p>
