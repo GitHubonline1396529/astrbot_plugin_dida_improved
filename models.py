@@ -180,7 +180,8 @@ class DidaTask:
     priority: int | None = None
     due_date: str = ""
     start_date: str = ""
-    completed_time: str = ""
+    completed_time: str = ""  # Completion timestamp; may be stale after reopen.
+    # Use `status` to determine completion, not this.
     is_all_day: bool = False
     time_zone: str = ""
     tags: list[str] = field(default_factory=list)

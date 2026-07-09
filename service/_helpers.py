@@ -24,8 +24,21 @@ from ..time_utils import (
 def is_completed(task: DidaTask) -> bool:
     """Check whether a task has been completed.
 
-    A task is considered completed if it has a ``completed_time`` value or
-    its status code is ``2``.
+    Note:
+        ``status`` is the **only reliable source** for completion state.
+        ``completed_time`` may retain a stale timestamp when a task is
+        **reopened** (uncompleted) -- in that case ``status`` is reset to
+        ``0`` but ``completed_time`` remains non-empty.  Never rely on
+        ``completed_time`` alone.
+
+    Priority:
+    1. If ``status`` is not ``None``: ``status in (1, 2)`` means completed.
+    2. If ``status`` is ``None`` (unlikely): fall back to ``completed_time``.
+
+    Values:
+        - ``status=0`` = not completed
+        - ``status=1`` = completed (used by some endpoints e.g. inbox)
+        - ``status=2`` = completed (standard Open API value)
 
     Args:
         task: The task to check.
@@ -33,9 +46,10 @@ def is_completed(task: DidaTask) -> bool:
     Returns:
         ``True`` if the task is completed, ``False`` otherwise.
     """
-    if task.completed_time:
-        return True
-    return task.status == 2
+    if task.status is not None:
+        return task.status in (1, 2)
+    # Fallback: status is None (unlikely), use completed_time as hint.
+    return bool(task.completed_time)
 
 
 def parse_datetime(

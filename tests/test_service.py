@@ -342,7 +342,10 @@ class TestIsCompleted:
         )
         assert service._is_completed(t) is True
 
-    def test_has_completed_time(self, service, sample_dida_tasks):
+    def test_has_completed_time_but_status_zero(
+        self, service, sample_dida_tasks
+    ):
+        """Task with status=0 and stale completed_time is NOT completed."""
         t = DidaTask(
             id="t",
             project_id="p",
@@ -350,7 +353,7 @@ class TestIsCompleted:
             status=0,
             completed_time="2026-07-03T15:00:00Z",
         )
-        assert service._is_completed(t) is True
+        assert service._is_completed(t) is False
 
     def test_not_completed(self, service, sample_dida_tasks):
         t = DidaTask(
