@@ -227,3 +227,129 @@ class DidaImprovedPlugin(Star):
         return await self._run_service(
             lambda service: service.delete_task(task_id)
         )
+
+    @filter.llm_tool(name="move_dida_task")
+    async def move_dida_task_llm(
+        self,
+        event: AstrMessageEvent,
+        task_id: str,
+        from_project_id: str,
+        to_project_id: str,
+    ):
+        """Move a Dida365 task from one project to another.
+
+        Args:
+            task_id (string): The ID of the task to move.
+            from_project_id (string): The source project ID.
+            to_project_id (string): The destination project ID.
+        """
+        return await self._run_service(
+            lambda service: service.move_task(
+                from_project_id, to_project_id, task_id
+            )
+        )
+
+    @filter.llm_tool(name="get_dida_task_detail")
+    async def get_dida_task_detail_llm(
+        self,
+        event: AstrMessageEvent,
+        project_id: str,
+        task_id: str,
+    ):
+        """Get detailed information for a specific Dida365 task.
+
+        Args:
+            project_id (string): The project ID containing the task.
+            task_id (string): The ID of the task to retrieve.
+        """
+        return await self._run_service(
+            lambda service: service.get_task_by_id(project_id, task_id)
+        )
+
+    @filter.llm_tool(name="list_completed_dida_tasks")
+    async def list_completed_dida_tasks_llm(
+        self,
+        event: AstrMessageEvent,
+        project_ids: str = "",
+        start_date: str = "",
+        end_date: str = "",
+    ):
+        """List completed Dida365 tasks within a time range.
+
+        Args:
+            project_ids (string): Comma-separated project IDs to filter by
+                (optional).
+            start_date (string): Start of time range in ISO format
+                (optional, e.g. "2026-07-01T00:00:00+08:00").
+            end_date (string): End of time range in ISO format
+                (optional, e.g. "2026-07-08T00:00:00+08:00").
+        """
+        pids = (
+            [p.strip() for p in project_ids.split(",") if p.strip()]
+            if project_ids.strip()
+            else None
+        )
+        start = start_date.strip() or None
+        end = end_date.strip() or None
+        return await self._run_service(
+            lambda service: service.list_completed_tasks(
+                project_ids=pids, start_date=start, end_date=end
+            )
+        )
+
+    @filter.llm_tool(name="get_dida_task_comments")
+    async def get_dida_task_comments_llm(
+        self,
+        event: AstrMessageEvent,
+        project_id: str,
+        task_id: str,
+    ):
+        """Get comments for a Dida365 task.
+
+        Args:
+            project_id (string): The project ID containing the task.
+            task_id (string): The ID of the task.
+        """
+        return await self._run_service(
+            lambda service: service.get_task_comments(project_id, task_id)
+        )
+
+    @filter.llm_tool(name="add_dida_task_comment")
+    async def add_dida_task_comment_llm(
+        self,
+        event: AstrMessageEvent,
+        project_id: str,
+        task_id: str,
+        title: str,
+    ):
+        """Add a comment to a Dida365 task.
+
+        Args:
+            project_id (string): The project ID containing the task.
+            task_id (string): The ID of the task.
+            title (string): Comment text.
+        """
+        return await self._run_service(
+            lambda service: service.add_task_comment(project_id, task_id, title)
+        )
+
+    @filter.llm_tool(name="delete_dida_task_comment")
+    async def delete_dida_task_comment_llm(
+        self,
+        event: AstrMessageEvent,
+        project_id: str,
+        task_id: str,
+        comment_id: str,
+    ):
+        """Delete a comment from a Dida365 task.
+
+        Args:
+            project_id (string): The project ID containing the task.
+            task_id (string): The ID of the task.
+            comment_id (string): The ID of the comment to delete.
+        """
+        return await self._run_service(
+            lambda service: service.delete_task_comment(
+                project_id, task_id, comment_id
+            )
+        )

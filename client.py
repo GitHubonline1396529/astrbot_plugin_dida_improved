@@ -12,7 +12,12 @@ from .exceptions import (
     DidaNetworkError,
     DidaNotFoundError,
 )
-from .models import DidaPluginSettings, DidaProject, DidaProjectData, DidaTask
+from .models import (
+    DidaPluginSettings,
+    DidaProject,
+    DidaProjectData,
+    DidaTask,
+)
 
 
 class DidaClient:
@@ -76,7 +81,7 @@ class DidaClient:
         method: str,
         path: str,
         *,
-        json_body: dict[str, Any] | None = None,
+        json_body: dict[str, Any] | list[Any] | None = None,
     ) -> Any:
         """Send an HTTP request to the Dida365 API.
 
@@ -84,6 +89,8 @@ class DidaClient:
             method: HTTP method (GET, POST, DELETE, etc.).
             path: API path (e.g. "/project").
             json_body: Optional JSON body for POST/PUT requests.
+                Accepts dict or list (the latter for batch endpoints
+                like Move Task).
 
         Returns:
             Parsed JSON response.
@@ -271,3 +278,189 @@ class DidaClient:
         )
         if data and not isinstance(data, dict):
             raise DidaApiError("Unexpected task delete response.")
+
+    async def get_task(self, project_id: str, task_id: str) -> DidaTask:
+        """Get a single task by project ID and task ID.
+
+        Args:
+            project_id: The project identifier.
+            task_id: The task identifier.
+
+        Returns:
+            The requested DidaTask.
+        """
+        data = await self._request(
+            "GET", f"/project/{project_id}/task/{task_id}"
+        )
+        if not isinstance(data, dict):
+            raise DidaApiError("Unexpected get-task response.")
+        return DidaTask.from_api(data)
+
+    async def move_task(
+        self,
+        from_project_id: str,
+        to_project_id: str,
+        task_id: str,
+    ) -> dict[str, str]:
+        """Move a task between projects.
+
+        Args:
+            from_project_id: Source project ID.
+            to_project_id: Destination project ID.
+            task_id: The task ID to move.
+
+        Returns:
+            Dict with ``id`` and ``etag`` keys.
+        """
+        payload: list[dict[str, str]] = [
+            {
+                "fromProjectId": from_project_id,
+                "toProjectId": to_project_id,
+                "taskId": task_id,
+            }
+        ]
+        data = await self._request("POST", "/task/move", json_body=payload)
+        if not isinstance(data, list) or not data:
+            raise DidaApiError("Unexpected move-task response.")
+        result = data[0]
+        if not isinstance(result, dict):
+            raise DidaApiError("Unexpected move-task item.")
+        return {
+            "id": str(result.get("id", "") or ""),
+            "etag": str(result.get("etag", "") or ""),
+        }
+
+    async def filter_tasks(
+        self,
+        *,
+        project_ids: list[str] | None = None,
+        start_date: str | None = None,
+        end_date: str | None = None,
+        priority: list[int] | None = None,
+        tag: list[str] | None = None,
+        status: list[int] | None = None,
+    ) -> list[DidaTask]:
+        """Filter tasks with advanced criteria.
+
+        Args:
+            project_ids: Filter by project IDs.
+            start_date: Filter by startDate >= start_date.
+            end_date: Filter by startDate <= end_date.
+            priority: Filter by priority levels.
+            tag: Filter by tags (must contain all).
+            status: Filter by status codes.
+
+        Returns:
+            List of matching DidaTask objects.
+        """
+        payload: dict[str, Any] = {}
+        if project_ids is not None:
+            payload["projectIds"] = project_ids
+        if start_date is not None:
+            payload["startDate"] = start_date
+        if end_date is not None:
+            payload["endDate"] = end_date
+        if priority is not None:
+            payload["priority"] = priority
+        if tag is not None:
+            payload["tag"] = tag
+        if status is not None:
+            payload["status"] = status
+
+        data = await self._request("POST", "/task/filter", json_body=payload)
+        if not isinstance(data, list):
+            raise DidaApiError("Unexpected filter-tasks response.")
+        return [
+            DidaTask.from_api(item) for item in data if isinstance(item, dict)
+        ]
+
+    async def list_completed_tasks(
+        self,
+        *,
+        project_ids: list[str] | None = None,
+        start_date: str | None = None,
+        end_date: str | None = None,
+    ) -> list[DidaTask]:
+        """List completed tasks within a time range.
+
+        Args:
+            project_ids: Filter by project IDs.
+            start_date: Include tasks with completedTime >= start_date.
+            end_date: Include tasks with completedTime <= end_date.
+
+        Returns:
+            List of completed DidaTask objects.
+        """
+        payload: dict[str, Any] = {}
+        if project_ids is not None:
+            payload["projectIds"] = project_ids
+        if start_date is not None:
+            payload["startDate"] = start_date
+        if end_date is not None:
+            payload["endDate"] = end_date
+
+        data = await self._request("POST", "/task/completed", json_body=payload)
+        if not isinstance(data, list):
+            raise DidaApiError("Unexpected completed-tasks response.")
+        return [
+            DidaTask.from_api(item) for item in data if isinstance(item, dict)
+        ]
+
+    async def get_task_comments(
+        self, project_id: str, task_id: str
+    ) -> list[dict]:
+        """Get comments for a task.
+
+        Args:
+            project_id: The project identifier.
+            task_id: The task identifier.
+
+        Returns:
+            List of comment dicts.
+        """
+        data = await self._request(
+            "GET",
+            f"/project/{project_id}/task/{task_id}/comments",
+        )
+        if not isinstance(data, list):
+            raise DidaApiError("Unexpected comments response.")
+        return data
+
+    async def add_task_comment(
+        self, project_id: str, task_id: str, title: str
+    ) -> dict:
+        """Add a comment to a task.
+
+        Args:
+            project_id: The project identifier.
+            task_id: The task identifier.
+            title: Comment text.
+
+        Returns:
+            The created comment dict.
+        """
+        data = await self._request(
+            "POST",
+            f"/project/{project_id}/task/{task_id}/comment",
+            json_body={"title": title},
+        )
+        if not isinstance(data, dict):
+            raise DidaApiError("Unexpected add-comment response.")
+        return data
+
+    async def delete_task_comment(
+        self, project_id: str, task_id: str, comment_id: str
+    ) -> None:
+        """Delete a task comment.
+
+        Args:
+            project_id: The project identifier.
+            task_id: The task identifier.
+            comment_id: The comment identifier.
+        """
+        data = await self._request(
+            "DELETE",
+            f"/project/{project_id}/task/{task_id}/comment/{comment_id}",
+        )
+        if data and not isinstance(data, dict):
+            raise DidaApiError("Unexpected delete-comment response.")

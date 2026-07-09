@@ -64,9 +64,9 @@ class DidaProject:
     """A Dida365 project.
 
     This class represents a project in Dida365, including its ID, name, kind,
-    color, view mode, closed status, group ID, and raw API response data. It
-    provides a class method `from_api` to construct an instance from API
-    response data.
+    color, view mode, closed status, group ID, sort order, permission, and raw
+    API response data. It provides a class method `from_api` to construct an
+    instance from API response data.
     """
 
     id: str
@@ -76,6 +76,8 @@ class DidaProject:
     view_mode: str = ""
     closed: bool = False
     group_id: str = ""
+    sort_order: int = 0
+    permission: str = ""
     raw: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
@@ -97,7 +99,61 @@ class DidaProject:
             view_mode=str(data.get("viewMode", "") or ""),
             closed=bool(data.get("closed", False)),
             group_id=str(data.get("groupId", "") or ""),
+            sort_order=int(data.get("sortOrder", 0) or 0),
+            permission=str(data.get("permission", "") or ""),
             raw=data,
+        )
+
+
+@dataclass(slots=True)
+class ChecklistItem:
+    """A subtask / checklist item within a Dida365 task.
+
+    Checklist items (also known as subtasks) are individual items within a
+    task that can be independently completed. Each item has its own status,
+    sort order, optional start date and timezone, mirroring the structure of
+    the parent task.
+
+    Attributes:
+        id: Unique identifier for the checklist item.
+        title: The text content of the checklist item.
+        status: Completion status (0 = unchecked, 1 = checked).
+        sort_order: Ordering position within the parent task.
+        start_date: Optional ISO-8601 start date.
+        is_all_day: Whether the start date is an all-day event.
+        time_zone: IANA timezone string.
+        completed_time: ISO-8601 timestamp of when the item was completed.
+    """
+
+    id: str
+    title: str
+    status: int = 0
+    sort_order: int = 0
+    start_date: str = ""
+    is_all_day: bool = False
+    time_zone: str = ""
+    completed_time: str = ""
+
+    @classmethod
+    def from_api(cls, data: dict[str, Any]) -> ChecklistItem:
+        """Build a ChecklistItem from API response data.
+
+        Args:
+            data: The API response dict containing checklist item fields
+                (``id``, ``title``, ``status``, etc.).
+
+        Returns:
+            A ``ChecklistItem`` instance.
+        """
+        return cls(
+            id=str(data.get("id", "") or ""),
+            title=str(data.get("title", "") or ""),
+            status=int(data.get("status", 0) or 0),
+            sort_order=int(data.get("sortOrder", 0) or 0),
+            start_date=str(data.get("startDate", "") or ""),
+            is_all_day=bool(data.get("isAllDay", False)),
+            time_zone=str(data.get("timeZone", "") or ""),
+            completed_time=str(data.get("completedTime", "") or ""),
         )
 
 
@@ -111,7 +167,8 @@ class DidaTask:
     2. content, description, status, priority,
     3. due date, start date, completed time,
     4. all-day flag, time zone, tags, sort order,
-    5. raw API response data.
+    5. repeat rule, task kind, subtask items,
+    6. raw API response data.
     """
 
     id: str
@@ -128,6 +185,9 @@ class DidaTask:
     time_zone: str = ""
     tags: list[str] = field(default_factory=list)
     sort_order: int = 0
+    repeat_flag: str = ""
+    kind: str = ""
+    items: list[ChecklistItem] = field(default_factory=list)
     raw: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
@@ -143,6 +203,16 @@ class DidaTask:
         Returns:
             A DidaTask instance.
         """
+        items_raw = data.get("items", [])
+        items = (
+            [
+                ChecklistItem.from_api(i)
+                for i in items_raw
+                if isinstance(i, dict)
+            ]
+            if isinstance(items_raw, list)
+            else []
+        )
         return cls(
             id=str(data.get("id", "") or ""),
             project_id=str(data.get("projectId", "") or ""),
@@ -160,6 +230,9 @@ class DidaTask:
             if isinstance(data.get("tags"), list)
             else [],
             sort_order=int(data.get("sortOrder", 0) or 0),
+            repeat_flag=str(data.get("repeatFlag", "") or ""),
+            kind=str(data.get("kind", "") or ""),
+            items=items,
             raw=data,
         )
 
@@ -169,12 +242,13 @@ class DidaProjectData:
     """Project data with its tasks.
 
     This class represents a Dida365 project along with its associated tasks. It
-    includes the project instance, a list of tasks, and the raw API response
-    data.
+    includes the project instance, a list of tasks, the project columns, and
+    the raw API response data.
     """
 
     project: DidaProject | None
     tasks: list[DidaTask]
+    columns: list[dict] = field(default_factory=list)
     raw: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
@@ -196,7 +270,14 @@ class DidaProjectData:
         )
         tasks_raw = data.get("tasks", [])
         tasks = [DidaTask.from_api(t) for t in tasks_raw if isinstance(t, dict)]
-        return cls(project=project, tasks=tasks, raw=data)
+        columns_raw = data.get("columns", [])
+        columns = [c for c in columns_raw if isinstance(c, dict)]
+        return cls(
+            project=project,
+            tasks=tasks,
+            columns=columns,
+            raw=data,
+        )
 
 
 @dataclass(slots=True)
