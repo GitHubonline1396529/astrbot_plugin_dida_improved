@@ -6,7 +6,7 @@
 
 ## 收集箱任务 projectId
 
-收集箱任务的 `projectId` 为虚拟 ID（如 `inbox1014302018`），不可用于其他 API 端点。
+收集箱任务的 `projectId` 为虚拟 ID (如 `inbox1014302018`)，不可用于其他 API 端点。
 
 ## Access Token 过期
 
@@ -16,6 +16,6 @@
 
 确认：
 
-1. Access Token 对应的账号下确实有项目/任务
-2. 项目未被归档或删除
-3. 网络环境可以正常访问 `api.dida365.com`
+1. Access Token 对应的账号下确实有项目/任务。
+2. 项目未被归档或删除。
+3. 网络环境可以正常访问 `api.dida365.com`。

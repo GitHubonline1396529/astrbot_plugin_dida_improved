@@ -21,9 +21,9 @@
 
 打开 [Dida365 开发者平台](https://developer.dida365.com/manage) 并登录。当然，这需要你提前注册好你的 Dida 365 账号，可以使用邮箱注册。
 
-接下来，点击“创建 App”，填写应用名称 (这里建议您填写 `Astrbot`)。创建完成后你会看到两个关键信息：
+接下来，点击"创建 App"，填写应用名称 (这里建议您填写 `Astrbot`)。创建完成后你会看到两个关键信息：
 
-- **Client ID**;
+- **Client ID**;；
 - **Client Secret**。
 
 接着在应用配置中设置回调地址 (Callback URL)，例如：
@@ -128,8 +128,8 @@ curl -X POST "https://dida365.com/oauth/token" \
 将 `access_token` 字段的值完整复制，填入插件配置的 `access_token` 项中。
 
 !!! danger "安全提醒"
-    - `Client Secret` 和 `access_token` 等同于你的账号密码，不要泄露给他人
-    - `redirect_uri` 必须和后台配置的回调地址完全一致
+    - `Client Secret` 和 `access_token` 等同于你的账号密码，不要泄露给他人。
+    - `redirect_uri` 必须和后台配置的回调地址完全一致。
 
 ### 第 7 步：验证
 
@@ -137,6 +137,6 @@ curl -X POST "https://dida365.com/oauth/token" \
 
 ### Token 有效期与更新
 
-- `access_token` 有效期通常约 **180 天**
-- 本插件不会自动刷新 Token，到期后需要重复上述步骤重新获取并手动更新配置
-- 如果 API 返回 401 或 403 错误，请优先检查 Token 是否已失效
+- `access_token` 有效期通常约 **180 天**；
+- 本插件不会自动刷新 Token，到期后需要重复上述步骤重新获取并手动更新配置；
+- 如果 API 返回 401 或 403 错误，请优先检查 Token 是否已失效。

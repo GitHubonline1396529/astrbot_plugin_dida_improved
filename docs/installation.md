@@ -2,20 +2,20 @@
 
 ## 环境要求
 
-- Python >= 3.11
-- [AstrBot](https://github.com/AstrBotDevs/AstrBot) >= 4.0.0
+- Python >= 3.11；
+- [AstrBot](https://github.com/AstrBotDevs/AstrBot) >= 4.0.0。
 
 ## 安装步骤
 
-### 通过 Git 安装（推荐）
+### 通过 Git 安装 (推荐) 
 
-1. 进入 AstrBot 的插件目录：
+1. 进入 AstrBot 的插件目录；
 
     ```bash
     cd path/to/astrbot/data/plugins
     ```
 
-2. 克隆仓库：
+2. 克隆仓库；
 
     ```bash
     git clone https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved.git
