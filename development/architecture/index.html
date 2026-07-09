@@ -1156,10 +1156,12 @@
 <li><strong>入口层</strong> — <code>main.py</code>：命令处理器和 LLM 工具注册；</li>
 <li><strong>业务逻辑层</strong> — <code>service/</code> 包：查询编排、格式化、错误处理；</li>
 <li><strong>基础设施层</strong> — <code>client.py</code>：Dida365 Open API HTTP 客户端封装；</li>
-<li><strong>支撑模块</strong>；</li>
+<li><strong>支撑模块</strong>；<ul>
 <li><code>models.py</code> — 数据模型；</li>
 <li><code>exceptions.py</code> — 异常层次；</li>
 <li><code>time_utils.py</code> — 时区工具。</li>
+</ul>
+</li>
 </ol>
 <h3 id="_3">各模块职责</h3>
 <ul>
@@ -1197,6 +1199,10 @@
 <div class="admonition warning">
 <p class="admonition-title">方法参数名的潜在冲突</p>
 <p>需要注意的是，LLM 工具的<strong>方法参数名不应与 AstrBot 模块名冲突</strong> (如避免使用 <code>filter</code> 作为参数名，因为它也是 <code>astrbot.api.event</code> 导出的模块名)，否则可能导致注册被静默跳过！</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">docstring 参数类型解析的完整机制</p>
+<p><code>@filter.llm_tool</code> 注册 LLM 工具时，<strong>只从 docstring 的 <code>Args:</code> 段落解析参数类型，完全忽略 Python 函数签名的类型注解</strong>。详细的类型映射表与 SUPPORTED_TYPES、常见踩坑点，以及对应的 AstrBot 源码位置，请参阅<a href="../coding-conventions/#llm-工具注册与参数类型解析">编码规范 → LLM 工具注册与参数类型解析</a>。</p>
 </div>
 <h3 id="6">6. 文档与代码同步策略</h3>
 <p>插件的功能描述在三个层面间传播，任何新增或修改都应保持三者一致：</p>
@@ -1346,13 +1352,12 @@
 <li><strong>Inbox 特殊处理</strong>：收集箱数据不能通过 <code>/project/{id}/data</code> 获取，必须使用 <code>/project/inbox/data</code>。收集箱的 <code>projectId</code> 为虚拟 ID (如 <code>inbox1014302018</code>)，不能用于其他端点；</li>
 <li><strong>reminders 字段</strong>：更新任务时如果包含 <code>reminders</code> 字段，服务端返回 HTTP 500。解决方案是先 GET 获取完整任务，移除 <code>reminders</code> 字段后再 POST 更新；</li>
 <li><strong>任务更新是整体替换</strong>：<code>POST /task/{id}</code> 需要传入完整的任务对象，不能只传变更字段。</li>
-<li><strong><code>completedTime</code> 残留问题</strong>：任务的 <code>completedTime</code> 字段在任务被
-   <strong>完成后再取消完成（重新打开）</strong> 后不会清空，会残留旧的完成时间戳。
-   判断任务是否已完成<strong>必须依据 <code>status</code> 字段</strong>，不能单独依赖
-   <code>completedTime</code>。详见 <code>service/_helpers.is_completed()</code>。</li>
-<li><code>status=0</code> = 未完成（即使 <code>completedTime</code> 非空）</li>
-<li><code>status=1</code> = 已完成（部分端点使用）</li>
-<li><code>status=2</code> = 已完成（Open API 规范标准值）</li>
+<li><strong><code>completedTime</code> 残留问题</strong>：任务的 <code>completedTime</code> 字段在任务被<strong>完成后再取消完成（重新打开）</strong> 后不会清空，会残留旧的完成时间戳。判断任务是否已完成<strong>必须依据 <code>status</code> 字段</strong>，不能单独依赖 <code>completedTime</code>。详见 <code>service/_helpers.is_completed()</code>。<ul>
+<li><code>status=0</code> = 未完成 (即使 <code>completedTime</code> 非空)；</li>
+<li><code>status=1</code> = 已完成 (部分端点使用)；</li>
+<li><code>status=2</code> = 已完成 (Open API 规范标准值)。</li>
+</ul>
+</li>
 </ol>
 <h2 id="_6">数据流</h2>
 <p>调用链：</p>
