@@ -1,5 +1,26 @@
 # 变更日志
 
+## v0.2.0-beta
+
+### 重构
+
+- 将单文件 `service.py` 拆分为 `service/` 包，按业务域划分为 `service.py`、`task_ops.py`、`comments.py`、`formatting.py`、`_helpers.py`，提升可维护性。
+
+### 新增
+
+- 新增 `move_dida_task` LLM 工具：支持将任务移动到指定项目或收集箱；
+- 新增 `filter_dida_tasks` LLM 工具：支持按标题、优先级、标签、项目、日期范围等条件筛选任务；
+- 新增 `list_completed_dida_tasks` LLM 工具：查询指定日期范围内的已完成任务；
+- 新增 `list_dida_task_comments` / `add_dida_task_comment` / `delete_dida_task_comment` LLM 工具：任务评论的完整 CRUD；
+- 在 `DidaService` 中新增对应的业务方法（`move_task()`、`filter_tasks()`、`list_completed_tasks()`、评论相关方法）；
+- 新增 `release-manifest.json`，定义发布文件清单，配合 CI 工作流实现 `main` 分支自动同步；
+- 测试引入 AstrBot 模块桩（`tests/conftest.py`），不再依赖本机 AstrBot 安装目录，测试完全自包含。
+
+### 文档
+
+- 全面整改所有文档：架构说明、API 参考、编码规范、开发/发布工作流、环境搭建、测试指南均同步更新；
+- 用户文档（README、配置说明、LLM 工具用法、安装指南、变更日志）同步至最新功能。
+
 ## v0.1.1-beta
 
 ### 杂项
