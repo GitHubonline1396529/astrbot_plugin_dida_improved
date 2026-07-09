@@ -107,9 +107,9 @@ class DidaImprovedPlugin(Star):
         """Query Dida365 tasks with optional filtering.
 
         Args:
-            task_filter (string): Filter condition. "today" for tasks due today, 
+            task_filter (string): Filter condition. "today" for tasks due today,
                 "unfinished" for all incomplete tasks (default).
-            limit (integer): Maximum number of tasks to return. Use 0 for no 
+            limit (number): Maximum number of tasks to return. Use 0 for no
                 limit. The configured ``display_limit`` is used when this is not
                 set.
         """
@@ -130,13 +130,13 @@ class DidaImprovedPlugin(Star):
 
         Uses the Dida365 API fetch-merge-POST workflow to update any field of a
         task. The ``updates_json`` parameter must be a JSON **object** with
-        camelCase keys matching the Dida365 API field names (e.g. 
+        camelCase keys matching the Dida365 API field names (e.g.
         ``{"title": "New title", "content": "New notes"}``).
 
         Args:
             task_id (string): The ID of the task to update.
             updates_json (string): JSON object of fields to update. Example:
-                {"title": "New title", "content": "New notes"}. Use camelCase 
+                {"title": "New title", "content": "New notes"}. Use camelCase
                 keys matching the Dida365 API.
         """
         if not updates_json.strip():
@@ -176,7 +176,7 @@ class DidaImprovedPlugin(Star):
             priority (string): Priority level: "none" (0), "low" (1), "medium"
                 (3), or "high" (5).
             tags (string): Comma-separated tag names, e.g. "work,urgent".
-            due_date (string): Due date in ISO format, e.g. 
+            due_date (string): Due date in ISO format, e.g.
                 "2026-07-10T18:00:00+08:00".
         """
         priority_map = {
@@ -287,9 +287,9 @@ class DidaImprovedPlugin(Star):
                 (optional).
             start_date (string): Start of time range in ISO format (optional,
                 e.g. "2026-07-01T00:00:00+08:00").
-            end_date (string): End of time range in ISO format (optional, e.g.、
+            end_date (string): End of time range in ISO format (optional, e.g.
                 "2026-07-08T00:00:00+08:00").
-            limit (integer): Maximum number of tasks to return. Use 0 for no 
+            limit (number): Maximum number of tasks to return. Use 0 for no
                 limit. The configured ``display_limit`` is used when this is not
                 set.
         """

@@ -36,6 +36,103 @@
 - 在 `__init__` 中接受 `config: AstrBotConfig` 获取插件配置；
 - 配置通过 `_conf_schema.json` 在 WebUI 中自动渲染。
 
+## LLM 工具注册与参数类型解析
+
+### docstring 是参数 schema 的唯一来源
+
+`@filter.llm_tool()` 装饰器在解析 LLM 工具的参数时，**只读取 docstring 的 `Args:` 段落**，完全忽略 Python 函数签名中的类型注解。
+
+具体的数据流如下：
+
+1. 读取 `awaitable.__doc__` 字符串。
+2. 用第三方库 `docstring_parser.parse()` 解析为结构化 Docstring 对象。
+3. 遍历 `Docstring.params` 列表，提取每个参数的 `arg_name`、`type_name`、`description`。
+4. 通过 `PY_TO_JSON_TYPE` 映射表将提取出的类型名称转为 JSON Schema 类型名。
+5. 校验转换后的类型是否属于 `SUPPORTED_TYPES`。
+6. 组装成 OpenAI 兼容的 JSON Schema 参数描述。
+
+对应 AstrBot 源码位置：`core/astrbot/core/star/register/star_handler.py` 的 `register_llm_tool()` 函数（约 L626–L659）。
+
+### Python 类型注解为何被忽略
+
+装饰器的实现中没有任何调用 `typing.get_type_hints()` 或 `inspect.signature()` 的逻辑。即使你为函数参数写了精确的 Python 类型注解，它们也不会被读取：
+
+```python
+@filter.llm_tool("example")
+async def my_tool(self, count: int, name: str) -> str:
+    """示例工具。
+    Args:
+        count (number): 数量。
+        name (string): 名称。
+    """
+```
+
+AstrBot 仍然只从 docstring 读取 `(number)` 和 `(string)`，`count: int` 和 `name: str` 如同不存在。这意味着 docstring 中的类型标注本质上**独立于函数签名的类型注解**，两者必须分开维护。
+
+### 参数 docstring 缺失或遗漏的后果
+
+- **完全没有 docstring** —— `docstring_parser.parse("")` 返回空 Docstring 对象，`args=[]`，工具注册为无参数函数。LLM 调用时不会传入任何参数。
+- **docstring 只覆盖了部分参数** —— 装饰器不会对比函数签名与 docstring 参数列表。遗漏的参数不会出现在 schema 中，LLM 不会传递该参数的值，运行时可能因缺少必填参数而抛出 `TypeError`。
+
+建议：为 `@llm_tool` 装饰的方法始终完整编写 Google 风格的 docstring，并确保 `Args:` 下的参数列表与实际函数签名一一对应。
+
+### 类型名称映射表 PY_TO_JSON_TYPE
+
+定义于 `core/astrbot/core/provider/func_tool_manager.py`：
+
+```python
+PY_TO_JSON_TYPE = {
+    "str": "string",
+    "int": "number",
+    "float": "number",
+    "bool": "boolean",
+    "dict": "object",
+    "list": "array",
+    "tuple": "array",
+    "set": "array",
+}
+```
+
+映射流程：`type_name = PY_TO_JSON_TYPE.get(type_name, type_name)` —— 若在映射表中找到，则替换为对应的 JSON Schema 类型名；若未找到，则保留原始字符串。随后检查该名称是否属于 `SUPPORTED_TYPES`：
+
+```python
+SUPPORTED_TYPES = ["string", "number", "object", "array", "boolean"]
+```
+
+因此，**表格中的 Python 类型名（`str`/`int`/`float`/`bool`/`dict`/`list`/`tuple`/`set`）和 JSON Schema 原生类型名（`string`/`number`/`boolean`/`object`/`array`）均被支持**。其他名称（如 `integer`、`Map`、自定义类名）则会因不在 `SUPPORTED_TYPES` 中而触发 `ValueError`。
+
+### docstring 中的类型标注写法示例
+
+```text
+Args:
+    name (string): 名称。              # 可行：直接通过 SUPPORTED_TYPES
+    count (number): 数量。              # 可行：直接通过 SUPPORTED_TYPES
+    enabled (boolean): 开关。           # 可行：直接通过 SUPPORTED_TYPES
+    data (object): 数据对象。           # 可行：直接通过 SUPPORTED_TYPES
+    items (array): 项目列表。           # 可行：直接通过 SUPPORTED_TYPES
+    tags (array[string]): 标签。        # 可行：复合类型，items.type = string
+    name (str): 名称。                 # 可行：PY_TO_JSON_TYPE 映射为 string
+    count (int): 数量。                # 可行：PY_TO_JSON_TYPE 映射为 number
+    mapping (dict): 配置字典。           # 可行：PY_TO_JSON_TYPE 映射为 object
+    limit (integer): 上限。            # 不可行：不在 PY_TO_JSON_TYPE 中，integer ∉ SUPPORTED_TYPES
+```
+
+> 注意：`int` 被映射为 `number` 而非 `integer`。OpenAI 的 JSON Schema 规范中实际接受 `integer` 作为单独的 `type`，但 AstrBot 的映射表未包含它。如果你需要让 LLM 明确知道参数应为整数，可在 `description` 中注明限制。
+
+### 验证方法
+
+如需确认 docstring 被正确解析为 function-calling schema，可在插件初始化时临时添加调试打印：
+
+```python
+from astrbot.core.provider.register import llm_tools
+
+for func in llm_tools.func_list:
+    print(f"Tool: {func.name}")
+    print(f"Parameters JSON Schema: {func.args}")
+```
+
+`func.args` 即为最终发送给 LLM 的 JSON Schema 参数描述数组。
+
 ## 构建与验证
 
 ```bash

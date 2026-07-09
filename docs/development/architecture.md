@@ -57,6 +57,9 @@ Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime(
 !!! warning "方法参数名的潜在冲突"
     需要注意的是，LLM 工具的**方法参数名不应与 AstrBot 模块名冲突** (如避免使用 `filter` 作为参数名，因为它也是 `astrbot.api.event` 导出的模块名)，否则可能导致注册被静默跳过！
 
+!!! warning "docstring 参数类型解析的完整机制"
+    `@filter.llm_tool` 注册 LLM 工具时，**只从 docstring 的 `Args:` 段落解析参数类型，完全忽略 Python 函数签名的类型注解**。详细的类型映射表与 SUPPORTED_TYPES、常见踩坑点，以及对应的 AstrBot 源码位置，请参阅[编码规范 → LLM 工具注册与参数类型解析](coding-conventions.md#llm-工具注册与参数类型解析)。
+
 ### 6. 文档与代码同步策略
 
 插件的功能描述在三个层面间传播，任何新增或修改都应保持三者一致：
@@ -105,13 +108,10 @@ Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime(
 2. **Inbox 特殊处理**：收集箱数据不能通过 `/project/{id}/data` 获取，必须使用 `/project/inbox/data`。收集箱的 `projectId` 为虚拟 ID (如 `inbox1014302018`)，不能用于其他端点；
 3. **reminders 字段**：更新任务时如果包含 `reminders` 字段，服务端返回 HTTP 500。解决方案是先 GET 获取完整任务，移除 `reminders` 字段后再 POST 更新；
 4. **任务更新是整体替换**：`POST /task/{id}` 需要传入完整的任务对象，不能只传变更字段。
-5. **`completedTime` 残留问题**：任务的 `completedTime` 字段在任务被
-   **完成后再取消完成（重新打开）** 后不会清空，会残留旧的完成时间戳。
-   判断任务是否已完成**必须依据 `status` 字段**，不能单独依赖
-   `completedTime`。详见 `service/_helpers.is_completed()`。
-   - `status=0` = 未完成（即使 `completedTime` 非空）
-   - `status=1` = 已完成（部分端点使用）
-   - `status=2` = 已完成（Open API 规范标准值）
+5. **`completedTime` 残留问题**：任务的 `completedTime` 字段在任务被**完成后再取消完成（重新打开）** 后不会清空，会残留旧的完成时间戳。判断任务是否已完成**必须依据 `status` 字段**，不能单独依赖 `completedTime`。详见 `service/_helpers.is_completed()`。
+   - `status=0` = 未完成（即使 `completedTime` 非空）；
+   - `status=1` = 已完成（部分端点使用）；
+   - `status=2` = 已完成（Open API 规范标准值）。
 
 ## 数据流
 
