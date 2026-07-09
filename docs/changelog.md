@@ -1,5 +1,18 @@
 # 变更日志
 
+## v0.2.2-beta
+
+### 修复
+
+- 修复 LLM 工具 docstring 中 `limit` 参数类型标注：将 `(integer)` 改为 `(number)`，以兼容 AstrBot 的 docstring 解析器（不支持 `integer` 类型关键字）；
+- 修复 `list_completed_dida_tasks` 的 `end_date` 参数 docstring 中残留的繁体中文标点 `、`；
+- 修复 `docs/configuration.md` 中 Client ID 说明的标点符号。
+
+### 文档
+
+- `docs/development/coding-conventions.md`：大幅补充 LLM 工具编写规范，明确 docstring 参数类型应使用 AstrBot 解析器支持的关键字（如 `string`、`number`、`boolean`），避免使用 Python 原生类型名（如 `integer`、`str`、`int`）；
+- `docs/development/architecture.md`：同步更新 LLM 工具注册与参数类型解析的相关说明。
+
 ## v0.2.1-beta
 
 ### 新增
