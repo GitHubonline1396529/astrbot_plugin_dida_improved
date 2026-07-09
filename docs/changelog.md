@@ -1,5 +1,23 @@
 # 变更日志
 
+## v0.2.1-beta
+
+### 新增
+
+- 新增 `display_limit` 配置项：支持通过插件配置控制列表查询（任务/项目）每次最多返回的条目数，默认为 50。设为 0 则不截断；Agent 仍可通过 LLM 工具参数覆盖该配置；
+- LLM 工具 `list_dida_tasks`、`list_completed_dida_tasks` 新增 `limit` 参数，可动态控制返回条目数；
+- 业务层 `list_projects_summary()`、`list_today_tasks_summary()`、`list_unfinished_tasks_summary()`、`filter_tasks()`、`list_completed_tasks()` 方法均接入 `display_limit` 配置，硬编码截断值（10/20/30）全部移除。
+
+### 修复
+
+- 修复 `is_completed()` 完成状态检测逻辑：`status` 字段作为首要判定依据（`status in (1, 2)` 视为已完成），不再单独依赖 `completed_time`。当任务被**重新打开**（取消完成）时 `status` 重置为 `0`，但 `completed_time` 可能残留旧值，旧逻辑会误判为已完成。
+
+### 文档
+
+- `docs/configuration.md`：新增 `display_limit` 配置说明；
+- `docs/usage/llm-tools.md`：同步更新 `list_dida_tasks` 和 `list_completed_dida_tasks` 的 `limit` 参数；
+- `docs/development/architecture.md`：补充关于 `completedTime` 字段与任务状态的说明。
+
 ## v0.2.0-beta
 
 ### 重构
