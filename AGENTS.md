@@ -13,7 +13,7 @@ astrbot_plugin_dida_improved/
 ├── logo.png              # Plugin icon
 ├── main.py               # Plugin entry: command handlers + LLM tool registration
 ├── client.py             # Dida365 Open API HTTP client
-├── service.py            # Business logic layer
+├── service/              # Business logic layer (package)
 ├── models.py             # Data models (DidaTask, DidaProject, DidaPluginSettings)
 ├── exceptions.py         # Custom exception hierarchy
 ├── time_utils.py         # Timezone-aware datetime utilities
@@ -48,7 +48,7 @@ astrbot_plugin_dida_improved/
 | Setup & environment | `docs/development/setup.md` |
 | Testing guide | `docs/development/testing.md` |
 | User commands | `docs/usage/commands.md` |
-| LLM tools (6 tools) | `docs/usage/llm-tools.md` |
+| LLM tools (12 tools) | `docs/usage/llm-tools.md` |
 
 ## External references
 
@@ -69,7 +69,7 @@ astrbot_plugin_dida_improved/
 
 ```bash
 ruff format . && ruff check .   # Format + lint
-pytest -v                        # Unit tests (requires ASTRBOT_CORE_PATH in .env)
+pytest -v                        # Unit tests (no AstrBot runtime needed)
 mkdocs build                     # Build docs to site/
 mkdocs serve                     # Preview at http://localhost:8000
 ```
@@ -80,7 +80,7 @@ See `docs/development/docs-workflow.md` and `docs/development/release-workflow.m
 
 ## Architecture & key patterns
 
-**3-layer architecture:** `main.py` (entry) → `service.py` (business logic) → `client.py` (HTTP).  
+**3-layer architecture:** `main.py` (entry) → `service/` (business logic) → `client.py` (HTTP).  
 See `docs/development/architecture.md` for full design decisions, data flow, and API details.
 
 **Key design decisions (summary):**

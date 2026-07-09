@@ -5,9 +5,9 @@
 插件采用三层架构设计：
 
 1. **入口层** — `main.py`：命令处理器和 LLM 工具注册；
-1. **业务逻辑层** — `service.py`：查询编排、格式化、错误处理；
+1. **业务逻辑层** — `service/` 包：查询编排、格式化、错误处理；
 1. **基础设施层** — `client.py`：Dida365 Open API HTTP 客户端封装；
-1. **支撑模块**
+1. **支撑模块**；
    - `models.py` — 数据模型；
    - `exceptions.py` — 异常层次；
    - `time_utils.py` — 时区工具。
@@ -16,7 +16,12 @@
 
 - **`main.py`** — 插件入口，继承 `Star` 类。注册 AstrBot 命令处理器和 LLM Function Tool。负责构建配置对象和依赖注入。
 - **`client.py`** — `DidaClient` 类封装了所有 Dida365 Open API 的 HTTP 调用。使用 `httpx.AsyncClient` 实现异步请求。
-- **`service.py`** — `DidaService` 类包含所有业务逻辑：任务收集、过滤、排序、格式化、任务更新（`update_task_details` 封装了 fetch-merge-POST 完整流程），以及错误消息的友好化处理。
+- **`service/` 包** — 业务逻辑层，按业务域拆分为子模块；
+    - `service.py` — `DidaService` 核心类：构造、查询编排、公共 API 入口；
+    - `task_ops.py` — 任务操作：创建、更新、完成、删除、移动、筛选、列出已完成；
+    - `formatting.py` — 输出格式化 (纯函数)；
+    - `comments.py` — 任务评论操作；
+    - `_helpers.py` — 内部辅助函数 (时区处理、排序、状态判断)。
 - **`models.py`** — 数据模型定义，使用 `dataclass(slots=True)`。
 - **`exceptions.py`** — 自定义异常层次，所有异常继承自 `DidaError`。
 - **`time_utils.py`** — 时区感知的日期时间工具函数。
@@ -37,22 +42,20 @@ Dida365 API 的收集箱 (Inbox) 是一个虚拟项目，不能通过 `/project/
 
 Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime()` 函数实现了：
 
-- 对带时区信息的时间戳进行正确的时区转换
-- 对不带时区的时间戳按配置的时区进行假设
-- 最终统一转换为目标时区
+- 对带时区信息的时间戳进行正确的时区转换；
+- 对不带时区的时间戳按配置的时区进行假设；
+- 最终统一转换为目标时区；
 
 ### 4. 错误处理
 
-所有 Dida365 API 错误通过 `DidaClient._request()` 方法集中处理，转换为特定的异常类型 (`DidaAuthenticationError`、`DidaNotFoundError`、`DidaApiError`、`DidaNetworkError`) 。`DidaService.explain_error()` 将这些异常转换为用户友好的中文消息。
+所有 Dida365 API 错误通过 `DidaClient._request()` 方法集中处理，转换为特定的异常类型 (`DidaAuthenticationError`、`DidaNotFoundError`、`DidaApiError`、`DidaNetworkError`)。`DidaService.explain_error()` 将这些异常转换为用户友好的中文消息。
 
 ### 5. LLM Function Tool 注册
 
-通过 `@filter.llm_tool(name=...)` 装饰器在类定义阶段注册 LLM 工具。装饰器解析方法的 Google 风格
-docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-calling schema。注册后的工具会加入全局
-`llm_tools.func_list`，由 `PluginManager.load()` 在插件实例化后绑定 handler 并激活。
+通过 `@filter.llm_tool(name=...)` 装饰器在类定义阶段注册 LLM 工具。装饰器解析方法的 Google 风格 docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-calling schema。注册后的工具会加入全局 `llm_tools.func_list`，由 `PluginManager.load()` 在插件实例化后绑定 handler 并激活。
 
-需要注意的是，LLM 工具的**方法参数名不应与 AstrBot 模块名冲突**（如避免使用 `filter` 作为参数名，
-因为它也是 `astrbot.api.event` 导出的模块名），否则可能导致注册被静默跳过。
+!!! warning "方法参数名的潜在冲突"
+    需要注意的是，LLM 工具的**方法参数名不应与 AstrBot 模块名冲突** (如避免使用 `filter` 作为参数名，因为它也是 `astrbot.api.event` 导出的模块名)，否则可能导致注册被静默跳过！
 
 ### 6. 文档与代码同步策略
 
@@ -67,39 +70,50 @@ docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-call
 | 序号 | 文件 | 需确认的内容 |
 |------|------|-------------|
 | 1 | `client.py` | HTTP 方法已存在；若否，先在此层添加 |
-| 2 | `service.py` | 业务编排方法已实现 |
+| 2 | `service/service.py` 或 `service/task_ops.py` / `service/comments.py` | 业务编排方法已实现 (视归属域而定)  |
 | 3 | `main.py` | `@filter.llm_tool` 装饰器已添加，参数名不与 AstrBot 模块冲突 |
 | 4 | `docs/usage/llm-tools.md` | 工具说明、参数描述、使用示例已更新 |
 | 5 | `README.md` | LLM 工具表格已同步 |
 | 6 | `tests/test_main.py` | 新增工具的 return 行为有测试覆盖 |
+| 7 | `release-manifest.json` | 若新增文件，需确认是否应加入发布清单 |
 
 ## Dida365 API 技术细节
+
+### 官方文档罗列的所有端口
 
 | 端点 | 方法 | 说明 |
 |------|------|------|
 | `/open/v1/project` | GET | 获取所有项目 |
+| `/open/v1/project/{id}` | GET | 按 ID 获取单个项目 |
 | `/open/v1/project/{id}/data` | GET | 获取项目内所有任务 |
-| `/open/v1/project/inbox/data` | GET | 获取收集箱任务 (独立端点)  |
+| `/open/v1/project/inbox/data` | GET | 获取收集箱任务 (独立端点) |
 | `/open/v1/task` | POST | 创建任务 |
-| `/open/v1/task/{id}` | POST | 更新任务 (需 POST 完整对象)  |
+| `/open/v1/task/{id}` | POST | 更新任务 (需 POST 完整对象) |
+| `/open/v1/project/{id}/task/{id}` | GET | 获取单个任务 |
 | `/open/v1/project/{id}/task/{id}/complete` | POST | 完成任务 |
 | `/open/v1/project/{id}/task/{id}` | DELETE | 删除任务 |
+| `/open/v1/task/move` | POST | 移动任务 |
+| `/open/v1/task/filter` | POST | 高级筛选任务 |
+| `/open/v1/task/completed` | POST | 列出已完成任务 |
+| `/open/v1/project/{id}/task/{id}/comments` | GET | 获取任务评论 |
+| `/open/v1/project/{id}/task/{id}/comment` | POST | 添加评论 |
+| `/open/v1/project/{id}/task/{id}/comment/{cid}` | DELETE | 删除评论 |
 
 ### API 调用注意事项
 
-1. **认证**：所有请求需要在 Header 中携带 `Authorization: Bearer {access_token}`
-2. **Inbox 特殊处理**：收集箱数据不能通过 `/project/{id}/data` 获取，必须使用 `/project/inbox/data`。收集箱的 `projectId` 为虚拟 ID (如 `inbox1014302018`) ，不能用于其他端点
-3. **reminders 字段**：更新任务时如果包含 `reminders` 字段，服务端返回 HTTP 500。解决方案是先 GET 获取完整任务，移除 `reminders` 字段后再 POST 更新
-4. **任务更新是整体替换**：`POST /task/{id}` 需要传入完整的任务对象，不能只传变更字段
+1. **认证**：所有请求需要在 Header 中携带 `Authorization: Bearer {access_token}`；
+2. **Inbox 特殊处理**：收集箱数据不能通过 `/project/{id}/data` 获取，必须使用 `/project/inbox/data`。收集箱的 `projectId` 为虚拟 ID (如 `inbox1014302018`)，不能用于其他端点；
+3. **reminders 字段**：更新任务时如果包含 `reminders` 字段，服务端返回 HTTP 500。解决方案是先 GET 获取完整任务，移除 `reminders` 字段后再 POST 更新；
+4. **任务更新是整体替换**：`POST /task/{id}` 需要传入完整的任务对象，不能只传变更字段。
 
 ## 数据流
 
 调用链：
 
-1. 用户消息 → 命令处理器 (`main.py`) 
-2. → `DidaService` (`service.py`) 
-3. → `DidaClient` (`client.py`) 
-4. → `httpx.AsyncClient` → Dida365 API
-5. ← 结构化响应返回
-6. ← 格式化字符串返回
-7. ← 返回结果给用户
+1. 用户消息 → 命令处理器 (`main.py`)；
+2. → `DidaService` (`service.py`)；
+3. → `DidaClient` (`client.py`)；
+4. → `httpx.AsyncClient` → Dida365 API；
+5. ← 结构化响应返回；
+6. ← 格式化字符串返回；
+7. ← 返回结果给用户。

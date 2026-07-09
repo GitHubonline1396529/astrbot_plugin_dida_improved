@@ -6,14 +6,14 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 与此同时，本项目中存在大量仅在开发阶段需要的文件，包括但不限于：
 
-- 文档源码（`docs/` 目录、`mkdocs.yml`）
-- 测试套件（`tests/` 目录）
-- 开发依赖声明（`requirements-dev.txt`、`pyproject.toml`）
-- CI/CD 工作流（`.github/` 目录）
-- 仅用于 `pytest` 包导入的 `__init__.py`
-- AI 辅助开发参考（`AGENTS.md`）
+- 文档源码 (`docs/` 目录、`mkdocs.yml`)；
+- 测试套件 (`tests/` 目录)；
+- 开发依赖声明 (`requirements-dev.txt`、`pyproject.toml`)；
+- CI/CD 工作流 (`.github/` 目录)；
+- 仅用于 `pytest` 包导入的 `__init__.py`；
+- AI 辅助开发参考 (`AGENTS.md`)。
 
-这些文件不应出现在 `main` 分支的下载包中（因为它们对插件运行无意义），但应当完整出现在 `dev` 分支的下载包中——协作者需要它们来完成开发工作流。
+这些文件不应出现在 `main` 分支的下载包中 (因为它们对插件运行无意义)，但应当完整出现在 `dev` 分支的下载包中——协作者需要它们来完成开发工作流。
 
 ## 分支策略
 
@@ -21,8 +21,8 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 远程 GitHub 仓库：
 
-- `main`：发布分支（仅包含 13 个运行时必需文件）；
-- `dev`：开发分支（包含全部源文件，包括测试、文档等）。
+- `main`：发布分支 (仅包含 13 个运行时必需文件)；
+- `dev`：开发分支 (包含全部源文件，包括测试、文档等)。
 
 本地开发环境下，`dev` 为唯一本地分支，包括：
 
@@ -39,23 +39,25 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 ### 发布文件清单
 
-以下 13 个文件是插件运行的必要条件，也是 `main` 分支的全部内容：
+发布文件清单由 `release-manifest.json` 定义。当前清单包含以下文件/目录：
 
-| 文件 | 用途 |
-|------|------|
+| 文件/目录 | 用途 |
+|-----------|------|
 | `logo.png` | 插件入口图标 |
 | `main.py` | 插件入口：命令处理器和 LLM 工具注册 |
 | `client.py` | Dida365 Open API HTTP 客户端 |
-| `service.py` | 业务逻辑层 |
+| `service/` | 业务逻辑层 (包目录)  |
 | `models.py` | 数据模型 |
 | `exceptions.py` | 自定义异常层次 |
 | `time_utils.py` | 时区工具 |
-| `_conf_schema.json` | 插件配置 Schema（WebUI 自动渲染） |
+| `_conf_schema.json` | 插件配置 Schema (WebUI 自动渲染) |
 | `metadata.yaml` | 插件元数据 |
 | `requirements.txt` | 运行时依赖 |
 | `README.md` | 使用说明 |
 | `LICENSE` | AGPL v3 许可证 |
-| `.gitignore` | Git 忽略规则（保持模板原样） |
+| `.gitignore` | Git 忽略规则 (保持模板原样)  |
+
+> 如果需要新增/移除发布文件，修改 `release-manifest.json` 即可，无需编辑 CI 工作流。
 
 ## 技术实现
 
@@ -69,11 +71,11 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 ```
 
 - **`.gitattributes` 自身**：标准做法，不在下载包中携带导出规则文件。
-- **`.env`**：包含 Dida365 Access Token 等凭据。此文件在 `.gitignore` 中已有排除，`export-ignore` 作为双重保险；仅用于集成测试，日常开发和用户运行都不需要。
+- **`.env`**：包含 Dida365 Access Token (仅集成测试使用)。此文件在 `.gitignore` 中已有排除，`export-ignore` 作为双重保险。
 
-其余所有文件（文档源码 `docs/`、测试套件 `tests/`、CI 配置 `.github/` 等）均**保留在下载包中**，以确保协作者下载 `dev` 分支后可以立即开展完整的开发工作流。
+其余所有文件 (文档源码 `docs/`、测试套件 `tests/`、CI 配置 `.github/` 等) 均**保留在下载包中**，以确保协作者下载 `dev` 分支后可以立即开展完整的开发工作流。
 
-之所以这样做，是因为 `dev` 与 `main` 的设计目标不同：`main` 面向最终用户（只需最小运行文件），`dev` 面向协作者（需要完整的开发环境）。
+之所以这样做，是因为 `dev` 与 `main` 的设计目标不同：`main` 面向最终用户 (只需最小运行文件)，`dev` 面向协作者 (需要完整的开发环境)。
 
 ### 第二层防护：GitHub Actions 自动同步
 
@@ -81,16 +83,16 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 触发后的执行逻辑：
 
-1. 检出标签所指向的 `dev` 分支提交
-2. `git checkout --orphan release-temp` — 创建一个没有历史的新分支
-3. `git add` 上述 13 个发布文件 — 仅暂存运行时必需的文件
-4. `git commit -m "release: v*"` — 提交只包含发布文件的快照
-5. `git branch -f main release-temp` — 用这个快照替换 `main` 分支
-6. `git push origin main --force` — 强制推送到远程
+1. 检出标签所指向的 `dev` 分支提交；
+2. `git checkout --orphan release-temp` — 创建一个没有历史的新分支；
+3. 读取 `release-manifest.json` 获取文件列表，`git add` 仅暂存运行时必需的文件；
+4. `git commit -m "release: v*"` — 提交只包含发布文件的快照；
+5. `git branch -f main release-temp` — 用这个快照替换 `main` 分支；
+6. `git push origin main --force` — 强制推送到远程。
 
 由于使用了 `--orphan`，`main` 分支的每次发布都是一个独立的根提交，没有与 `dev` 共享的历史。这保证了 `main` 的纯净。
 
-推送时使用 Personal Access Token（`RELEASE_TOKEN` Secret）绕过 GitHub 分支保护规则，确保只有 GitHub Actions 可以写入 `main`。
+推送时使用 Personal Access Token (`RELEASE_TOKEN` Secret) 绕过 GitHub 分支保护规则，确保只有 GitHub Actions 可以写入 `main`。
 
 ### 远程仓库防护
 
@@ -98,7 +100,7 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 - 分支名：`main`；
 - "Restrict who can push to matching branches" — 已启用；
-- 仅允许 GitHub Actions（通过 PAT）推送。
+- 仅允许 GitHub Actions (通过 PAT) 推送。
 
 因此，执行 `git push origin main` 会被 GitHub 直接拒绝。
 
@@ -119,13 +121,13 @@ git add metadata.yaml
 git commit -m "chore: bump version to v0.2.0"
 ```
 
-**4. 打标签**：标签名**必须**以 `v` 开头，这是 GitHub Actions 工作流的触发条件。 
+**4. 打标签**：标签名**必须**以 `v` 开头，这是 GitHub Actions 工作流的触发条件。
 
 ```bash
 git tag v0.2.0
 ```
 
-**5. 推送标签（触发 GitHub Actions 自动同步到 main）**
+**5. 推送标签 (触发 GitHub Actions 自动同步到 main) **
 
 ```bash
 git push origin v0.2.0
@@ -155,7 +157,7 @@ GitHub 的分支保护规则会直接拒绝推送：`remote: error: GH006: Prote
 
 ### `RELEASE_TOKEN` 是什么？
 
-是一个 GitHub Fine-grained Personal Access Token，具有对仓库 `Contents: Write` 权限。它被存储在仓库的 Secrets 中（名称为 `RELEASE_TOKEN`），供 GitHub Actions 在推送 `main` 时认证使用。
+是一个 GitHub Fine-grained Personal Access Token，具有对仓库 `Contents: Write` 权限。它被存储在仓库的 Secrets 中 (名称为 `RELEASE_TOKEN`)，供 GitHub Actions 在推送 `main` 时认证使用。
 
 ### 为什么不在本地创建 `main` 分支？
 
