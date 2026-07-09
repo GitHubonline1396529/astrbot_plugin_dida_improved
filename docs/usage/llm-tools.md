@@ -45,6 +45,8 @@ LLM 会自动调用 `list_dida_tasks(filter="today")` 返回今日到期任务�
 
 LLM 会自动调用 `list_dida_tasks(filter="unfinished")` 返回所有未完成任务列表。
 
+两个查询均支持传入 `limit` 参数控制返回数量，默认值为 50，设为 0 则不截断。
+
 ### 创建任务
 
 > 帮我创建一个任务
@@ -119,7 +121,8 @@ LLM 会自动调用 `list_completed_dida_tasks` 工具。传入参数 (可选)�
 
 - `project_ids` — 逗号分隔的项目 ID；
 - `start_date` — ISO 格式的开始时间；
-- `end_date` — ISO 格式的结束时间。
+- `end_date` — ISO 格式的结束时间；
+- `limit` — 返回的最大条目数，默认 50，设为 0 则不截断。
 
 ### 查看任务评论
 

@@ -11,6 +11,7 @@
 | `default_project` | string | (空) | 创建任务时的兜底项目 |
 | `timezone` | string | `Asia/Shanghai` | 插件时区 |
 | `request_timeout_seconds` | int | `15` | API 请求超时秒数 |
+| `display_limit` | int | `50` | 列表每次最多显示的条目数，设为 0 则不截断 |
 
 ## 获取 Access Token
 
