@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-import os
+import logging
 import sys
+import types
+from enum import Enum
 from pathlib import Path
 
 import pytest
@@ -12,26 +14,88 @@ load_dotenv()
 _project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_project_root.parent))
 
-# Add AstrBot core to path so the plugin can import astrbot.api.*
-# The path is set via the ASTRBOT_CORE_PATH environment variable.
-# Create a .env file in the project root (see .env.example) with:
-#   ASTRBOT_CORE_PATH=/path/to/AstrBot/core
-_astrbot_core_env = os.environ.get("ASTRBOT_CORE_PATH")
-if _astrbot_core_env:
-    _astrbot_core = Path(_astrbot_core_env)
-    if not _astrbot_core.exists():
-        raise RuntimeError(
-            f"ASTRBOT_CORE_PATH={_astrbot_core_env} does not exist. "
-            "Please check your .env file."
-        )
-    sys.path.insert(0, str(_astrbot_core))
-else:
-    raise RuntimeError(
-        "ASTRBOT_CORE_PATH is not set. "
-        "Create a .env file in the project root with:\n"
-        "    ASTRBOT_CORE_PATH=/path/to/AstrBot/core\n"
-        "See .env.example for a template."
-    )
+
+def _install_astrbot_stubs() -> None:
+    """Install minimal AstrBot module stubs for testing.
+
+    Covers the imports used by the plugin:
+    - astrbot.api (AstrBotConfig, logger)
+    - astrbot.api.event (AstrMessageEvent, filter)
+    - astrbot.api.star (Context, Star, register)
+    """
+
+    def _identity_decorator(*args, **kwargs):
+        return lambda func: func
+
+    # --- astrbot ---
+    astrbot = types.ModuleType("astrbot")
+    astrbot.__path__ = []
+
+    # --- astrbot.api ---
+    api = types.ModuleType("astrbot.api")
+
+    logger = logging.getLogger("astrbot-plugin-test")
+
+    class AstrBotConfig:
+        def __init__(self, data: dict | None = None) -> None:
+            self._data = data or {}
+
+        def get(self, key: str, default=None):
+            return self._data.get(key, default)
+
+    api.logger = logger
+    api.AstrBotConfig = AstrBotConfig
+
+    # --- astrbot.api.event ---
+    event = types.ModuleType("astrbot.api.event")
+
+    class AstrMessageEvent:
+        def plain_result(self, message):
+            return message
+
+    event.AstrMessageEvent = AstrMessageEvent
+
+    # --- astrbot.api.event.filter ---
+    event_filter = types.ModuleType("astrbot.api.event.filter")
+
+    class PermissionType(Enum):
+        ADMIN = "admin"
+
+    event_filter.PermissionType = PermissionType
+    event_filter.permission_type = _identity_decorator
+    event_filter.command = _identity_decorator
+    event_filter.llm_tool = _identity_decorator
+
+    event.filter = event_filter
+
+    # --- astrbot.api.star ---
+    star = types.ModuleType("astrbot.api.star")
+
+    class Context:
+        def get_config(self):
+            return {}
+
+    class Star:
+        def __init__(self, context=None, config=None):
+            self.context = context
+            self.config = config
+
+    def register(*args, **kwargs):
+        return lambda cls: cls
+
+    star.Context = Context
+    star.Star = Star
+    star.register = register
+
+    # Register all modules in sys.modules
+    sys.modules["astrbot"] = astrbot
+    sys.modules["astrbot.api"] = api
+    sys.modules["astrbot.api.event"] = event
+    sys.modules["astrbot.api.event.filter"] = event_filter
+    sys.modules["astrbot.api.star"] = star
+
+
+_install_astrbot_stubs()
 
 from astrbot_plugin_dida_improved.models import (  # noqa: E402
     DidaPluginSettings,
