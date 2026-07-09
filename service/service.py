@@ -74,40 +74,55 @@ class DidaService:
             f"- Sample projects: {names}{suffix}"
         )
 
-    async def list_projects_summary(self) -> str:
+    async def list_projects_summary(self, limit: int | None = None) -> str:
         """List all Dida365 projects as a formatted summary string.
 
+        Args:
+            limit: Maximum number of projects to show. Uses
+                ``display_limit`` from settings when not set. Use 0
+                for no limit.
+
         Returns:
-            Multi-line string with project names and IDs (up to 10 projects
-            plus the virtual inbox entry).
+            Multi-line string with project names and IDs.
         """
         projects = await self.client.list_projects()
         if not projects:
             return "No Dida365 projects found."
+        _limit = limit if limit is not None else self.settings.display_limit
+        if _limit <= 0 or _limit >= len(projects):
+            _limit = len(projects)
         lines = [f"Dida365 projects: {len(projects)}"]
-        for p in projects[:10]:
+        for p in projects[:_limit]:
             lines.append(f"- {p.name or '(unnamed)'} [{p.id}]")
-        if len(projects) > 10:
+        if len(projects) > _limit:
             lines.append("- ...")
         lines.append(f"- {_INBOX_PROJECT_NAME} [{_INBOX_PROJECT_ID}]")
         return "\n".join(lines)
 
-    async def list_today_tasks_summary(self) -> str:
+    async def list_today_tasks_summary(self, limit: int | None = None) -> str:
         """List tasks due today as a formatted summary string.
 
+        Args:
+            limit: Maximum number of tasks to show. Uses
+                ``display_limit`` from settings when not set. Use 0
+                for no limit.
+
         Returns:
-            Multi-line string with due-today task details (up to 20 items)
-            or a "no tasks" message.
+            Multi-line string with due-today task details or a
+            "no tasks" message.
         """
         today = self._today()
         items = await self.list_today_tasks(today=today)
         if not items:
             return f"No tasks due today ({today.isoformat()})."
+        _limit = limit if limit is not None else self.settings.display_limit
+        if _limit <= 0 or _limit >= len(items):
+            _limit = len(items)
         lines = [f"Tasks due today ({today.isoformat()}): {len(items)}"]
-        for item in items[:20]:
+        for item in items[:_limit]:
             lines.append(self._format_single_task(item))
-        if len(items) > 20:
-            lines.append(f"... and {len(items) - 20} more")
+        if len(items) > _limit:
+            lines.append(f"... and {len(items) - _limit} more")
         return "\n".join(lines)
 
     async def list_today_tasks(
@@ -132,12 +147,19 @@ class DidaService:
             and not _helpers.is_completed(item.task)
         ]
 
-    async def list_unfinished_tasks_summary(self) -> str:
+    async def list_unfinished_tasks_summary(
+        self, limit: int | None = None
+    ) -> str:
         """List all unfinished tasks as a formatted summary string.
+
+        Args:
+            limit: Maximum number of tasks to show. Uses
+                ``display_limit`` from settings when not set. Use 0
+                for no limit.
 
         Returns:
             Multi-line string with unfinished task count, overdue count,
-            and details (up to 30 items) or a "no tasks" message.
+            and task details or a "no tasks" message.
         """
         items = await self.list_unfinished_tasks()
         if not items:
@@ -147,11 +169,14 @@ class DidaService:
             for item in items
             if _helpers.is_overdue(item.task, timezone=self.settings.timezone)
         )
+        _limit = limit if limit is not None else self.settings.display_limit
+        if _limit <= 0 or _limit >= len(items):
+            _limit = len(items)
         lines = [
             f"Unfinished tasks: {len(items)}",
             f"- Overdue: {overdue_count}",
         ]
-        for item in items[:30]:
+        for item in items[:_limit]:
             lines.append(
                 formatting.format_single_task(
                     item,
@@ -159,8 +184,8 @@ class DidaService:
                     include_overdue=True,
                 )
             )
-        if len(items) > 30:
-            lines.append(f"... and {len(items) - 30} more")
+        if len(items) > _limit:
+            lines.append(f"... and {len(items) - _limit} more")
         return "\n".join(lines)
 
     async def list_unfinished_tasks(
@@ -581,10 +606,9 @@ class DidaService:
         priority: list[int] | None = None,
         tag: list[str] | None = None,
         status: list[int] | None = None,
+        limit: int | None = None,
     ) -> str:
         """Query tasks with optional filters.
-
-        Results are truncated to 20 items in the output string.
 
         Args:
             project_ids: Only include tasks from these project IDs.
@@ -593,9 +617,12 @@ class DidaService:
             priority: Only include tasks with these priority values.
             tag: Only include tasks matching any of these tags.
             status: Only include tasks with these status codes.
+            limit: Maximum number of tasks to show. Uses
+                ``display_limit`` from settings when not set. Use 0
+                for no limit.
 
         Returns:
-            Formatted result string (up to 20 tasks).
+            Formatted result string.
         """
         tasks = await task_ops.filter_tasks(
             self.client,
@@ -608,11 +635,14 @@ class DidaService:
         )
         if not tasks:
             return "No tasks match the filter criteria."
+        _limit = limit if limit is not None else self.settings.display_limit
+        if _limit <= 0 or _limit >= len(tasks):
+            _limit = len(tasks)
         lines = [f"Matching tasks: {len(tasks)}"]
-        for t in tasks[:20]:
+        for t in tasks[:_limit]:
             lines.append(f"- [{t.id}] {t.title}")
-        if len(tasks) > 20:
-            lines.append(f"... and {len(tasks) - 20} more")
+        if len(tasks) > _limit:
+            lines.append(f"... and {len(tasks) - _limit} more")
         return "\n".join(lines)
 
     async def list_completed_tasks(
@@ -621,18 +651,20 @@ class DidaService:
         project_ids: list[str] | None = None,
         start_date: str | None = None,
         end_date: str | None = None,
+        limit: int | None = None,
     ) -> str:
         """List completed tasks, optionally filtered by project and date range.
-
-        Results are truncated to 20 items in the output string.
 
         Args:
             project_ids: Only include tasks from these project IDs.
             start_date: ISO-8601 start date (inclusive).
             end_date: ISO-8601 end date (inclusive).
+            limit: Maximum number of tasks to show. Uses
+                ``display_limit`` from settings when not set. Use 0
+                for no limit.
 
         Returns:
-            Formatted result string (up to 20 tasks).
+            Formatted result string.
         """
         tasks = await task_ops.list_completed_tasks(
             self.client,
@@ -642,12 +674,15 @@ class DidaService:
         )
         if not tasks:
             return "No completed tasks found in the given range."
+        _limit = limit if limit is not None else self.settings.display_limit
+        if _limit <= 0 or _limit >= len(tasks):
+            _limit = len(tasks)
         lines = [f"Completed tasks: {len(tasks)}"]
-        for t in tasks[:20]:
+        for t in tasks[:_limit]:
             completed = t.completed_time or "(unknown)"
             lines.append(f"- [{t.id}] {t.title} (completed: {completed})")
-        if len(tasks) > 20:
-            lines.append(f"... and {len(tasks) - 20} more")
+        if len(tasks) > _limit:
+            lines.append(f"... and {len(tasks) - _limit} more")
         return "\n".join(lines)
 
     async def get_task_by_id(self, project_id: str, task_id: str) -> str:

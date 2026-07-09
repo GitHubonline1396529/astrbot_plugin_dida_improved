@@ -19,6 +19,7 @@ class DidaPluginSettings:
     - default_project: The default project ID to use for tasks.
     - request_timeout_seconds: Timeout for API requests in seconds.
     - timezone: The timezone for task scheduling.
+    - display_limit: Maximum items to show in list responses.
     """
 
     access_token: str
@@ -26,6 +27,7 @@ class DidaPluginSettings:
     default_project: str
     request_timeout_seconds: int
     timezone: str
+    display_limit: int = 50
 
     @classmethod
     def from_config(
@@ -56,6 +58,7 @@ class DidaPluginSettings:
             timezone=str(
                 config.get("timezone", fallback_timezone) or fallback_timezone
             ),
+            display_limit=max(0, int(config.get("display_limit", 50) or 50)),
         )
 
 

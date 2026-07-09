@@ -99,39 +99,45 @@ class DidaImprovedPlugin(Star):
 
     @filter.llm_tool(name="list_dida_tasks")
     async def list_dida_tasks_llm(
-        self, event: AstrMessageEvent, task_filter: str = "unfinished"
+        self,
+        event: AstrMessageEvent,
+        task_filter: str = "unfinished",
+        limit: int = 50,
     ):
         """Query Dida365 tasks with optional filtering.
 
         Args:
-            task_filter (string): Filter condition. "today" for tasks due
-                today, "unfinished" for all incomplete tasks (default).
+            task_filter (string): Filter condition. "today" for tasks due today, 
+                "unfinished" for all incomplete tasks (default).
+            limit (integer): Maximum number of tasks to return. Use 0 for no 
+                limit. The configured ``display_limit`` is used when this is not
+                set.
         """
         if task_filter == "today":
             return await self._run_service(
-                lambda service: service.list_today_tasks_summary()
+                lambda service: service.list_today_tasks_summary(limit=limit)
             )
         return await self._run_service(
-            lambda service: service.list_unfinished_tasks_summary()
+            lambda service: service.list_unfinished_tasks_summary(limit=limit)
         )
 
     @filter.llm_tool(name="update_dida_task")
     async def update_dida_task_llm(
         self, event: AstrMessageEvent, task_id: str, updates_json: str = ""
     ):
-        """Update a Dida365 task's fields (title, content, dueDate,
-        priority, tags, etc.).
+        """Update a Dida365 task's fields (title, content, dueDate, priority,
+        tags, etc.).
 
-        Uses the Dida365 API fetch-merge-POST workflow to update any
-        field of a task. The ``updates_json`` parameter must be a JSON
-        **object** with camelCase keys matching the Dida365 API field
-        names (e.g. ``{"title": "New title", "content": "New notes"}``).
+        Uses the Dida365 API fetch-merge-POST workflow to update any field of a
+        task. The ``updates_json`` parameter must be a JSON **object** with
+        camelCase keys matching the Dida365 API field names (e.g. 
+        ``{"title": "New title", "content": "New notes"}``).
 
         Args:
             task_id (string): The ID of the task to update.
-            updates_json (string): JSON object of fields to update.
-                Example: {"title": "New title", "content": "New notes"}.
-                Use camelCase keys matching the Dida365 API.
+            updates_json (string): JSON object of fields to update. Example:
+                {"title": "New title", "content": "New notes"}. Use camelCase 
+                keys matching the Dida365 API.
         """
         if not updates_json.strip():
             return (
@@ -164,15 +170,14 @@ class DidaImprovedPlugin(Star):
 
         Args:
             title (string): Task title (required).
-            project_id (string): Target project ID. Leave empty to use
-                the configured default project or Inbox.
+            project_id (string): Target project ID. Leave empty to use the
+                configured default project or Inbox.
             content (string): Task notes or description.
-            priority (string): Priority level: "none" (0), "low" (1),
-                "medium" (3), or "high" (5).
-            tags (string): Comma-separated tag names,
-                e.g. "work,urgent".
-            due_date (string): Due date in ISO format,
-                e.g. "2026-07-10T18:00:00+08:00".
+            priority (string): Priority level: "none" (0), "low" (1), "medium"
+                (3), or "high" (5).
+            tags (string): Comma-separated tag names, e.g. "work,urgent".
+            due_date (string): Due date in ISO format, e.g. 
+                "2026-07-10T18:00:00+08:00".
         """
         priority_map = {
             "none": 0,
@@ -273,16 +278,20 @@ class DidaImprovedPlugin(Star):
         project_ids: str = "",
         start_date: str = "",
         end_date: str = "",
+        limit: int = 50,
     ):
         """List completed Dida365 tasks within a time range.
 
         Args:
             project_ids (string): Comma-separated project IDs to filter by
                 (optional).
-            start_date (string): Start of time range in ISO format
-                (optional, e.g. "2026-07-01T00:00:00+08:00").
-            end_date (string): End of time range in ISO format
-                (optional, e.g. "2026-07-08T00:00:00+08:00").
+            start_date (string): Start of time range in ISO format (optional,
+                e.g. "2026-07-01T00:00:00+08:00").
+            end_date (string): End of time range in ISO format (optional, e.g.、
+                "2026-07-08T00:00:00+08:00").
+            limit (integer): Maximum number of tasks to return. Use 0 for no 
+                limit. The configured ``display_limit`` is used when this is not
+                set.
         """
         pids = (
             [p.strip() for p in project_ids.split(",") if p.strip()]
@@ -293,7 +302,10 @@ class DidaImprovedPlugin(Star):
         end = end_date.strip() or None
         return await self._run_service(
             lambda service: service.list_completed_tasks(
-                project_ids=pids, start_date=start, end_date=end
+                project_ids=pids,
+                start_date=start,
+                end_date=end,
+                limit=limit,
             )
         )
 

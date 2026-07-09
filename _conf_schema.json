@@ -28,5 +28,11 @@
     "description": "API 请求超时（秒）",
     "type": "int",
     "default": 15
+  },
+  "display_limit": {
+    "description": "列表每次最多显示条目数",
+    "type": "int",
+    "default": 50,
+    "hint": "查询任务或项目列表时单次最多返回的条目数。设为 0 则不截断。调用工具时一旦返回的未完成任务数量超过了该限制值则后续内容被截断，但 Agent 仍可自行传参以覆盖该配置。"
   }
 }
