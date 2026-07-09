@@ -24,7 +24,7 @@
 
 接下来，点击"创建 App"，填写应用名称 (这里建议您填写 `Astrbot`)。创建完成后你会看到两个关键信息：
 
-- **Client ID**;；
+- **Client ID**；
 - **Client Secret**。
 
 接着在应用配置中设置回调地址 (Callback URL)，例如：

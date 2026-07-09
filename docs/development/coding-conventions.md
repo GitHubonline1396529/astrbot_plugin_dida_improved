@@ -45,7 +45,7 @@
 具体的数据流如下：
 
 1. 读取 `awaitable.__doc__` 字符串。
-2. 用第三方库 `docstring_parser.parse()` 解析为结构化 Docstring 对象。
+2. 用第三方库 `docstring_parser.parse()` 解析为结构化 docstring 对象。
 3. 遍历 `Docstring.params` 列表，提取每个参数的 `arg_name`、`type_name`、`description`。
 4. 通过 `PY_TO_JSON_TYPE` 映射表将提取出的类型名称转为 JSON Schema 类型名。
 5. 校验转换后的类型是否属于 `SUPPORTED_TYPES`。

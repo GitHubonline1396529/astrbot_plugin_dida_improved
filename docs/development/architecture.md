@@ -8,9 +8,9 @@
 1. **业务逻辑层** — `service/` 包：查询编排、格式化、错误处理；
 1. **基础设施层** — `client.py`：Dida365 Open API HTTP 客户端封装；
 1. **支撑模块**；
-   - `models.py` — 数据模型；
-   - `exceptions.py` — 异常层次；
-   - `time_utils.py` — 时区工具。
+    - `models.py` — 数据模型；
+    - `exceptions.py` — 异常层次；
+    - `time_utils.py` — 时区工具。
 
 ### 各模块职责
 
@@ -109,9 +109,9 @@ Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime(
 3. **reminders 字段**：更新任务时如果包含 `reminders` 字段，服务端返回 HTTP 500。解决方案是先 GET 获取完整任务，移除 `reminders` 字段后再 POST 更新；
 4. **任务更新是整体替换**：`POST /task/{id}` 需要传入完整的任务对象，不能只传变更字段。
 5. **`completedTime` 残留问题**：任务的 `completedTime` 字段在任务被**完成后再取消完成（重新打开）** 后不会清空，会残留旧的完成时间戳。判断任务是否已完成**必须依据 `status` 字段**，不能单独依赖 `completedTime`。详见 `service/_helpers.is_completed()`。
-   - `status=0` = 未完成（即使 `completedTime` 非空）；
-   - `status=1` = 已完成（部分端点使用）；
-   - `status=2` = 已完成（Open API 规范标准值）。
+    - `status=0` = 未完成 (即使 `completedTime` 非空)；
+    - `status=1` = 已完成 (部分端点使用)；
+    - `status=2` = 已完成 (Open API 规范标准值)。
 
 ## 数据流
 
