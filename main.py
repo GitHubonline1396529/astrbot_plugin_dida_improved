@@ -49,7 +49,7 @@ class DidaImprovedPlugin(Star):
         """Build a DidaService instance from the current config.
 
         Returns:
-            A configured ``DidaService`` ready for use.
+            A configured `DidaService` ready for use.
         """
         settings = self._build_settings()
         return DidaService(settings, client=DidaClient(settings))
@@ -110,7 +110,7 @@ class DidaImprovedPlugin(Star):
             task_filter (string): Filter condition. "today" for tasks due today,
                 "unfinished" for all incomplete tasks (default).
             limit (number): Maximum number of tasks to return. Use 0 for no
-                limit. The configured ``display_limit`` is used when this is not
+                limit. The configured `display_limit` is used when this is not
                 set.
         """
         if task_filter == "today":
@@ -129,9 +129,9 @@ class DidaImprovedPlugin(Star):
         tags, etc.).
 
         Uses the Dida365 API fetch-merge-POST workflow to update any field of a
-        task. The ``updates_json`` parameter must be a JSON **object** with
+        task. The `updates_json` parameter must be a JSON **object** with
         camelCase keys matching the Dida365 API field names (e.g.
-        ``{"title": "New title", "content": "New notes"}``).
+        `{"title": "New title", "content": "New notes"}`).
 
         Args:
             task_id (string): The ID of the task to update.
@@ -304,7 +304,7 @@ class DidaImprovedPlugin(Star):
             end_date (string): End of time range in ISO format (optional, e.g.
                 "2026-07-08T00:00:00+08:00").
             limit (number): Maximum number of tasks to return. Use 0 for no
-                limit. The configured ``display_limit`` is used when this is not
+                limit. The configured `display_limit` is used when this is not
                 set.
         """
         pids = (

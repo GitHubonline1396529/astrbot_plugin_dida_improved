@@ -28,8 +28,8 @@ class DidaService:
 
         Args:
             settings: Plugin configuration settings.
-            client: Optional pre-configured :class:`DidaClient`. If omitted
-                a new client is created from *settings*.
+            client: Optional pre-configured `DidaClient`. If omitted a new 
+                client is created from `settings`.
         """
         self.settings = settings
         self.client = client or DidaClient(settings)
@@ -78,9 +78,8 @@ class DidaService:
         """List all Dida365 projects as a formatted summary string.
 
         Args:
-            limit: Maximum number of projects to show. Uses
-                ``display_limit`` from settings when not set. Use 0
-                for no limit.
+            limit: Maximum number of projects to show. Uses `display_limit` from
+                settings when not set. Use 0 for no limit.
 
         Returns:
             Multi-line string with project names and IDs.
@@ -103,13 +102,11 @@ class DidaService:
         """List tasks due today as a formatted summary string.
 
         Args:
-            limit: Maximum number of tasks to show. Uses
-                ``display_limit`` from settings when not set. Use 0
-                for no limit.
+            limit: Maximum number of tasks to show. Uses `display_limit` from
+                settings when not set. Use 0 for no limit.
 
         Returns:
-            Multi-line string with due-today task details or a
-            "no tasks" message.
+            Multi-line string with due-today task details or a no tasks message.
         """
         today = self._today()
         items = await self.list_today_tasks(today=today)
@@ -131,11 +128,11 @@ class DidaService:
         """Return all uncompleted tasks due today.
 
         Args:
-            today: Reference date (typically obtained via :meth:`_today`).
+            today: Reference date (typically obtained via `_today`).
 
         Returns:
-            List of :class:`DidaTaskWithProject` whose effective due date
-            matches *today* and that are not yet completed.
+            List of `DidaTaskWithProject` whose effective due date matches 
+            `today` and that are not yet completed.
         """
         all_items = await self._collect_all_tasks()
         return [
@@ -153,13 +150,12 @@ class DidaService:
         """List all unfinished tasks as a formatted summary string.
 
         Args:
-            limit: Maximum number of tasks to show. Uses
-                ``display_limit`` from settings when not set. Use 0
-                for no limit.
+            limit: Maximum number of tasks to show. Uses `display_limit` from
+                settings when not set. Use 0 for no limit.
 
         Returns:
-            Multi-line string with unfinished task count, overdue count,
-            and task details or a "no tasks" message.
+            Multi-line string with unfinished task count, overdue count, and
+            task details or a "no tasks" message.
         """
         items = await self.list_unfinished_tasks()
         if not items:
@@ -201,7 +197,7 @@ class DidaService:
         5. Alphabetically by title.
 
         Returns:
-            Sorted list of unfinished :class:`DidaTaskWithProject`.
+            Sorted list of unfinished `DidaTaskWithProject`.
         """
         all_items = await self._collect_all_tasks()
         unfinished = [
@@ -230,14 +226,14 @@ class DidaService:
     async def _collect_all_tasks(self) -> list[DidaTaskWithProject]:
         """Collect all tasks from all projects and the inbox.
 
-        Fetches project data in parallel via :func:`asyncio.gather`.
+        Fetches project data in parallel via `asyncio.gather`.
         A single project failure is silently skipped so that data from
         other projects is still available. The inbox is fetched via its
         dedicated endpoint as a best-effort operation.
 
         Returns:
-            List of :class:`DidaTaskWithProject` across all accessible
-            projects and the inbox.
+            List of `DidaTaskWithProject` across all accessible projects and the
+            inbox.
         """
         projects = await self.client.list_projects()
         active_projects = [p for p in projects if p.id]
@@ -284,22 +280,22 @@ class DidaService:
         """Check whether a task is completed.
 
         See Also:
-            :func:`_helpers.is_completed`
+            `_helpers.is_completed`
         """
         return _helpers.is_completed(task)
 
     async def _resolve_project_name(self, project_id: str) -> str:
         """Resolve a project ID to a human-readable project name.
 
-        Inbox-style virtual IDs (beginning with ``"inbox"``) are mapped to
-        the constant ``"Inbox"``.  Other IDs are looked up via the project
-        list.  Falls back to the raw *project_id* when the lookup fails.
+        Inbox-style virtual IDs (beginning with `"inbox"`) are mapped to the
+        constant `"Inbox"`.  Other IDs are looked up via the project list. Falls
+        back to the raw `project_id` when the lookup fails.
 
         Args:
             project_id: The project identifier to resolve.
 
         Returns:
-            The project name, or *project_id* if it cannot be resolved.
+            The project name, or `project_id` if it cannot be resolved.
         """
         if project_id.lower().startswith("inbox"):
             return _INBOX_PROJECT_NAME
@@ -316,7 +312,7 @@ class DidaService:
         """Get the configured timezone object.
 
         See Also:
-            :func:`time_utils.get_timezone`
+            `time_utils.get_timezone`
         """
         return get_timezone(self.settings.timezone)
 
@@ -324,7 +320,7 @@ class DidaService:
         """Get today's date in the configured timezone.
 
         See Also:
-            :func:`time_utils.today_in_timezone`
+            `time_utils.today_in_timezone`
         """
         return today_in_timezone(self.settings.timezone)
 
@@ -334,7 +330,7 @@ class DidaService:
         """Parse an API datetime string.
 
         See Also:
-            :func:`_helpers.parse_datetime`
+            `_helpers.parse_datetime`
         """
         return _helpers.parse_datetime(
             value, task=task, timezone=self.settings.timezone
@@ -344,7 +340,7 @@ class DidaService:
         """Get the effective due datetime for a task.
 
         See Also:
-            :func:`_helpers.effective_due_datetime`
+            `_helpers.effective_due_datetime`
         """
         return _helpers.effective_due_datetime(
             task, timezone=self.settings.timezone
@@ -354,7 +350,7 @@ class DidaService:
         """Check whether a task is due on a given date.
 
         See Also:
-            :func:`_helpers.is_task_due_today`
+            `_helpers.is_task_due_today`
         """
         return _helpers.is_task_due_today(
             task, today=today, timezone=self.settings.timezone
@@ -369,7 +365,7 @@ class DidaService:
         """Check whether a task is overdue.
 
         See Also:
-            :func:`_helpers.is_overdue`
+            `_helpers.is_overdue`
         """
         return _helpers.is_overdue(
             task, today=today, timezone=self.settings.timezone
@@ -379,7 +375,7 @@ class DidaService:
         """Get a sort key tuple for due-date ordering.
 
         See Also:
-            :func:`_helpers.sort_due_value`
+            `_helpers.sort_due_value`
         """
         return _helpers.sort_due_value(task, timezone=self.settings.timezone)
 
@@ -387,7 +383,7 @@ class DidaService:
         """Get a sort priority for unfinished task ordering.
 
         See Also:
-            :func:`_helpers.unfinished_sort_key`
+            `_helpers.unfinished_sort_key`
         """
         return _helpers.unfinished_sort_key(
             task,
@@ -400,7 +396,7 @@ class DidaService:
         """Serialize a task to the API raw dict format.
 
         See Also:
-            :func:`_helpers.task_to_raw`
+            `_helpers.task_to_raw`
         """
         return _helpers.task_to_raw(task)
 
@@ -408,7 +404,7 @@ class DidaService:
         """Format a task's due date as a human-readable string.
 
         See Also:
-            :func:`formatting.format_due`
+            `formatting.format_due`
         """
         return formatting.format_due(task, timezone=self.settings.timezone)
 
@@ -417,7 +413,7 @@ class DidaService:
         """Format a task's priority as a human-readable label.
 
         See Also:
-            :func:`formatting.format_priority`
+            `formatting.format_priority`
         """
         return formatting.format_priority(task)
 
@@ -426,7 +422,7 @@ class DidaService:
         """Format a task's status as a human-readable string.
 
         See Also:
-            :func:`formatting.format_status`
+            `formatting.format_status`
         """
         return formatting.format_status(task)
 
@@ -440,7 +436,7 @@ class DidaService:
         """Format a task-with-project item as a multi-line summary.
 
         See Also:
-            :func:`formatting.format_single_task`
+            `formatting.format_single_task`
         """
         return formatting.format_single_task(
             item,
@@ -464,17 +460,18 @@ class DidaService:
         return f"Unexpected Dida365 plugin error: {error!s}"
 
     async def find_task_by_id(self, task_id: str) -> DidaTaskWithProject | None:
-        """Find a task by its ID across all projects, inbox, and completed tasks.
+        """Find a task by its ID across all projects, inbox,
+        and completed tasks.
 
         First searches uncompleted tasks (via project data + inbox). If not
         found, falls back to searching completed tasks via the dedicated
-        ``/task/completed`` endpoint.
+        `/task/completed` endpoint.
 
         Args:
             task_id: The task ID to search for.
 
         Returns:
-            The matching :class:`DidaTaskWithProject`, or ``None``.
+            The matching `DidaTaskWithProject`, or `None`.
         """
         all_items = await self._collect_all_tasks()
         for item in all_items:
@@ -502,9 +499,9 @@ class DidaService:
     ) -> str:
         """Update one or more fields of a task.
 
-        Fetches the current task representation, applies *updates*, strips
-        the problematic ``reminders`` field, and performs a full-object
-        replacement via the API.
+        Fetches the current task representation, applies `updates`, strips the
+        problematic `reminders` field, and performs a full-object replacement 
+        via the API.
 
         Args:
             task_id: ID of the task to update.
@@ -514,7 +511,7 @@ class DidaService:
             Success message listing the changed fields.
 
         Raises:
-            DidaValidationError: If *task_id* is not found.
+            DidaValidationError: If `task_id` is not found.
         """
         found = await self.find_task_by_id(task_id)
         if not found:
@@ -549,7 +546,7 @@ class DidaService:
     ) -> str:
         """Create a new task.
 
-        If *project_id* is not specified, falls back to the default project
+        If `project_id` is not specified, falls back to the default project
         configured in plugin settings. If that is also empty, the task is
         created in the inbox.
 
@@ -589,23 +586,21 @@ class DidaService:
             Success message.
 
         Raises:
-            DidaValidationError: If *task_id* is not found.
+            DidaValidationError: If `task_id` is not found.
         """
         found = await self.find_task_by_id(task_id)
         if not found:
             raise DidaValidationError(f"Task {task_id} not found.")
         if _helpers.is_completed(found.task):
-            return (
-                f"Task [{task_id}] {found.task.title} is already completed."
-            )
+            return f"Task [{task_id}] {found.task.title} is already completed."
         await task_ops.complete_task(self.client, found.project_id, task_id)
         return f"Task [{task_id}] {found.task.title} marked as completed."
 
     async def reopen_task(self, task_id: str) -> str:
         """Reopen (uncomplete) a completed task by setting status to 0.
 
-        Fetches the current task representation, applies ``status=0``, strips
-        the problematic ``reminders`` field, and performs a full-object
+        Fetches the current task representation, applies `status=0`, strips
+        the problematic `reminders` field, and performs a full-object
         replacement via the API.
 
         Args:
@@ -615,7 +610,7 @@ class DidaService:
             Success message.
 
         Raises:
-            DidaValidationError: If *task_id* is not found or the task is
+            DidaValidationError: If `task_id` is not found or the task is
                 not completed.
         """
         found = await self.find_task_by_id(task_id)
@@ -651,7 +646,7 @@ class DidaService:
             Success message.
 
         Raises:
-            DidaValidationError: If *task_id* is not found.
+            DidaValidationError: If `task_id` is not found.
         """
         found = await self.find_task_by_id(task_id)
         if not found:
@@ -702,9 +697,8 @@ class DidaService:
             priority: Only include tasks with these priority values.
             tag: Only include tasks matching any of these tags.
             status: Only include tasks with these status codes.
-            limit: Maximum number of tasks to show. Uses
-                ``display_limit`` from settings when not set. Use 0
-                for no limit.
+            limit: Maximum number of tasks to show. Uses `display_limit` from
+                settings when not set. Use 0 for no limit.
 
         Returns:
             Formatted result string.
@@ -744,9 +738,8 @@ class DidaService:
             project_ids: Only include tasks from these project IDs.
             start_date: ISO-8601 start date (inclusive).
             end_date: ISO-8601 end date (inclusive).
-            limit: Maximum number of tasks to show. Uses
-                ``display_limit`` from settings when not set. Use 0
-                for no limit.
+            limit: Maximum number of tasks to show. Uses `display_limit` from
+            settings when not set. Use 0 for no limit.
 
         Returns:
             Formatted result string.
@@ -778,8 +771,8 @@ class DidaService:
             task_id: ID of the task to fetch.
 
         Returns:
-            Multi-line string with task details (title, project, content,
-            due date, priority, status).
+            Multi-line string with task details (title, project, content, due
+            date, priority, status).
         """
         task = await task_ops.get_task_by_id(self.client, project_id, task_id)
         due_str = formatting.format_due(task, timezone=self.settings.timezone)

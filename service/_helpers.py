@@ -1,12 +1,12 @@
 """Low-level helper predicates and serialization utilities.
 
-This module provides pure functions that operate on :class:`DidaTask` objects.
+This module provides pure functions that operate on `DidaTask` objects.
 None of these functions perform I/O; they are used by the service layer to
 query task state (completed, overdue, due-today) and to build sort keys and
 serialization dicts.
 
 See Also:
-    - :func:`service.service.DidaService` — primary consumer of these helpers.
+    - `DidaService` — primary consumer of these helpers.
 """
 
 from __future__ import annotations
@@ -25,26 +25,26 @@ def is_completed(task: DidaTask) -> bool:
     """Check whether a task has been completed.
 
     Note:
-        ``status`` is the **only reliable source** for completion state.
-        ``completed_time`` may retain a stale timestamp when a task is
-        **reopened** (uncompleted) -- in that case ``status`` is reset to
-        ``0`` but ``completed_time`` remains non-empty.  Never rely on
-        ``completed_time`` alone.
+        `status` is the **only reliable source** for completion state.
+        `completed_time` may retain a stale timestamp when a task is
+        **reopened** (uncompleted) -- in that case `status` is reset to `0` but
+        `completed_time` remains non-empty.  Never rely on `completed_time`
+        alone.
 
     Priority:
-    1. If ``status`` is not ``None``: ``status in (1, 2)`` means completed.
-    2. If ``status`` is ``None`` (unlikely): fall back to ``completed_time``.
+        1. If `status` is not `None`: `status in (1, 2)` means completed.
+        2. If `status` is `None` (unlikely): fall back to `completed_time`.
 
     Values:
-        - ``status=0`` = not completed
-        - ``status=1`` = completed (used by some endpoints e.g. inbox)
-        - ``status=2`` = completed (standard Open API value)
+        - `status=0` = not completed
+        - `status=1` = completed (used by some endpoints e.g. inbox)
+        - `status=2` = completed (standard Open API value)
 
     Args:
         task: The task to check.
 
     Returns:
-        ``True`` if the task is completed, ``False`` otherwise.
+        `True` if the task is completed, `False` otherwise.
     """
     if task.status is not None:
         return task.status in (1, 2)
@@ -60,18 +60,18 @@ def parse_datetime(
 ) -> datetime | None:
     """Parse an API datetime string, respecting the task's timezone.
 
-    If the task has an explicit ``time_zone`` field it is used as the
-    assumed source timezone; otherwise the caller-provided ``timezone``
-    is used. The result is converted to the target ``timezone``.
+    If the task has an explicit `time_zone` field it is used as the assumed
+    source timezone; otherwise the caller-provided `timezone` is used. The
+    result is converted to the target `timezone`.
 
     Args:
         value: ISO-8601 datetime string from the API.
-        task: Optional task whose ``time_zone`` field may override the
-            assumed source timezone.
+        task: Optional task whose `time_zone` field may override the assumed
+            source timezone.
         timezone: IANA timezone name for the target conversion.
 
     Returns:
-        A timezone-aware :class:`datetime.datetime`, or ``None`` if the
+        A timezone-aware `datetime.datetime`, or `None` if the
         value could not be parsed.
     """
     assume_tz = task.time_zone if task and task.time_zone else timezone
@@ -89,17 +89,17 @@ def effective_due_datetime(
 ) -> datetime | None:
     """Get the effective due datetime for a task.
 
-    For all-day tasks the API stores the end date as ``due_date``; this
-    function subtracts one day so that date comparisons (due-today, overdue)
-    behave intuitively. For timed tasks the raw ``due_date`` is returned.
+    For all-day tasks the API stores the end date as `due_date`; this function
+    subtracts one day so that date comparisons (due-today, overdue) behave
+    intuitively. For timed tasks the raw `due_date` is returned.
 
     Args:
         task: The task to evaluate.
         timezone: IANA timezone name.
 
     Returns:
-        A timezone-aware :class:`datetime.datetime`, or ``None`` if the
-        task has no due date.
+        A timezone-aware `datetime.datetime`, or `None` if the task has no due
+        date.
     """
     if task.is_all_day:
         # All-day tasks store the end date as due_date.
@@ -121,16 +121,15 @@ def is_task_due_today(
     today: date,
     timezone: str,
 ) -> bool:
-    """Check whether a task's effective due date falls on *today*.
+    """Check whether a task's effective due date falls on `today`.
 
     Args:
         task: The task to check.
-        today: Reference date (obtained via
-            :func:`today_in_timezone`).
+        today: Reference date (obtained via `today_in_timezone`).
         timezone: IANA timezone name.
 
     Returns:
-        ``True`` if the task's effective due date matches *today*.
+        `True` if the task's effective due date matches `today`.
     """
     dt = effective_due_datetime(task, timezone=timezone)
     if not dt:
@@ -146,17 +145,17 @@ def is_overdue(
 ) -> bool:
     """Check whether a task is overdue.
 
-    Completed tasks are never considered overdue. A task without a due date
-    is also not overdue.
+    Completed tasks are never considered overdue. A task without a due date is
+    also not overdue.
 
     Args:
         task: The task to check.
-        today: Reference date. Defaults to :func:`today_in_timezone`.
+        today: Reference date. Defaults to `today_in_timezone`.
         timezone: IANA timezone name.
 
     Returns:
-        ``True`` if the task is not completed and its effective due date
-        is before *today*.
+        `True` if the task is not completed and its effective due date is 
+        before `today`.
     """
     if is_completed(task):
         return False
@@ -174,16 +173,16 @@ def sort_due_value(
 ) -> tuple[int, str]:
     """Get a sort key tuple for due-date ordering.
 
-    Tasks with a due date sort before those without. Among tasks with
-    a due date, ordering is by ISO datetime.
+    Tasks with a due date sort before those without. Among tasks with a due 
+    date, ordering is by ISO datetime.
 
     Args:
         task: The task to evaluate.
         timezone: IANA timezone name.
 
     Returns:
-        Tuple ``(0, isoformat)`` if the task has a due date, or
-        ``(1, "")`` if it does not.
+        Tuple `(0, isoformat)` if the task has a due date, or `(1, "")` if it
+        does not.
     """
     # Sort key tuple: (has_due, iso_datetime).
     # (0, isoformat) sorts before (1, "") — tasks with a due date come first.
@@ -207,8 +206,8 @@ def unfinished_sort_key(
         timezone: IANA timezone name.
 
     Returns:
-        ``0`` if overdue (sorts highest), ``1`` if it has a due date,
-        ``2`` if it has no due date (sorts lowest).
+        `0` if overdue (sorts highest), `1` if it has a due date, `2` if it has
+        no due date (sorts lowest).
     """
     # Sort priority: 0 = overdue (top), 1 = has due date (middle),
     # 2 = no due date (bottom).
@@ -220,14 +219,14 @@ def unfinished_sort_key(
 
 
 def task_to_raw(task: DidaTask) -> dict[str, Any]:
-    """Serialize a :class:`DidaTask` to the raw dict format expected by the API.
+    """Serialize a `DidaTask` to the raw dict format expected by the API.
 
     Only non-None / non-empty optional fields are included in the output,
     matching the API's partial-update expectations.
 
-    .. note::
-       The ``reminders`` field is intentionally omitted (see
-       :meth:`DidaService.update_task_details`).
+    Note:
+        The `reminders` field is intentionally omitted (see
+        `DidaService.update_task_details`).
 
     Args:
         task: The task to serialize.

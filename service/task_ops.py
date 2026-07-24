@@ -1,12 +1,12 @@
 """Task CRUD and query operations.
 
-Each function in this module accepts a :class:`DidaClient` as the first
+Each function in this module accepts a `DidaClient` as the first
 argument and delegates the actual HTTP request to the client layer.
-These are the building blocks that :class:`DidaService` composes into
+These are the building blocks that `DidaService` composes into
 user-facing command handlers.
 
 See Also:
-    - :class:`service.service.DidaService` — primary consumer.
+    - `service.service.DidaService` — primary consumer.
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ async def create_task(
     """Create a new Dida365 task.
 
     Validates that the title is non-empty, then builds the API payload and
-    delegates to :meth:`DidaClient.create_task`.
+    delegates to `DidaClient.create_task`.
 
     Args:
         client: The Dida365 API client.
@@ -40,11 +40,11 @@ async def create_task(
         content: Optional rich-text content / description.
         priority: Priority level (0=none, 1=low, 3=medium, 5=high).
         tags: Comma-separated tag string, will be split into a list.
-        due_date: ISO-8601 due date string (e.g. ``"2026-07-10"`` or
-            ``"2026-07-10T15:00:00Z"``).
+        due_date: ISO-8601 due date string (e.g. `"2026-07-10"` or
+            `"2026-07-10T15:00:00Z"`).
 
     Returns:
-        The created :class:`DidaTask`.
+        The created `DidaTask`.
 
     Raises:
         DidaValidationError: If the title is empty or whitespace-only.
@@ -75,12 +75,12 @@ async def update_task(
 ) -> DidaTask:
     """Update an existing task (full-object replacement).
 
-    .. note::
-       The Dida365 API performs a full-object replacement when updating a
-        task. Clients should obtain the current task representation via
-        :func:`task_to_raw`, merge desired changes, and pass the complete
-        dict here. The ``reminders`` field must be stripped beforehand to
-        avoid HTTP 500 (see :meth:`DidaService.update_task_details`).
+    Note:
+        The Dida365 API performs a full-object replacement when updating a task.
+        Clients should obtain the current task representation via `task_to_raw`,
+        merge desired changes, and pass the complete dict here. The `reminders` 
+        field must be stripped beforehand to avoid HTTP 500 (see 
+        `DidaService.update_task_details`).
 
     Args:
         client: The Dida365 API client.
@@ -88,7 +88,7 @@ async def update_task(
         raw: Full task representation dict.
 
     Returns:
-        The updated :class:`DidaTask`.
+        The updated `DidaTask`.
     """
     return await client.update_task(task_id, raw)
 
@@ -138,7 +138,7 @@ async def move_task(
         task_id: ID of the task to move.
 
     Returns:
-        Dict with ``"id"`` and ``"etag"`` keys from the API response.
+        Dict with `"id"` and `"etag"` keys from the API response.
     """
     return await client.move_task(from_project_id, to_project_id, task_id)
 
@@ -168,7 +168,7 @@ async def filter_tasks(
         status: Only include tasks with these status codes.
 
     Returns:
-        List of matching :class:`DidaTask`.
+        List of matching `DidaTask`.
     """
     return await client.filter_tasks(
         project_ids=project_ids,
@@ -196,7 +196,7 @@ async def list_completed_tasks(
         end_date: ISO-8601 end date (inclusive).
 
     Returns:
-        List of completed :class:`DidaTask` instances.
+        List of completed `DidaTask` instances.
     """
     return await client.list_completed_tasks(
         project_ids=project_ids,
@@ -218,6 +218,6 @@ async def get_task_by_id(
         task_id: ID of the task to fetch.
 
     Returns:
-        The :class:`DidaTask` instance.
+        The `DidaTask` instance.
     """
     return await client.get_task(project_id, task_id)

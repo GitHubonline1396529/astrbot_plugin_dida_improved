@@ -1,11 +1,11 @@
 """Task comment operations.
 
-Thin delegation wrappers over :class:`DidaClient` comment endpoints.
+Thin delegation wrappers over `DidaClient` comment endpoints.
 
 See Also:
-    - :meth:`DidaService.get_task_comments`
-    - :meth:`DidaService.add_task_comment`
-    - :meth:`DidaService.delete_task_comment`
+    - `DidaService.get_task_comments`
+    - `DidaService.add_task_comment`
+    - `DidaService.delete_task_comment`
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ async def get_task_comments(
         List of comment dicts as returned by the API.
 
     See Also:
-        :meth:`DidaService.get_task_comments`
+        `DidaService.get_task_comments`
     """
     return await client.get_task_comments(project_id, task_id)
 
@@ -52,7 +52,7 @@ async def add_task_comment(
         The created comment dict from the API.
 
     See Also:
-        :meth:`DidaService.add_task_comment`
+        `DidaService.add_task_comment`
     """
     return await client.add_task_comment(project_id, task_id, title)
 
@@ -72,6 +72,6 @@ async def delete_task_comment(
         comment_id: ID of the comment to delete.
 
     See Also:
-        :meth:`DidaService.delete_task_comment`
+        `DidaService.delete_task_comment`
     """
     await client.delete_task_comment(project_id, task_id, comment_id)

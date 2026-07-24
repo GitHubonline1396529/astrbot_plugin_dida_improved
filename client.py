@@ -44,7 +44,7 @@ class DidaClient:
             settings: Plugin configuration with the access token.
 
         Returns:
-            Dict with ``Authorization`` and ``Content-Type`` headers.
+            Dict with `Authorization` and `Content-Type` headers.
 
         Raises:
             DidaConfigurationError: If the access token is empty.
@@ -62,7 +62,7 @@ class DidaClient:
         """Build the full URL for an API request.
 
         Args:
-            path: The API path (e.g. ``"/project"``).
+            path: The API path (e.g. `"/project"`).
 
         Returns:
             Full URL by joining the base URL and path.
@@ -310,7 +310,7 @@ class DidaClient:
             task_id: The task ID to move.
 
         Returns:
-            Dict with ``id`` and ``etag`` keys.
+            Dict with `id` and `etag` keys.
         """
         payload: list[dict[str, str]] = [
             {

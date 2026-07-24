@@ -26,6 +26,17 @@
 - 需要额外向开发者指明的关键信息，用 Note 标记；
 - See Also 可以被追加在 docstring 的末尾，用于索引或者类方法函数被关键性地调用的位置。
 
+### Docstring 中的 Markdown 语法
+
+项目使用 mkdocstrings 将 docstring 渲染为 API 文档，docstring 中的内联标记必须使用 Markdown 语法：
+
+- **字面量/代码引用**：使用单反引号 `` `code` ``，不使用 `\`\`code\`\``（RST 双反引号）或 `:class:\`X\`` 等 RST 角色；
+- **交叉引用**：直接用 `` `ClassName` ``、`` `method_name` ``、`` `function_name` ``，不使用 `:class:\`ClassName\``、`:meth:\`method_name\``、`:func:\`function_name\`` 等 Sphinx 角色；
+- **参数名引用**：在 docstring 正文中引用参数时，用 `` `param_name` ``（代码风格）而非 `*param_name*`（斜体）；
+- **强调**：`**bold**` 和 `*italic*` 均可使用（两种语法一致）；
+- **注意块**：使用 Google 风格 `Note:` 段落头，内容缩进 4 空格，不使用 `.. note::` RST 指令；
+- **Google 风格段落**：`Note:`、`See Also:`、`Priority:`、`Values:` 等段落头下的**内容必须缩进 4 空格**，否则不会被 griffe 关联到段落头。
+
 ## AstrBot 插件规范
 
 - 插件类必须继承自 `Star` 并位于 `main.py`；

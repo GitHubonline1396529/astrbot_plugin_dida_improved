@@ -89,10 +89,10 @@ class DidaProject:
 
         Args:
             data: The API response dict containing project fields
-                (``id``, ``name``, ``kind``, ``color``, etc.).
+                (`id`, `name`, `kind`, `color`, etc.).
 
         Returns:
-            A ``DidaProject`` instance.
+            A `DidaProject` instance.
         """
         return cls(
             id=str(data.get("id", "") or ""),
@@ -112,10 +112,10 @@ class DidaProject:
 class ChecklistItem:
     """A subtask / checklist item within a Dida365 task.
 
-    Checklist items (also known as subtasks) are individual items within a
-    task that can be independently completed. Each item has its own status,
-    sort order, optional start date and timezone, mirroring the structure of
-    the parent task.
+    Checklist items (also known as subtasks) are individual items within a task
+    that can be independently completed. Each item has its own status, sort
+    order, optional start date and timezone, mirroring the structure of the
+    parent task.
 
     Attributes:
         id: Unique identifier for the checklist item.
@@ -142,11 +142,11 @@ class ChecklistItem:
         """Build a ChecklistItem from API response data.
 
         Args:
-            data: The API response dict containing checklist item fields
-                (``id``, ``title``, ``status``, etc.).
+            data: The API response dict containing checklist item fields (`id`,
+                `title`, `status`, etc.).
 
         Returns:
-            A ``ChecklistItem`` instance.
+            A `ChecklistItem` instance.
         """
         return cls(
             id=str(data.get("id", "") or ""),
@@ -246,8 +246,8 @@ class DidaProjectData:
     """Project data with its tasks.
 
     This class represents a Dida365 project along with its associated tasks. It
-    includes the project instance, a list of tasks, the project columns, and
-    the raw API response data.
+    includes the project instance, a list of tasks, the project columns, and the
+    raw API response data.
     """
 
     project: DidaProject | None
@@ -260,11 +260,11 @@ class DidaProjectData:
         """Build a DidaProjectData from API response data.
 
         Args:
-            data: The API response dict containing a ``project``
-                object and a ``tasks`` array.
+            data: The API response dict containing a `project`
+                object and a `tasks` array.
 
         Returns:
-            A ``DidaProjectData`` instance.
+            A `DidaProjectData` instance.
         """
         project_data = data.get("project")
         project = (

@@ -1,11 +1,11 @@
 """Task display formatting utilities.
 
-Converts :class:`DidaTask` fields into human-readable strings suitable
+Converts `DidaTask` fields into human-readable strings suitable
 for AstrBot plain-text replies.
 
 See Also:
-    - :func:`service.service.DidaService.list_today_tasks_summary`
-    - :func:`service.service.DidaService.list_unfinished_tasks_summary`
+    - `service.service.DidaService.list_today_tasks_summary`
+    - `service.service.DidaService.list_unfinished_tasks_summary`
 """
 
 from __future__ import annotations
@@ -17,8 +17,8 @@ from ._helpers import effective_due_datetime, is_overdue
 def format_due(task: DidaTask, *, timezone: str) -> str:
     """Format a task's due date as a human-readable string.
 
-    All-day tasks are displayed as ``YYYY-MM-DD`` only; timed tasks include
-    hour and minute. Tasks without a due date return ``"(No due date)"``.
+    All-day tasks are displayed as `YYYY-MM-DD` only; timed tasks include hour
+    and minute. Tasks without a due date return `"(No due date)"`.
 
     Args:
         task: The task to format.
@@ -38,8 +38,8 @@ def format_due(task: DidaTask, *, timezone: str) -> str:
 def format_priority(task: DidaTask) -> str:
     """Format the task's priority as a human-readable label.
 
-    The Dida365 API uses integer codes: ``0`` (none), ``1`` (low),
-    ``3`` (medium), ``5`` (high). ``None`` maps to ``"(unknown)"``.
+    The Dida365 API uses integer codes: `0` (none), `1` (low), `3` (medium),
+    `5` (high). `None` maps to `"(unknown)"`.
 
     Args:
         task: The task whose priority to format.
@@ -64,8 +64,8 @@ def format_status(task: DidaTask) -> str:
         task: The task whose status to format.
 
     Returns:
-        ``"completed"`` if the task has a ``completed_time`` or status code 2,
-        otherwise ``"open"``.
+        `"completed"` if the task has a `completed_time` or status code 2,
+        otherwise `"open"`.
     """
     if task.completed_time or task.status == 2:
         return "completed"
