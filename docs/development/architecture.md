@@ -50,7 +50,20 @@ Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime(
 
 所有 Dida365 API 错误通过 `DidaClient._request()` 方法集中处理，转换为特定的异常类型 (`DidaAuthenticationError`、`DidaNotFoundError`、`DidaApiError`、`DidaNetworkError`)。`DidaService.explain_error()` 将这些异常转换为用户友好的中文消息。
 
-### 5. LLM Function Tool 注册
+### 5. 已完成任务可见性
+
+「完成」状态的任务通过 `/project/{id}/data` 或 `/project/inbox/data` 均不可见。查询已完成任务需使用 `/task/completed` 端点。
+
+`find_task_by_id()` 采用二级回退策略：
+
+1. 先在未完成任务集合（`_collect_all_tasks()`）中查找；
+2. 未命中时，通过 `/task/completed`（无时间范围过滤）回退搜索已完成任务。
+
+这使得 `update_dida_task`、`delete_dida_task`、`complete_dida_task`、`reopen_dida_task` 均能作用于已完成任务。
+
+**注意：** 判断任务是否已完成必须依据 `status` 字段，详见下方 `completedTime` 残留问题。
+
+### 6. LLM Function Tool 注册
 
 通过 `@filter.llm_tool(name=...)` 装饰器在类定义阶段注册 LLM 工具。装饰器解析方法的 Google 风格 docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-calling schema。注册后的工具会加入全局 `llm_tools.func_list`，由 `PluginManager.load()` 在插件实例化后绑定 handler 并激活。
 
@@ -60,7 +73,7 @@ Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime(
 !!! warning "docstring 参数类型解析的完整机制"
     `@filter.llm_tool` 注册 LLM 工具时，**只从 docstring 的 `Args:` 段落解析参数类型，完全忽略 Python 函数签名的类型注解**。详细的类型映射表与 SUPPORTED_TYPES、常见踩坑点，以及对应的 AstrBot 源码位置，请参阅[编码规范 → LLM 工具注册与参数类型解析](coding-conventions.md#llm-工具注册与参数类型解析)。
 
-### 6. 文档与代码同步策略
+### 7. 文档与代码同步策略
 
 插件的功能描述在三个层面间传播，任何新增或修改都应保持三者一致：
 

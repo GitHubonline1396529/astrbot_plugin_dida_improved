@@ -75,6 +75,7 @@
 | `complete_dida_task` | 完成任务 |
 | `update_dida_task` | 更新任务的任意字段 (标题、备注、截止日期、优先级等) |
 | `delete_dida_task` | 删除任务 |
+| `reopen_dida_task` | 重新打开已完成任务 |
 | `move_dida_task` | 移动任务到其他项目 |
 | `get_dida_task_detail` | 获取单个任务的详细信息 |
 | `list_completed_dida_tasks` | 查询已完成任务 |

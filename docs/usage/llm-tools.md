@@ -12,6 +12,7 @@
 | `complete_dida_task` | 完成任务 | "把任务完成" |
 | `update_dida_task` | 更新任务的任意字段 (标题、备注、截止日期、优先级等)  | "把任务备注改成已完成"、"把优先级改为高" |
 | `delete_dida_task` | 删除任务 | "把这个任务删掉" |
+| `reopen_dida_task` | 重新打开已完成的任务 | "把这个已完成的任务重新打开" |
 | `move_dida_task` | 移动任务到其他项目 | "把这个任务移到工作项目" |
 | `get_dida_task_detail` | 获取单个任务的详细信息 | "查看任务详情" |
 | `list_completed_dida_tasks` | 查询已完成任务 | "已完成的任务有哪些" |
@@ -98,6 +99,16 @@ LLM 会自动调用 `update_dida_task` 工具。传入参数：
 > 删除这个任务
 
 LLM 会自动调用 `delete_dida_task` 工具。传入参数：
+
+- `task_id` — 任务 ID (必填)。
+
+### 重新打开任务
+
+> 把任务 6a2a9b91e4b039e491b1de54 重新打开
+>
+> 取消勾选这个已完成的任务
+
+LLM 会自动调用 `reopen_dida_task` 工具。传入参数：
 
 - `task_id` — 任务 ID (必填)。
 
