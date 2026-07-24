@@ -35,7 +35,8 @@
 - **参数名引用**：在 docstring 正文中引用参数时，用 `` `param_name` ``（代码风格）而非 `*param_name*`（斜体）；
 - **强调**：`**bold**` 和 `*italic*` 均可使用（两种语法一致）；
 - **注意块**：使用 Google 风格 `Note:` 段落头，内容缩进 4 空格，不使用 `.. note::` RST 指令；
-- **Google 风格段落**：`Note:`、`See Also:`、`Priority:`、`Values:` 等段落头下的**内容必须缩进 4 空格**，否则不会被 griffe 关联到段落头。
+- **Google 风格段落**：`Note:`、`See Also:`、`Priority:`、`Values:` 等段落头下的**内容必须缩进 4 空格**，否则不会被 griffe 关联到段落头；
+- **已知渲染局限**：griffe 会将 `Returns:` 段落中的每行文本独立解析为一条 return entry，而非在一个单元格内折行。跨行描述会在 API 文档中呈现为多个表格行。此行为由 griffe 决定，无法通过格式调整绕过。
 
 ## AstrBot 插件规范
 
@@ -114,21 +115,22 @@ SUPPORTED_TYPES = ["string", "number", "object", "array", "boolean"]
 
 ### docstring 中的类型标注写法示例
 
-```text
-Args:
-    name (string): 名称。              # 可行：直接通过 SUPPORTED_TYPES
-    count (number): 数量。              # 可行：直接通过 SUPPORTED_TYPES
-    enabled (boolean): 开关。           # 可行：直接通过 SUPPORTED_TYPES
-    data (object): 数据对象。           # 可行：直接通过 SUPPORTED_TYPES
-    items (array): 项目列表。           # 可行：直接通过 SUPPORTED_TYPES
-    tags (array[string]): 标签。        # 可行：复合类型，items.type = string
-    name (str): 名称。                 # 可行：PY_TO_JSON_TYPE 映射为 string
-    count (int): 数量。                # 可行：PY_TO_JSON_TYPE 映射为 number
-    mapping (dict): 配置字典。           # 可行：PY_TO_JSON_TYPE 映射为 object
-    limit (integer): 上限。            # 不可行：不在 PY_TO_JSON_TYPE 中，integer ∉ SUPPORTED_TYPES
-```
+下表罗列 `Args:` 段落下的参数：
 
-> 注意：`int` 被映射为 `number` 而非 `integer`。OpenAI 的 JSON Schema 规范中实际接受 `integer` 作为单独的 `type`，但 AstrBot 的映射表未包含它。如果你需要让 LLM 明确知道参数应为整数，可在 `description` 中注明限制。
+| 写法 | 映射结果 | 有效？ | 说明 |
+|------|----------|--------|------|
+| `name (string)` | `string` | ✅ | 直接通过 `SUPPORTED_TYPES` |
+| `count (number)` | `number` | ✅ | 直接通过 `SUPPORTED_TYPES` |
+| `enabled (boolean)` | `boolean` | ✅ | 直接通过 `SUPPORTED_TYPES` |
+| `data (object)` | `object` | ✅ | 直接通过 `SUPPORTED_TYPES` |
+| `items (array)` | `array` | ✅ | 直接通过 `SUPPORTED_TYPES` |
+| `tags (array[string])` | `array` | ✅ | 复合类型，`items.type = string` |
+| `name (str)` | `string` | ✅ | 经 `PY_TO_JSON_TYPE` 映射为 `string` |
+| `count (int)` | `number` | ✅ | 经 `PY_TO_JSON_TYPE` 映射为 `number` |
+| `mapping (dict)` | `object` | ✅ | 经 `PY_TO_JSON_TYPE` 映射为 `object` |
+| `limit (integer)` | `integer` | ❌ | `integer` 不在映射表中，也不在 `SUPPORTED_TYPES` 中 |
+
+> **注意**：`int` 被映射为 `number` 而非 `integer`。OpenAI 的 JSON Schema 规范实际接受 `integer` 作为独立的 `type`，但 AstrBot 的映射表未包含它。若需让 LLM 明确知道参数应为整数，可在 `description` 中注明限制。
 
 ### 验证方法
 
