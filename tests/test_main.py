@@ -156,6 +156,12 @@ class TestCompleteDidaTaskLlm:
         assert isinstance(result, str)
 
 
+class TestReopenDidaTaskLlm:
+    async def test_valid_task_id(self, plugin):
+        result = await plugin.reopen_dida_task_llm(MagicMock(), task_id="t1")
+        assert isinstance(result, str)
+
+
 class TestDeleteDidaTaskLlm:
     async def test_valid_task_id(self, plugin):
         result = await plugin.delete_dida_task_llm(MagicMock(), task_id="t1")

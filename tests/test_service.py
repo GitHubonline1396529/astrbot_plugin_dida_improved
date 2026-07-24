@@ -667,6 +667,76 @@ class TestCreateTask:
             await service.create_task(title="   ")
 
 
+class TestFindTaskById:
+    async def test_finds_uncompleted(self, service, mock_client):
+        task = DidaTask(id="t1", project_id="p1", title="Active", status=0)
+        project_data = DidaProjectData(
+            project=DidaProject(id="p1", name="Work"),
+            tasks=[task],
+        )
+        mock_client.list_projects = AsyncMock(
+            return_value=[DidaProject(id="p1", name="Work")]
+        )
+        mock_client.get_project_data = AsyncMock(return_value=project_data)
+        mock_client.get_inbox_tasks = AsyncMock(return_value=[])
+
+        result = await service.find_task_by_id("t1")
+        assert result is not None
+        assert result.task.id == "t1"
+        assert result.project_name == "Work"
+
+    async def test_finds_completed_fallback(self, service, mock_client):
+        completed_task = DidaTask(
+            id="t99",
+            project_id="p2",
+            title="Done task",
+            status=2,
+            completed_time="2026-07-10T10:00:00Z",
+        )
+        mock_client.list_projects = AsyncMock(
+            return_value=[
+                DidaProject(id="p1", name="Work"),
+                DidaProject(id="p2", name="Personal"),
+            ]
+        )
+        mock_client.get_project_data = AsyncMock(
+            side_effect=lambda pid: DidaProjectData(
+                project=DidaProject(id=pid, name=""),
+                tasks=[],
+            )
+        )
+        mock_client.get_inbox_tasks = AsyncMock(return_value=[])
+        mock_client.list_completed_tasks = AsyncMock(
+            return_value=[completed_task]
+        )
+
+        result = await service.find_task_by_id("t99")
+        assert result is not None
+        assert result.task.id == "t99"
+        assert result.task.status == 2
+        assert result.project_name == "Personal"
+
+    async def test_not_found_anywhere(self, service, mock_client):
+        mock_client.list_projects = AsyncMock(return_value=[])
+        mock_client.get_inbox_tasks = AsyncMock(return_value=[])
+        mock_client.list_completed_tasks = AsyncMock(return_value=[])
+
+        result = await service.find_task_by_id("nonexistent")
+        assert result is None
+
+    async def test_completed_fallback_failure_returns_none(
+        self, service, mock_client
+    ):
+        mock_client.list_projects = AsyncMock(return_value=[])
+        mock_client.get_inbox_tasks = AsyncMock(return_value=[])
+        mock_client.list_completed_tasks = AsyncMock(
+            side_effect=Exception("API error")
+        )
+
+        result = await service.find_task_by_id("any")
+        assert result is None
+
+
 class TestCompleteTask:
     async def test_success(self, service, mock_client):
         task = DidaTask(id="t1", project_id="p1", title="Buy milk")
@@ -687,6 +757,94 @@ class TestCompleteTask:
 
         with pytest.raises(DidaValidationError, match="not found"):
             await service.complete_task("nonexistent")
+
+    async def test_already_completed(self, service, mock_client):
+        task = DidaTask(id="t2", project_id="p1", title="Done", status=2)
+        found = DidaTaskWithProject(
+            project_id="p1", project_name="Work", task=task
+        )
+        service.find_task_by_id = AsyncMock(return_value=found)
+
+        result = await service.complete_task("t2")
+
+        assert "already completed" in result
+        mock_client.complete_task.assert_not_called()
+
+
+class TestReopenTask:
+    async def test_success(self, service, mock_client):
+        raw = {
+            "id": "t1",
+            "projectId": "p1",
+            "title": "Done task",
+            "status": 2,
+        }
+        task = DidaTask(
+            id="t1",
+            project_id="p1",
+            title="Done task",
+            status=2,
+            raw=raw,
+        )
+        found = DidaTaskWithProject(
+            project_id="p1", project_name="Work", task=task
+        )
+        service.find_task_by_id = AsyncMock(return_value=found)
+        updated = DidaTask(id="t1", project_id="p1", title="Done task")
+        mock_client.update_task = AsyncMock(return_value=updated)
+
+        result = await service.reopen_task("t1")
+
+        assert "reopened" in result
+        mock_client.update_task.assert_awaited_once()
+        call_args = mock_client.update_task.await_args
+        assert call_args is not None
+        payload = call_args[0][1] if len(call_args[0]) > 1 else call_args[1]
+        assert payload["status"] == 0
+
+    async def test_not_completed(self, service, mock_client):
+        task = DidaTask(id="t1", project_id="p1", title="Active", status=0)
+        found = DidaTaskWithProject(
+            project_id="p1", project_name="Work", task=task
+        )
+        service.find_task_by_id = AsyncMock(return_value=found)
+
+        result = await service.reopen_task("t1")
+        assert "not completed" in result
+        mock_client.update_task.assert_not_called()
+
+    async def test_not_found_raises(self, service, mock_client):
+        service.find_task_by_id = AsyncMock(return_value=None)
+
+        with pytest.raises(DidaValidationError, match="not found"):
+            await service.reopen_task("nonexistent")
+
+    async def test_reminders_stripped(self, service, mock_client):
+        raw = {
+            "id": "t1",
+            "projectId": "p1",
+            "title": "Done",
+            "status": 2,
+            "reminders": [{"minutes": 30}],
+        }
+        task = DidaTask(
+            id="t1", project_id="p1", title="Done", status=2, raw=raw
+        )
+        found = DidaTaskWithProject(
+            project_id="p1", project_name="W", task=task
+        )
+        service.find_task_by_id = AsyncMock(return_value=found)
+        mock_client.update_task = AsyncMock(
+            return_value=DidaTask(id="t1", project_id="p1", title="Done")
+        )
+
+        await service.reopen_task("t1")
+
+        call_args = mock_client.update_task.await_args
+        assert call_args is not None
+        payload = call_args[0][1] if len(call_args[0]) > 1 else call_args[1]
+        assert payload["status"] == 0
+        assert "reminders" not in payload
 
 
 class TestDeleteTask:
