@@ -1,5 +1,30 @@
 # 变更日志
 
+## v0.2.3-beta
+
+### 新增
+
+- 新增 `reopen_dida_task` LLM 工具：支持将已完成任务重新打开（取消完成），重置 `status` 为 `0`，使其重新出现在活跃任务列表中；
+- 新增 `_find_task_by_id()` 业务方法：先搜索未完成任务，未找到时自动回退到搜索已完成任务，为跨状态任务操作提供基础。
+
+### 修复
+
+- 修复 `update_dida_task` 无法修改已完成任务的问题：旧版本中 `update_task()` 仅从项目数据中查找任务，已完成任务不在项目数据中导致无法定位。现通过 `_find_task_by_id()` 统一查找逻辑，支持对已完成任务进行编辑和重新打开操作；
+- 修复已完成任务重新打开后无法再次标记为未完成的问题：新增 `reopen_task()` 业务方法，正确将任务 `status` 设为 `0` 并推送更新，同时移除 `completed_time` 残留旧值带来的误判风险。
+
+### 文档
+
+- 全面整改 docstring 格式：将 Google 风格 docstring 中的双反引号（`` ```backticks``` ``）统一替换为 Markdown 单反引号（`` `code` ``），以提升 API 参考文档的渲染效果；
+- `docs/development/coding-conventions.md`：补充 docstring 标记语法规范，明确应使用 Markdown 单反引号而非双反引号；
+- `docs/usage/llm-tools.md`：新增 `reopen_dida_task` 工具说明；
+- `docs/development/architecture.md`：同步更新「查找任务」流程说明、`reopen_task` 相关架构描述；
+- `docs/README.md`、`docs/index.md`、`docs/development/testing.md`：小幅优化措辞和排版。
+
+### 测试
+
+- 新增 `reopen_task` 单元测试（`tests/test_service.py`）：覆盖重新打开已完成任务、重新打开未完成任务（应拒绝）、查找已完成任务等场景；
+- 新增 `_find_task_by_id` 单元测试：覆盖搜索未完成任务、回退到已完成任务、找不到任务等路径。
+
 ## v0.2.2-beta
 
 ### 修复
