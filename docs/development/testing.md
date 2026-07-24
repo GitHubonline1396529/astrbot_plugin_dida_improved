@@ -136,8 +136,6 @@ DIDA_BASE_URL=https://api.dida365.com/open/v1
 | `test_get_inbox_tasks` | 获取收集箱任务，返回列表 |
 | `test_probe_read_access` | 端到端只读探测，返回成功消息 |
 
----
-
 ## 未覆盖的测试范围
 
 以下场景需要完整的 AstrBot 运行时环境 (启动 PluginManager 和消息平台)，当前未通过测试覆盖：
@@ -147,8 +145,6 @@ DIDA_BASE_URL=https://api.dida365.com/open/v1
 3. **WebUI 配置变更** — 通过 WebUI 修改配置后插件能否正确响应。
 
 建议通过 AstrBot 热重载功能手动验证上述场景：修改代码后在 WebUI 插件管理页点击「重载插件」。
-
----
 
 ## 测试编码规范
 
