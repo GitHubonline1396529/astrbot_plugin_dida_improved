@@ -222,6 +222,20 @@ class DidaImprovedPlugin(Star):
             lambda service: service.complete_task(task_id)
         )
 
+    @filter.llm_tool(name="reopen_dida_task")
+    async def reopen_dida_task_llm(self, event: AstrMessageEvent, task_id: str):
+        """Reopen (uncomplete) a completed Dida365 task.
+
+        Sets the task status back to 0 so it appears in the active task list
+        again.
+
+        Args:
+            task_id (string): The ID of the completed task to reopen.
+        """
+        return await self._run_service(
+            lambda service: service.reopen_task(task_id)
+        )
+
     @filter.llm_tool(name="delete_dida_task")
     async def delete_dida_task_llm(self, event: AstrMessageEvent, task_id: str):
         """Delete a Dida365 task permanently.

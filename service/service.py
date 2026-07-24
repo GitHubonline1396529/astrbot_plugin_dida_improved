@@ -288,6 +288,30 @@ class DidaService:
         """
         return _helpers.is_completed(task)
 
+    async def _resolve_project_name(self, project_id: str) -> str:
+        """Resolve a project ID to a human-readable project name.
+
+        Inbox-style virtual IDs (beginning with ``"inbox"``) are mapped to
+        the constant ``"Inbox"``.  Other IDs are looked up via the project
+        list.  Falls back to the raw *project_id* when the lookup fails.
+
+        Args:
+            project_id: The project identifier to resolve.
+
+        Returns:
+            The project name, or *project_id* if it cannot be resolved.
+        """
+        if project_id.lower().startswith("inbox"):
+            return _INBOX_PROJECT_NAME
+        try:
+            projects = await self.client.list_projects()
+            for p in projects:
+                if p.id == project_id:
+                    return p.name
+        except Exception:
+            pass
+        return project_id
+
     def _tz(self):
         """Get the configured timezone object.
 
@@ -440,9 +464,11 @@ class DidaService:
         return f"Unexpected Dida365 plugin error: {error!s}"
 
     async def find_task_by_id(self, task_id: str) -> DidaTaskWithProject | None:
-        """Find a task by its ID across all projects and the inbox.
+        """Find a task by its ID across all projects, inbox, and completed tasks.
 
-        Performs a linear scan over all collected tasks.
+        First searches uncompleted tasks (via project data + inbox). If not
+        found, falls back to searching completed tasks via the dedicated
+        ``/task/completed`` endpoint.
 
         Args:
             task_id: The task ID to search for.
@@ -454,6 +480,21 @@ class DidaService:
         for item in all_items:
             if item.task.id == task_id:
                 return item
+        # Fallback: search completed tasks.
+        try:
+            completed_tasks = await task_ops.list_completed_tasks(self.client)
+            for task in completed_tasks:
+                if task.id == task_id:
+                    project_name = await self._resolve_project_name(
+                        task.project_id
+                    )
+                    return DidaTaskWithProject(
+                        project_id=task.project_id,
+                        project_name=project_name,
+                        task=task,
+                    )
+        except Exception:
+            pass
         return None
 
     async def update_task_details(
@@ -553,8 +594,52 @@ class DidaService:
         found = await self.find_task_by_id(task_id)
         if not found:
             raise DidaValidationError(f"Task {task_id} not found.")
+        if _helpers.is_completed(found.task):
+            return (
+                f"Task [{task_id}] {found.task.title} is already completed."
+            )
         await task_ops.complete_task(self.client, found.project_id, task_id)
         return f"Task [{task_id}] {found.task.title} marked as completed."
+
+    async def reopen_task(self, task_id: str) -> str:
+        """Reopen (uncomplete) a completed task by setting status to 0.
+
+        Fetches the current task representation, applies ``status=0``, strips
+        the problematic ``reminders`` field, and performs a full-object
+        replacement via the API.
+
+        Args:
+            task_id: ID of the task to reopen.
+
+        Returns:
+            Success message.
+
+        Raises:
+            DidaValidationError: If *task_id* is not found or the task is
+                not completed.
+        """
+        found = await self.find_task_by_id(task_id)
+        if not found:
+            raise DidaValidationError(f"Task {task_id} not found.")
+        if not _helpers.is_completed(found.task):
+            return (
+                f"Task [{task_id}] {found.task.title} is not completed, "
+                "no need to reopen."
+            )
+
+        raw = (
+            dict(found.task.raw)
+            if found.task.raw
+            else _helpers.task_to_raw(found.task)
+        )
+        raw["status"] = 0
+        raw.pop("reminders", None)
+
+        updated = await task_ops.update_task(self.client, task_id, raw)
+        return (
+            f"Task [{updated.id}] {updated.title} has been reopened "
+            "(status set to 0)."
+        )
 
     async def delete_task(self, task_id: str) -> str:
         """Delete a task permanently.
