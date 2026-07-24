@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -656,10 +656,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-llm-function-tool" class="md-nav__link">
+  <a href="#5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. LLM Function Tool 注册
+        5. 已完成任务可见性
       
     </span>
   </a>
@@ -667,10 +667,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6" class="md-nav__link">
+  <a href="#6-llm-function-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. 文档与代码同步策略
+        6. LLM Function Tool 注册
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 文档与代码同步策略
       
     </span>
   </a>
@@ -1053,10 +1064,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-llm-function-tool" class="md-nav__link">
+  <a href="#5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. LLM Function Tool 注册
+        5. 已完成任务可见性
       
     </span>
   </a>
@@ -1064,10 +1075,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6" class="md-nav__link">
+  <a href="#6-llm-function-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. 文档与代码同步策略
+        6. LLM Function Tool 注册
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 文档与代码同步策略
       
     </span>
   </a>
@@ -1194,7 +1216,16 @@
 </ul>
 <h3 id="4">4. 错误处理</h3>
 <p>所有 Dida365 API 错误通过 <code>DidaClient._request()</code> 方法集中处理，转换为特定的异常类型 (<code>DidaAuthenticationError</code>、<code>DidaNotFoundError</code>、<code>DidaApiError</code>、<code>DidaNetworkError</code>)。<code>DidaService.explain_error()</code> 将这些异常转换为用户友好的中文消息。</p>
-<h3 id="5-llm-function-tool">5. LLM Function Tool 注册</h3>
+<h3 id="5">5. 已完成任务可见性</h3>
+<p>「完成」状态的任务通过 <code>/project/{id}/data</code> 或 <code>/project/inbox/data</code> 均不可见。查询已完成任务需使用 <code>/task/completed</code> 端点。</p>
+<p><code>find_task_by_id()</code> 采用二级回退策略：</p>
+<ol>
+<li>先在未完成任务集合（<code>_collect_all_tasks()</code>）中查找；</li>
+<li>未命中时，通过 <code>/task/completed</code>（无时间范围过滤）回退搜索已完成任务。</li>
+</ol>
+<p>这使得 <code>update_dida_task</code>、<code>delete_dida_task</code>、<code>complete_dida_task</code>、<code>reopen_dida_task</code> 均能作用于已完成任务。</p>
+<p><strong>注意：</strong> 判断任务是否已完成必须依据 <code>status</code> 字段，详见下方 <code>completedTime</code> 残留问题。</p>
+<h3 id="6-llm-function-tool">6. LLM Function Tool 注册</h3>
 <p>通过 <code>@filter.llm_tool(name=...)</code> 装饰器在类定义阶段注册 LLM 工具。装饰器解析方法的 Google 风格 docstring 提取参数名和类型，自动构建 OpenAI 兼容的 function-calling schema。注册后的工具会加入全局 <code>llm_tools.func_list</code>，由 <code>PluginManager.load()</code> 在插件实例化后绑定 handler 并激活。</p>
 <div class="admonition warning">
 <p class="admonition-title">方法参数名的潜在冲突</p>
@@ -1204,7 +1235,7 @@
 <p class="admonition-title">docstring 参数类型解析的完整机制</p>
 <p><code>@filter.llm_tool</code> 注册 LLM 工具时，<strong>只从 docstring 的 <code>Args:</code> 段落解析参数类型，完全忽略 Python 函数签名的类型注解</strong>。详细的类型映射表与 SUPPORTED_TYPES、常见踩坑点，以及对应的 AstrBot 源码位置，请参阅<a href="../coding-conventions/#llm-工具注册与参数类型解析">编码规范 → LLM 工具注册与参数类型解析</a>。</p>
 </div>
-<h3 id="6">6. 文档与代码同步策略</h3>
+<h3 id="7">7. 文档与代码同步策略</h3>
 <p>插件的功能描述在三个层面间传播，任何新增或修改都应保持三者一致：</p>
 <ol>
 <li><strong>元数据层</strong> — <code>metadata.yaml</code> 和 <code>README.md</code> 声明的高级功能列表；</li>
@@ -1428,7 +1459,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

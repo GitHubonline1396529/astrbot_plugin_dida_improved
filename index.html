@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
@@ -926,7 +926,7 @@
 <h1 id="_1">滴答清单改进版</h1>
 <p>滴答清单改进版 —— 在 AstrBot 中连接 Dida365/TickTick/滴答清单，支持完整的任务管理功能，包括收集箱 (Inbox) 任务。</p>
 <p>事情的起因是我之前使用 <a href="https://github.com/wuhuqif176">wuhuqif176</a>/<a href="https://github.com/wuhuqif176/astrbot_plugin_dida_todo">astrbot_plugin_dida_todo</a> 的时候发现插件的使用无法访问滴答清单的内建清单 <code>Inbox</code> 的问题。于是我 Fork 了原仓库，改进了插件项目，改进后的代码也在刚才提到的文件夹里面。我向原作者提交了 Issue 并声称可以提供 PR，但是他还没有回复我。于是我打算独立开发 <code>astrbot_plugin_dida_improved</code>，支持更多 API 功能。</p>
-<p>尽管我不得不承认这个项目赶工上马，大部分内容基本都还是 Vibe Coding 的产物 (Opencode + DeepSeek-v4-Flash)，而且是我第一次尝试通过 Vibe Coding 的方式开发一个项目，但我还是尽我所能对项目进行了测试，并保障代码的质量。</p>
+<p>最初写这个插件的时候，我的预期原本只是两三个几百行代码的小脚本，但是后来发现由于插件涉及到与 Dida 365 的 API 进行交互，实现完整功能所需的代码体量实在不是我三天两头就能写完的东西。于是我就开始高强度 Vibe Coding 了 (Opencode + DeepSeek-v4-Flash)。尽管我不得不承认这个项目赶工上马，大部分内容基本都还是 Vibe 的产物，而且是我第一次尝试通过 Vibe Coding 的方式开发一个项目，但我还是尽我所能对项目进行了测试，并保障代码的质量。希望大家用得喜欢。</p>
 <h2 id="_2">特性</h2>
 <h3 id="_3">基础功能</h3>
 <p>本项目目前实现了如下的功能，均通过 LLM 工具调用，核心是 Astrbot 的自然语言处理能力。你只需要通过自然语言向 Astrbot 下达命令，就能让它完全接管你的滴答清单，就像操作本地文件一样容易。</p>
@@ -1089,7 +1089,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
