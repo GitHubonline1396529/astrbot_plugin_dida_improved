@@ -17,12 +17,11 @@
 
 **返回示例：**
 
-```
-Dida365 Improved Plugin loaded
-- Access token configured: True
-- API base URL: https://api.dida365.com/open/v1
-- Timezone: Asia/Shanghai
-```
+> Dida365 Improved Plugin loaded
+>
+> - Access token configured: True
+> - API base URL: https://api.dida365.com/open/v1
+> - Timezone: Asia/Shanghai
 
 ### `/dida_probe`
 
@@ -30,8 +29,7 @@ Dida365 Improved Plugin loaded
 
 **返回示例：**
 
-```
-Dida365 API read probe successful.
-- Project count: 3
-- Sample projects: 工作, 学习, 生活
-```
+> Dida365 API read probe successful.
+>
+> - Project count: 3
+> - Sample projects: 工作, 学习, 生活
