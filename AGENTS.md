@@ -68,7 +68,7 @@ astrbot_plugin_dida_improved/
 ## Build & verification
 
 ```bash
-ruff format . && ruff check .   # Format + lint
+ruff format . && ruff check .    # Format + lint
 pytest -v                        # Unit tests (no AstrBot runtime needed)
 mkdocs build                     # Build docs to site/
 mkdocs serve                     # Preview at http://localhost:8000
