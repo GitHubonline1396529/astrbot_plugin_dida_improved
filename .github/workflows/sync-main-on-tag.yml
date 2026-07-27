@@ -30,4 +30,4 @@ jobs:
           git add $FILES
           git commit -m "release: ${TAG_NAME}"
           git branch -f main release-temp
-          git push https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/${{ github.repository }}.git main --force
+          git push origin main --force

@@ -92,18 +92,6 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 由于使用了 `--orphan`，`main` 分支的每次发布都是一个独立的根提交，没有与 `dev` 共享的历史。这保证了 `main` 的纯净。
 
-推送时使用 Personal Access Token (`RELEASE_TOKEN` Secret) 绕过 GitHub 分支保护规则，确保只有 GitHub Actions 可以写入 `main`。
-
-### 远程仓库防护
-
-为防止意外推送 `main` 分支，在 GitHub 仓库设置中配置了分支保护规则：
-
-- 分支名：`main`；
-- "Restrict who can push to matching branches" — 已启用；
-- 仅允许 GitHub Actions (通过 PAT) 推送。
-
-因此，执行 `git push origin main` 会被 GitHub 直接拒绝。
-
 ## 发布流程
 
 **1. 进入 dev 分支**：确保当前工作目录在 `dev` 分支上，所有后续操作都基于此分支进行。
@@ -149,15 +137,17 @@ git push origin dev
 
 ### 如果不小心对 `main` 执行了 `git push`？
 
-GitHub 的分支保护规则会直接拒绝推送：`remote: error: GH006: Protected branch update failed for refs/heads/main.`
+由于没有分支保护限制，推送会成功，但 `main` 分支不应被手动修改。如果误推了，可以在远程删除 `main` 分支后重新推送标签触发 CI 重建：
+
+```bash
+git push origin --delete main
+```
+
+然后重新执行发布流程中的标签推送步骤。
 
 ### 如果本地不小心创建了 `main` 分支？
 
 没有影响。`main` 仅存在于远程，且本地的 `main` 分支内容与远程不同。只需删除本地分支：`git branch -D main`。
-
-### `RELEASE_TOKEN` 是什么？
-
-是一个 GitHub Fine-grained Personal Access Token，具有对仓库 `Contents: Write` 权限。它被存储在仓库的 Secrets 中 (名称为 `RELEASE_TOKEN`)，供 GitHub Actions 在推送 `main` 时认证使用。
 
 ### 为什么不在本地创建 `main` 分支？
 
