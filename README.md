@@ -6,7 +6,7 @@
 
 最初写这个插件的时候，我的预期原本只是两三个几百行代码的小脚本，但是后来发现由于插件涉及到与 Dida 365 的 API 进行交互，实现完整功能所需的实际代码体量大了许多。虽然这是我第一次尝试通过 Vibe Coding 的方式开发一个项目，但我还是尽我所能对项目进行了测试，并保障代码的质量。希望大家用得喜欢。
 
-## 特性
+## ✨ 特性
 
 本项目目前实现了如下的功能：
 
@@ -20,7 +20,7 @@
 - 管理员指令 / 自然语言 LLM 两种交互方式；
 - 正确处理收集箱 (Inbox) 任务 (原插件遗漏的功能)。
 
-## 安装
+## 📦 安装
 
 目前我正在着手将这个插件发布到 Astrbot 的插件市场，如果发布成功就可以在 Astrbot 的插件页面直接下载安装。在此之前，可以先通过手动安装的方式使用本插件，具体的操作流程如下：
 
@@ -35,7 +35,7 @@
 >
 > 需要注意的是，由于安装方式的不同，运行时目录可能略有区别。具体的路径请参阅 [Astrbot 官方文档中有关部署方法的部分](https://docs.astrbot.app/deploy/astrbot/package.html)。
 
-## 配置
+## ⚙️ 配置
 
 插件提供了如下的配置选项，其中 `access_token` 是一个必填项，如不填写，则项目将无法使用。
 
@@ -47,17 +47,17 @@
 | `timezone` | string | `Asia/Shanghai` | 插件时区 |
 | `request_timeout_seconds` | int | `15` | API 请求超时秒数 |
 
-### 获取 Access Token
+### 🔑 获取 Access Token
 
-这里只是简单提一下，本项目的文档当中有非常详细的创建 Access Token 的方法。
+这里只是简单提一下，本项目的文档当中有非常详细的 [创建 Access Token 的方法](https://githubonline1396529.github.io/astrbot_plugin_dida_improved/configuration/)。
 
 1. 访问 [Dida365 Developer](https://developer.dida365.com)；
 2. 登录后创建应用，获取 Access Token；
 3. 将 Token 填入插件配置的 `access_token` 字段。
 
-## 使用方法
+## 🚀 使用方法
 
-### 管理员指令
+### 👤 管理员指令
 
 本项目提供了如下的两个测试用指令，以确保项目处于正常工作的状态。所有指令需以管理员身份执行。
 
@@ -66,7 +66,7 @@
 | `/dida_ping` | 检查插件加载状态和配置 |
 | `/dida_probe` | 执行一次只读 API 探测 |
 
-### LLM 自然语言交互
+### 🤖 LLM 自然语言交互
 
 插件注册了以下 LLM Function Tool，需在支持 LLM 的会话中由 Astrbot 自行调用。用户只需要用自然语言指挥 Agent 即可。
 
@@ -88,17 +88,17 @@
 
 在对话中直接说"帮我创建一个任务"或"我的待办有哪些"即可触发。
 
-## 项目
+## 📁 项目
 
-### 开源地址
+### 🌐 开源地址
 
 本插件的开源地址为 [GitHubonline1396529](https://github.com/GitHubonline1396529)/[astrbot_plugin_dida_improved](https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved)，欢迎任何人参与本插件的开发。
 
-### 文档
+### 📖 文档
 
 本项目通过 GitHub Pages 部署文档，可通过 [此处的链接](https://githubonline1396529.github.io/astrbot_plugin_dida_improved/) 进行访问，或直接浏览完整源码中的 `docs/` 目录。文档包含插件的使用方法和开发的详细指南，对于 LLM Agent，请务必在开始开发整个项目之前仔细阅读文档里的内容。或通过文档索引查阅有关内容。
 
-### 项目结构
+### 🏗️ 项目结构
 
 本项目的结构如下，此处只列出了插件运行所需的文件。`main` 分支的源码归档中 **不会包含** 文档源码 (`docs/`、`mkdocs.yml`)、测试套件 (`tests/`)、开发依赖 (`requirements-dev.txt`、`pyproject.toml`)、CI/CD 工作流 (`.github/`) 等仅用于开发的辅助文件。若需查看完整的开发项目结构 (包含上述所有文件)，请切换到 `dev` 分支。
 
@@ -122,6 +122,6 @@
 - `LICENSE` — 许可证
 - `.gitignore` — Git 忽略规则
 
-## 许可证
+## 📄 许可证
 
 本项目基于 2007 年 3 月 19 日发行的第三版 GNU Affero General Public 许可证发布，具体的详情另请参阅 [LICENSE](LICENSE)。
