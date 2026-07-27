@@ -1,5 +1,22 @@
 # 变更日志
 
+## v0.3.0
+
+### 修复
+
+- 修复 CI 工作流 `sync-main-on-tag.yml` 中推送命令使用硬编码 PAT token 的问题，改用 `git push origin main --force`，简化认证方式；
+- 修复 `AGENTS.md` 构建与验证区块中格式对齐不一致的问题。
+
+### 文档
+
+- `README.md`：全面重写格式化，使用 Emoji 装饰标题和分类；添加在线文档链接；重写安装说明为「通过 Git 安装」和「手动安装」两种方式；新增「项目」章节包含开源地址和文档链接；简化项目结构展示并移入项目章节；
+- `docs/usage/llm-tools.md`：全面重写使用示例，从逐个工具说明改为场景化的自然语言交互示例（开启高效的一天、从灵感到执行等），增强可读性和实用性；
+- `docs/usage/commands.md`：指令返回示例格式从代码块改为 blockquote 引用风格；
+- `docs/installation.md`：新增手动安装方式说明，补充 Git 安装步骤细节，添加配置提醒；
+- `docs/index.md`：添加文档链接，移除重复的安装部分（已迁移至 `installation.md`）；
+- `docs/development/release-workflow.md`：移除 `RELEASE_TOKEN` 和分支保护相关说明；更新误推 `main` 分支的处理指南；
+- `docs/development/coding-conventions.md`：修正 docstring 标记语法示例中的格式化问题。
+
 ## v0.2.3-beta
 
 ### 新增
