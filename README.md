@@ -1,10 +1,10 @@
 # Astrbot 滴答清单插件改进版
 
-滴答清单改进版 —— 在 AstrBot 中连接 Dida365/TickTick/滴答清单，支持完整的任务管理功能，包括收集箱 (Inbox) 任务。
+滴答清单改进版 —— 在 AstrBot 中连接 Dida365/TickTick/滴答清单，支持完整的任务管理功能，包括收集箱 (Inbox) 任务。[点击此处链接访问项目文档页面](https://githubonline1396529.github.io/astrbot_plugin_dida_improved/)。
 
 事情的起因是我之前使用 [wuhuqif176](https://github.com/wuhuqif176)/[astrbot_plugin_dida_todo](https://github.com/wuhuqif176/astrbot_plugin_dida_todo) 的时候发现插件的使用无法访问滴答清单的内建清单 `Inbox` 的问题。于是我 Fork 了原仓库，改进了插件项目，改进后的代码也在刚才提到的文件夹里面。我向原作者提交了 Issue 并声称可以提供 PR，但是他还没有回复我。于是我打算独立开发 `astrbot_plugin_dida_improved`，支持更多 API 功能。
 
-最初写这个插件的时候，我的预期原本只是两三个几百行代码的小脚本，但是后来发现由于插件涉及到与 Dida 365 的 API 进行交互，实现完整功能所需的代码体量实在不是我三天两头就能写完的东西。于是我就开始高强度 Vibe Coding 了 (Opencode + DeepSeek-v4-Flash)。尽管我不得不承认这个项目赶工上马，大部分内容基本都还是 Vibe 的产物，而且是我第一次尝试通过 Vibe Coding 的方式开发一个项目，但我还是尽我所能对项目进行了测试，并保障代码的质量。希望大家用得喜欢。
+最初写这个插件的时候，我的预期原本只是两三个几百行代码的小脚本，但是后来发现由于插件涉及到与 Dida 365 的 API 进行交互，实现完整功能所需的实际代码体量大了许多。虽然这是我第一次尝试通过 Vibe Coding 的方式开发一个项目，但我还是尽我所能对项目进行了测试，并保障代码的质量。希望大家用得喜欢。
 
 ## 特性
 
@@ -22,11 +22,14 @@
 
 ## 安装
 
-由于本项目目前还没有发布到 Astrbot 插件市场，目前您可以先通过手动安装的方式使用本项目，具体的操作流程如下：
+目前我正在着手将这个插件发布到 Astrbot 的插件市场，如果发布成功就可以在 Astrbot 的插件页面直接下载安装。在此之前，可以先通过手动安装的方式使用本插件，具体的操作流程如下：
 
-1. 将插件目录放置到 AstrBot 的运行时目录下的 `data/plugins/` 下；
-2. 在 WebUI 中重载插件，或者直接重启 AstrBot；
-3. 在插件配置中至少应当填写您的 `access_token`。
+1. 从本项目的仓库地址 [astrbot_plugin_dida_improved](https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved) 下载插件的源码压缩包 (`main` 分支)；
+2. 将插件目录解压后放置到 AstrBot 的运行时目录下的 `data/plugins/` 下；
+3. 在 WebUI 中重载插件，或者直接重启 AstrBot；
+4. 在插件配置中至少应当填写您的 `access_token`。
+
+其他的安装方法 (比如，如果您有 Git)，请参阅 [插件文档 - 安装](https://githubonline1396529.github.io/astrbot_plugin_dida_improved/installation/)。
 
 > [!NOTE]
 >
@@ -65,7 +68,7 @@
 
 ### LLM 自然语言交互
 
-插件注册了以下 LLM Function Tool (需在支持 LLM 的会话中使用)：
+插件注册了以下 LLM Function Tool，需在支持 LLM 的会话中由 Astrbot 自行调用。用户只需要用自然语言指挥 Agent 即可。
 
 | 工具名称 | 功能 |
 |----------|------|
@@ -85,38 +88,39 @@
 
 在对话中直接说"帮我创建一个任务"或"我的待办有哪些"即可触发。
 
-## 开发
+## 项目
 
-### 开发文档
+### 开源地址
 
-如果您想参与本项目的开发，项目的文档对此有十分详细的说明以供你查阅。请务必在开始开发整个项目之前仔细阅读文档里的内容。或者，如果你对项目的结构大致有一些了解，请通过文档索引查阅有关内容。
+本插件的开源地址为 [GitHubonline1396529](https://github.com/GitHubonline1396529)/[astrbot_plugin_dida_improved](https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved)，欢迎任何人参与本插件的开发。
+
+### 文档
+
+本项目通过 GitHub Pages 部署文档，可通过 [此处的链接](https://githubonline1396529.github.io/astrbot_plugin_dida_improved/) 进行访问，或直接浏览完整源码中的 `docs/` 目录。文档包含插件的使用方法和开发的详细指南，对于 LLM Agent，请务必在开始开发整个项目之前仔细阅读文档里的内容。或通过文档索引查阅有关内容。
 
 ### 项目结构
 
-下面展示的是本项目发布的代码的结构，也就是插件本身的部分。本项目还包含很多开发流程涉及的文件，请切换到 `dev` 分支进行查看。
+本项目的结构如下，此处只列出了插件运行所需的文件。`main` 分支的源码归档中 **不会包含** 文档源码 (`docs/`、`mkdocs.yml`)、测试套件 (`tests/`)、开发依赖 (`requirements-dev.txt`、`pyproject.toml`)、CI/CD 工作流 (`.github/`) 等仅用于开发的辅助文件。若需查看完整的开发项目结构 (包含上述所有文件)，请切换到 `dev` 分支。
 
-```
-astrbot_plugin_dida_improved/
-├── logo.png            # 插件图标
-├── main.py             # 插件入口：命令处理器和 LLM 工具注册
-├── client.py           # Dida365 Open API HTTP 客户端
-├── service/            # 业务逻辑层 (包目录)
-│   ├── __init__.py     #   包入口，导出 DidaService
-│   ├── service.py      #   DidaService 主类 (查询编排、公共 API)
-│   ├── task_ops.py     #   任务操作 (CRUD、移动、筛选、已完成)
-│   ├── formatting.py   #   输出格式化
-│   ├── comments.py     #   任务评论
-│   └── _helpers.py     #   内部辅助函数
-├── models.py           # 数据模型
-├── exceptions.py       # 自定义异常层次
-├── time_utils.py       # 时区工具
-├── _conf_schema.json   # 插件配置 Schema (WebUI 自动渲染)
-├── metadata.yaml       # 插件元数据
-├── requirements.txt    # Python 依赖
-├── README.md           # 本文件
-├── LICENSE             # 许可证
-└── .gitignore          # Git 忽略规则
-```
+- `logo.png` — 插件图标
+- `main.py` — 插件入口：命令处理器和 LLM 工具注册
+- `client.py` — Dida365 Open API HTTP 客户端
+- `service/` — 业务逻辑层 (包目录)
+  - `__init__.py` — 包入口，导出 DidaService
+  - `service.py` — DidaService 主类 (查询编排、公共 API)
+  - `task_ops.py` — 任务操作 (CRUD、移动、筛选、已完成)
+  - `formatting.py` — 输出格式化
+  - `comments.py` — 任务评论
+  - `_helpers.py` — 内部辅助函数
+- `models.py` — 数据模型
+- `exceptions.py` — 自定义异常层次
+- `time_utils.py` — 时区工具
+- `_conf_schema.json` — 插件配置 Schema (WebUI 自动渲染)
+- `metadata.yaml` — 插件元数据
+- `requirements.txt` — Python 依赖
+- `README.md` — 本文件
+- `LICENSE` — 许可证
+- `.gitignore` — Git 忽略规则
 
 ## 许可证
 
