@@ -1211,8 +1211,8 @@
 <h3 id="docstring-markdown">Docstring 中的 Markdown 语法</h3>
 <p>项目使用 mkdocstrings 将 docstring 渲染为 API 文档，docstring 中的内联标记必须使用 Markdown 语法：</p>
 <ul>
-<li><strong>字面量/代码引用</strong>：使用单反引号 <code>`code`</code>，不使用 <code>\</code>`code``<code>（RST 双反引号）或</code>:class:`X`` 等 RST 角色；</li>
-<li><strong>交叉引用</strong>：直接用 <code>`ClassName`</code>、<code>`method_name`</code>、<code>`function_name`</code>，不使用 <code>:class:\</code>ClassName`<code>、</code>:meth:`method_name`<code>、</code>:func:`function_name`` 等 Sphinx 角色；</li>
+<li><strong>字面量/代码引用</strong>：使用单反引号 <code>`code`</code>，不使用 <code>``code``</code>（RST 双反引号）或 <code>:class:`X`</code> 等 RST 角色；</li>
+<li><strong>交叉引用</strong>：直接用 <code>`ClassName`</code>、<code>`method_name`</code>、<code>`function_name`</code>，不使用 <code>:class:`ClassName`</code>、<code>:meth:`method_name`</code>、<code>:func:`function_name`</code> 等 Sphinx 角色；</li>
 <li><strong>参数名引用</strong>：在 docstring 正文中引用参数时，用 <code>`param_name`</code>（代码风格）而非 <code>*param_name*</code>（斜体）；</li>
 <li><strong>强调</strong>：<code>**bold**</code> 和 <code>*italic*</code> 均可使用（两种语法一致）；</li>
 <li><strong>注意块</strong>：使用 Google 风格 <code>Note:</code> 段落头，内容缩进 4 空格，不使用 <code>.. note::</code> RST 指令；</li>
