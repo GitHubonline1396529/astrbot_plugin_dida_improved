@@ -5,9 +5,9 @@
 插件采用三层架构设计：
 
 1. **入口层** — `main.py`：命令处理器和 LLM 工具注册；
-1. **业务逻辑层** — `service/` 包：查询编排、格式化、错误处理；
-1. **基础设施层** — `client.py`：Dida365 Open API HTTP 客户端封装；
-1. **支撑模块**；
+2. **业务逻辑层** — `service/` 包：查询编排、格式化、错误处理；
+3. **基础设施层** — `client.py`：Dida365 Open API HTTP 客户端封装；
+4. **支撑模块**；
     - `models.py` — 数据模型；
     - `exceptions.py` — 异常层次；
     - `time_utils.py` — 时区工具。
@@ -61,7 +61,8 @@ Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime(
 
 这使得 `update_dida_task`、`delete_dida_task`、`complete_dida_task`、`reopen_dida_task` 均能作用于已完成任务。
 
-**注意：** 判断任务是否已完成必须依据 `status` 字段，详见下方 `completedTime` 残留问题。
+!!! warning "字段依据"
+    判断任务是否已完成必须依据 `status` 字段，详见下方 `completedTime` 残留问题。
 
 ### 6. LLM Function Tool 注册
 
@@ -91,7 +92,7 @@ Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime(
 | 4 | `docs/usage/llm-tools.md` | 工具说明、参数描述、使用示例已更新 |
 | 5 | `README.md` | LLM 工具表格已同步 |
 | 6 | `tests/test_main.py` | 新增工具的 return 行为有测试覆盖 |
-| 7 | `release-manifest.json` | 若新增文件，需确认是否应加入发布清单 |
+| 7 | `release-manifest.json` | 若新增文件，需确认是否应加入发布清单；若需复制/重命名 (如 `docs/changelog.md` → `CHANGELOG.md`)，加入 `copies` |
 
 ## Dida365 API 技术细节
 

@@ -100,7 +100,7 @@
 
 ### 🏗️ 项目结构
 
-本项目的结构如下，此处只列出了插件运行所需的文件。`main` 分支的源码归档中 **不会包含** 文档源码 (`docs/`、`mkdocs.yml`)、测试套件 (`tests/`)、开发依赖 (`requirements-dev.txt`、`pyproject.toml`)、CI/CD 工作流 (`.github/`) 等仅用于开发的辅助文件。若需查看完整的开发项目结构 (包含上述所有文件)，请切换到 `dev` 分支。
+本项目的结构如下，此处列出了 `main` 分支发布包中的全部文件。`main` 分支的源码归档中 **不会包含** 文档源码 (`docs/`、`mkdocs.yml`)、测试套件 (`tests/`)、开发依赖 (`requirements-dev.txt`、`pyproject.toml`)、CI/CD 工作流 (`.github/`) 等仅用于开发的辅助文件。若需查看完整的开发项目结构 (包含上述所有文件)，请切换到 `dev` 分支。
 
 - `logo.png` — 插件图标
 - `main.py` — 插件入口：命令处理器和 LLM 工具注册
@@ -119,6 +119,7 @@
 - `metadata.yaml` — 插件元数据
 - `requirements.txt` — Python 依赖
 - `README.md` — 本文件
+- `CHANGELOG.md` — 变更日志 (发布时由 `docs/changelog.md` 自动生成，供插件市场展示更新历史)
 - `LICENSE` — 许可证
 - `.gitignore` — Git 忽略规则
 

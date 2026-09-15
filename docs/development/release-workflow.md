@@ -21,7 +21,7 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 远程 GitHub 仓库：
 
-- `main`：发布分支 (仅包含 13 个运行时必需文件)；
+- `main`：发布分支 (仅包含 13 个运行时必需文件，外加一份由 `docs/changelog.md` 自动生成的 `CHANGELOG.md`)；
 - `dev`：开发分支 (包含全部源文件，包括测试、文档等)。
 
 本地开发环境下，`dev` 为唯一本地分支，包括：
@@ -32,14 +32,19 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 日常开发在 `dev` 上进行；`main` 分支不创建于本地，仅由 GitHub Actions 在发布时自动同步。这里的命名策略与直觉相反：
 
-- **`main`** 实际上是发布分支，只放插件运行所必需的最小文件集合。
+- **`main`** 实际上是发布分支，只放插件运行所必需的最小文件集合，外加一份由 `docs/changelog.md` 自动生成的 `CHANGELOG.md` (供 AstrBot 插件市场展示更新历史)。
 - **`dev`** 实际上是开发的主分支，所有工作都在此进行。
 
 之所以如此命名，是因为 AstrBot 的插件下载机制读取的是 GitHub 仓库的默认分支。将 `main` 设为默认分支，并让它只包含发布文件，可以确保用户下载的永远是干净的插件包。
 
 ### 发布文件清单
 
-发布文件清单由 `release-manifest.json` 定义。当前清单包含以下文件/目录：
+发布文件清单由 `release-manifest.json` 定义，包含两个部分：
+
+- `files` — 直接从 `dev` 分支原样暂存的运行时文件/目录；
+- `copies` — 需要复制或重命名的文件 (源路径 → 目标路径)，例如将 `docs/changelog.md` 复制为根目录下的 `CHANGELOG.md`。
+
+`files` 当前清单包含以下文件/目录：
 
 | 文件/目录 | 用途 |
 |-----------|------|
@@ -57,7 +62,14 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 | `LICENSE` | AGPL v3 许可证 |
 | `.gitignore` | Git 忽略规则 (保持模板原样)  |
 
-> 如果需要新增/移除发布文件，修改 `release-manifest.json` 即可，无需编辑 CI 工作流。
+`copies` 当前清单包含以下映射：
+
+| 源路径 | 目标路径 | 用途 |
+|--------|----------|------|
+| `docs/changelog.md` | `CHANGELOG.md` | 变更日志，供 AstrBot 插件市场展示更新历史 |
+
+!!! note "变更发布文件清单"
+    如果需要新增/移除发布文件，修改 `release-manifest.json` 即可，无需编辑 CI 工作流。
 
 ## 技术实现
 
@@ -85,10 +97,11 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 1. 检出标签所指向的 `dev` 分支提交；
 2. `git checkout --orphan release-temp` — 创建一个没有历史的新分支；
-3. 读取 `release-manifest.json` 获取文件列表，`git add` 仅暂存运行时必需的文件；
-4. `git commit -m "release: v*"` — 提交只包含发布文件的快照；
-5. `git branch -f main release-temp` — 用这个快照替换 `main` 分支；
-6. `git push origin main --force` — 强制推送到远程。
+3. 读取 `release-manifest.json` 的 `files` 列表，`git add` 仅暂存运行时必需的文件；
+4. 读取 `release-manifest.json` 的 `copies` 列表，将源文件复制到目标路径 (如 `docs/changelog.md` → `CHANGELOG.md`) 并暂存；
+5. `git commit -m "release: v*"` — 提交只包含发布文件的快照；
+6. `git branch -f main release-temp` — 用这个快照替换 `main` 分支；
+7. `git push origin main --force` — 强制推送到远程。
 
 由于使用了 `--orphan`，`main` 分支的每次发布都是一个独立的根提交，没有与 `dev` 共享的历史。这保证了 `main` 的纯净。
 
@@ -131,7 +144,7 @@ git push origin dev
 
 如果希望远程 `dev` 分支也保持最新，可以一并推送。
 
-推送标签后，可以在 GitHub 仓库的 Actions 页面查看 `sync release to main` 工作流的执行状态。执行成功后，`main` 分支将自动更新为只包含 13 个发布文件的新快照。
+推送标签后，可以在 GitHub 仓库的 Actions 页面查看 `sync release to main` 工作流的执行状态。执行成功后，`main` 分支将自动更新为只包含 13 个发布文件 (外加生成的 `CHANGELOG.md`) 的新快照。
 
 ## 常见问题
 

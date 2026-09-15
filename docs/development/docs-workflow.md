@@ -94,3 +94,9 @@ mkdocs gh-deploy  # 构建并推送到 gh-pages 分支
 3. 安装 `mkdocs`、`mkdocs-material`、`mkdocstrings[python]`；
 4. 执行 `mkdocs build`；
 5. 执行 `mkdocs gh-deploy` 推送到 `gh-pages` 分支。
+
+## 变更日志同步到 main
+
+`docs/changelog.md` 是变更日志的唯一来源。在发布 (推送 `v*` 标签) 时，`sync-main-on-tag.yml` 工作流会依据 `release-manifest.json` 的 `copies` 映射，将其复制为仓库根目录下的 `CHANGELOG.md` 并同步到 `main` 分支，以配合 AstrBot 插件市场展示更新历史。
+
+因此，`CHANGELOG.md` 不需要 (也不应) 在 `dev` 分支的根目录中手动维护——只需在发布前更新 `docs/changelog.md`，根目录版本会在发布时自动生成。详见[发布流程](release-workflow.md)。
