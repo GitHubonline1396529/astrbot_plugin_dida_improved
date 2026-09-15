@@ -13,5 +13,11 @@
     "LICENSE",
     ".gitignore",
     "logo.png"
+  ],
+  "copies": [
+    {
+      "src": "docs/changelog.md",
+      "dest": "CHANGELOG.md"
+    }
   ]
 }

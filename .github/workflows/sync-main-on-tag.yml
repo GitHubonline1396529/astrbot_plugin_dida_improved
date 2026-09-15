@@ -1,5 +1,7 @@
 # Sync release files from dev to main when a v* tag is pushed.
 # This is the ONLY channel through which main should be updated.
+# Files are taken from release-manifest.json: `files` are staged as-is,
+# `copies` are copied/renamed (e.g. docs/changelog.md -> CHANGELOG.md).
 name: sync release to main
 
 on:
@@ -28,6 +30,9 @@ jobs:
           git rm -rf --cached .
           FILES=$(python -c "import json; print(' '.join(json.load(open('release-manifest.json'))['files']))")
           git add $FILES
+          python -c "import json,shutil; m=json.load(open('release-manifest.json')); [shutil.copyfile(c['src'], c['dest']) for c in m.get('copies', [])]"
+          COPIED=$(python -c "import json; print(' '.join(c['dest'] for c in json.load(open('release-manifest.json')).get('copies', [])))")
+          if [ -n "$COPIED" ]; then git add $COPIED; fi
           git commit -m "release: ${TAG_NAME}"
           git branch -f main release-temp
           git push origin main --force
