@@ -1,0 +1,12 @@
+name: astrbot_plugin_dida_improved
+display_name: 滴答清单改进版
+short_desc: 在 AstrBot 中连接 Dida365（滴答清单），支持完整的任务管理功能。
+desc: 连接 Dida365（滴答清单）Open API，支持查询、创建、完成、更新、移动和删除任务；正确处理收集箱（Inbox）任务；提供指令和 LLM 自然语言两种交互方式。
+author: Githubonline1396529
+version: v0.3.0
+repo: https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved
+astrbot_version: ">=4.0.0"
+social_link: https://www.cnblogs.com/BOXonline1396529
+tags:
+  - Dida365
+  - TickTick

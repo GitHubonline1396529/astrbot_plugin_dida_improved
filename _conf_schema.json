@@ -1,0 +1,38 @@
+{
+  "access_token": {
+    "description": "Dida365 Access Token",
+    "type": "string",
+    "default": "",
+    "hint": "在滴答清单开放平台 (https://developer.dida365.com) 获取。有效期约 180 天。",
+    "obvious_hint": true
+  },
+  "api_base_url": {
+    "description": "Dida365 Open API 基础地址",
+    "type": "string",
+    "default": "https://api.dida365.com/open/v1",
+    "hint": "通常保持默认值。"
+  },
+  "default_project": {
+    "description": "默认项目名称或 ID",
+    "type": "string",
+    "default": "",
+    "hint": "创建任务时未指定项目时使用的兜底项目。留空则使用第一个项目。"
+  },
+  "timezone": {
+    "description": "时区（IANA 格式）",
+    "type": "string",
+    "default": "Asia/Shanghai",
+    "hint": "例如 Asia/Shanghai, America/New_York。用于截止日期解析和逾期判断。"
+  },
+  "request_timeout_seconds": {
+    "description": "API 请求超时（秒）",
+    "type": "int",
+    "default": 15
+  },
+  "display_limit": {
+    "description": "列表每次最多显示条目数",
+    "type": "int",
+    "default": 50,
+    "hint": "查询任务或项目列表时单次最多返回的条目数。设为 0 则不截断。调用工具时一旦返回的未完成任务数量超过了该限制值则后续内容被截断，但 Agent 仍可自行传参以覆盖该配置。"
+  }
+}
