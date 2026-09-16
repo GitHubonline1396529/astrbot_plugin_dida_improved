@@ -1,0 +1,53 @@
+# Refresh the preview branch on every push to dev.
+# The preview branch mirrors the release file set defined by
+# release-manifest.json (the same manifest used by main), but is rebuilt from
+# the latest dev commit instead of from a v* tag, so that a clean
+# runtime-only package of the current development state can be installed for
+# testing. The push is skipped when the resulting snapshot is identical to the
+# remote preview branch.
+name: sync preview branch
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-preview-branch
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: create clean preview branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          git checkout --orphan preview-temp
+          git rm -rf --cached .
+          FILES=$(python3 -c "import json; print(' '.join(json.load(open('release-manifest.json'))['files']))")
+          git add $FILES
+          python3 -c "import json,shutil; m=json.load(open('release-manifest.json')); [shutil.copyfile(c['src'], c['dest']) for c in m.get('copies', [])]"
+          COPIED=$(python3 -c "import json; print(' '.join(c['dest'] for c in json.load(open('release-manifest.json')).get('copies', [])))")
+          if [ -n "$COPIED" ]; then git add $COPIED; fi
+          NEW_TREE=$(git write-tree)
+          if git fetch origin preview 2>/dev/null; then
+            if [ "$(git rev-parse FETCH_HEAD^{tree})" = "$NEW_TREE" ]; then
+              echo "preview already matches dev@${SHORT_SHA}; skipping push."
+              exit 0
+            fi
+          fi
+          git commit -m "preview: ${SHORT_SHA}"
+          git branch -f preview preview-temp
+          git push origin preview --force

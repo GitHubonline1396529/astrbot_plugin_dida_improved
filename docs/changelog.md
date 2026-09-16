@@ -1,5 +1,17 @@
 # 变更日志
 
+## Unreleased
+
+### 新增
+
+- 新增 GitHub Actions 工作流 `sync-preview-on-dev-push.yml`：每次向 `dev` 分支推送时，按 `release-manifest.json` 重建远程 `preview` 预览分支，供开发者安装只含运行时文件的干净插件包进行测试；当发布文件集合未发生变化时自动跳过推送。
+
+### 文档
+
+- `docs/development/release-workflow.md`：分支策略由双分支更新为三分支，新增「预览分支」章节 (目的、触发与更新逻辑、与 `main` 的差异对比、三种获取预览包的方式) ，并补充相关常见问题；
+- `docs/development/architecture.md`：补充发布清单变更在 `preview` 与 `main` 两个分支上的生效时机；
+- `AGENTS.md`：更新 CI/CD 说明，补充预览分支同步工作流。
+
 ## v0.3.0
 
 ### 修复

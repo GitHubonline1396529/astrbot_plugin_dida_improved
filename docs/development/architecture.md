@@ -94,6 +94,9 @@ Dida365 API 返回的日期时间可能不带时区信息。`parse_api_datetime(
 | 6 | `tests/test_main.py` | 新增工具的 return 行为有测试覆盖 |
 | 7 | `release-manifest.json` | 若新增文件，需确认是否应加入发布清单；若需复制/重命名 (如 `docs/changelog.md` → `CHANGELOG.md`)，加入 `copies` |
 
+!!! note "发布清单的生效时机"
+    修改 `release-manifest.json` 后，改动会在下一次向 `dev` 推送时反映到 `preview` 分支 (预览包)，并在下一次推送 `v*` 标签时反映到 `main` 分支 (发布包)。详见[发布流程 → 预览分支](release-workflow.md#预览分支)。
+
 ## Dida365 API 技术细节
 
 ### 官方文档罗列的所有端口

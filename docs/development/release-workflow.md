@@ -17,12 +17,13 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 ## 分支策略
 
-为解决上述问题，我们采用双分支策略管理代码：
+为解决上述问题，我们采用三分支策略管理代码：
 
 远程 GitHub 仓库：
 
 - `main`：发布分支 (仅包含 13 个运行时必需文件，外加一份由 `docs/changelog.md` 自动生成的 `CHANGELOG.md`)；
-- `dev`：开发分支 (包含全部源文件，包括测试、文档等)。
+- `dev`：开发分支 (包含全部源文件，包括测试、文档等)；
+- `preview`：预览分支 (发布文件清单与 `main` 完全相同，但由每次 `dev` 推送自动重建，详见[预览分支](#预览分支) 章节) 。
 
 本地开发环境下，`dev` 为唯一本地分支，包括：
 
@@ -30,12 +31,14 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 - `fix/xxx` ——修复分支；
 - ……
 
-日常开发在 `dev` 上进行；`main` 分支不创建于本地，仅由 GitHub Actions 在发布时自动同步。这里的命名策略与直觉相反：
+日常开发在 `dev` 上进行；`main` 与 `preview` 都不创建于本地，仅由 GitHub Actions 维护。这里的命名策略与直觉相反：
 
 - **`main`** 实际上是发布分支，只放插件运行所必需的最小文件集合，外加一份由 `docs/changelog.md` 自动生成的 `CHANGELOG.md` (供 AstrBot 插件市场展示更新历史)。
 - **`dev`** 实际上是开发的主分支，所有工作都在此进行。
 
 之所以如此命名，是因为 AstrBot 的插件下载机制读取的是 GitHub 仓库的默认分支。将 `main` 设为默认分支，并让它只包含发布文件，可以确保用户下载的永远是干净的插件包。
+
+`preview` 分支解决的是另一个问题：开发新功能时，需要在一个干净的插件包上测试。若直接从 `dev` 分支安装，AstrBot 会把测试套件、文档源码、CI 配置等一并下载到 `data/plugins/` 目录中，既冗余又容易干扰测试。`preview` 提供了「当前的开发状态，但只含运行时文件」的包。
 
 ### 发布文件清单
 
@@ -105,6 +108,69 @@ AstrBot 内置的插件下载机制直接从 GitHub 仓库的默认分支下载�
 
 由于使用了 `--orphan`，`main` 分支的每次发布都是一个独立的根提交，没有与 `dev` 共享的历史。这保证了 `main` 的纯净。
 
+`preview` 分支复用完全相同的清单与快照机制，但由独立工作流 `sync-preview-on-dev-push.yml` 在 `dev` 推送时重建，详见下一章节。
+
+## 预览分支
+
+### 目的
+
+开发新功能时，需要一个**干净**的插件包来测试：即只包含运行必需文件，而不含测试套件、文档源码、CI 配置等开发期文件。
+
+若直接从 `dev` 分支安装，AstrBot 会把这些开发期文件一并下载到 `data/plugins/` 目录下，既冗余又容易干扰测试 (例如 `pytest` 配置、CI 工作流会随插件一起出现)。`preview` 分支的目标就是提供「当前开发状态 + 发布文件清单」的组合。
+
+### 触发与更新逻辑
+
+`sync-preview-on-dev-push.yml` 工作流在每次向 `dev` 分支推送时触发：
+
+1. 检出 `dev` 分支的最新提交；
+2. 与 `sync-main-on-tag.yml` 相同，按 `release-manifest.json` 构建只含发布文件的快照；
+3. 计算快照的 tree 哈希，与远程 `preview` 分支的 tree 哈希比较；
+4. 若两者**相同** (例如本次提交只改动了 `tests/`、`docs/`、`.github/` 等非发布文件)，则不产生任何推送，工作流以成功状态退出；
+5. 若不同，则提交 `preview: <短哈希>` 并强制推送到远程 `preview` 分支。
+
+因此 `preview` 只会在发布文件集合真正变化时才更新，测试代码或文档的提交不会制造无意义的快照。
+
+### 与 `main` 分支的差异
+
+| 维度 | `main` | `preview` |
+|------|--------|-----------|
+| 触发条件 | 推送 `v*` 标签 | 每次推送到 `dev` 分支 |
+| 快照来源 | 标签所指向的 `dev` 提交 | `dev` 分支最新提交 |
+| 提交信息 | `release: v*` | `preview: <短哈希>` |
+| 更新频率 | 每次发布一次 | 每次发布文件变更一次 |
+| 稳定性 | 稳定，可视为正式版本 | 易变，仅供测试 |
+
+两者的文件清单同由 `release-manifest.json` 定义，因此**修改清单会同时影响二者**：改动在下次 `dev` 推送后反映到 `preview`，在下次推送标签后反映到 `main`。
+
+### 获取预览包
+
+**方式一：通过 AstrBot 插件市场界面安装 (推荐) **
+
+在 AstrBot WebUI 的插件安装界面输入以下地址：
+
+```
+https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved/tree/preview
+```
+
+AstrBot 会识别 `/tree/<分支名>` 形式并下载该分支的 ZIP 归档。安装后再次点击「更新」，AstrBot 会使用安装时记录的仓库地址与分支重新下载，从而拉取最新的预览快照。
+
+**方式二：手动下载 ZIP**
+
+```
+https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved/archive/refs/heads/preview.zip
+```
+
+解压后的目录名为 `astrbot_plugin_dida_improved-preview`，需要重命名为 `astrbot_plugin_dida_improved`，再放入 AstrBot 的 `data/plugins/` 目录。
+
+**方式三：`git clone`**
+
+```bash
+git clone -b preview --depth 1 https://github.com/GitHubonline1396529/astrbot_plugin_dida_improved.git
+```
+
+!!! warning "`preview` 分支是易变的"
+    `preview` 仅用于测试开发中的代码，其历史随时会被强制推送覆盖，因此不应在它之上进行开发，也不应将它作为拉取请求的目标分支。需要修改代码时，请切回 `dev` 分支。
+
 ## 发布流程
 
 **1. 进入 dev 分支**：确保当前工作目录在 `dev` 分支上，所有后续操作都基于此分支进行。
@@ -165,3 +231,15 @@ git push origin --delete main
 ### 为什么不在本地创建 `main` 分支？
 
 避免误推。本地只有 `dev`，开发者没有机会执行 `git push origin main`。`main` 的维护完全交由 GitHub Actions 处理。
+
+### 如果不小心对 `preview` 执行了 `git push`？
+
+无需处理。`preview` 分支的更新始终使用强制推送，下一次向 `dev` 推送时，工作流会将它重建为正确内容。若要立即恢复，可在 GitHub 仓库的 Actions 页面找到 `sync preview branch` 的历史运行记录，使用 **Re-run all jobs** 重新执行。
+
+### 为什么不在本地创建 `preview` 分支？
+
+与 `main` 同理：`preview` 是构建产物，只存在于远程。在本地创建它既无必要，也容易造成误推与内容不一致。
+
+### `preview` 分支何时首次出现？
+
+首次创建需要先有一次 `dev` 分支推送 (即工作流文件提交并推送之后)。由于本仓库的默认分支为 `main`，而 `main` 不包含 `.github/` 目录，工作流在首次运行前不会出现在 Actions 页面的手动触发列表中；因此最初的创建依赖于一次 `dev` 推送，之后即可在 Actions 页面手动重新运行。

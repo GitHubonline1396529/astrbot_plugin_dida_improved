@@ -25,7 +25,7 @@ astrbot_plugin_dida_improved/
 ├── site/                 # Built docs output (gitignored)
 ├── pages/docs/           # AstrBot Plugin Page target (gitignored, optional)
 ├── .gitattributes        # Archive export rules
-├── .github/workflows/    # CI/CD: docs deploy + sync-to-main
+├── .github/workflows/    # CI/CD: docs deploy + sync-to-main + sync-preview
 ├── _conf_schema.json     # Plugin config schema (auto-rendered in WebUI)
 ├── metadata.yaml         # Plugin metadata
 ├── pyproject.toml        # Ruff + pytest config
@@ -75,7 +75,8 @@ mkdocs serve                     # Preview at http://localhost:8000
 ```
 
 CI auto-deploys docs on `dev` push (changes under `docs/`, `*.py`, `mkdocs.yml`).  
-Push `v*` tag on `dev` → GitHub Actions syncs release files to `main`.  
+Push `v*` tag on `dev` → GitHub Actions syncs release files to `main` (release branch).  
+Push to `dev` → GitHub Actions rebuilds the `preview` branch (same release file set, latest `dev` state; skipped when no release file changed).  
 See `docs/development/docs-workflow.md` and `docs/development/release-workflow.md`.
 
 ## Architecture & key patterns
