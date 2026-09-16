@@ -39,6 +39,15 @@ plugins:
             show_symbol_type_toc: true
 
 markdown_extensions:
+  # The default Python-Markdown slugify strips non-ASCII characters, which
+  # would turn every Chinese-only heading into an order-dependent `_N` anchor
+  # (e.g. `## 预览分支` -> `#_6`). Use the Unicode-aware slugifier from
+  # `pymdownx.slugs` so headings keep their CJK characters, matching how the
+  # same files are rendered on GitHub.
+  - toc:
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.superfences

@@ -6,10 +6,15 @@
 
 - 新增 GitHub Actions 工作流 `sync-preview-on-dev-push.yml`：每次向 `dev` 分支推送时，按 `release-manifest.json` 重建远程 `preview` 预览分支，供开发者安装只含运行时文件的干净插件包进行测试；当发布文件集合未发生变化时自动跳过推送。
 
+### 修复
+
+- 修复文档站中文标题锚点失效的问题：`mkdocs.yml` 的 `toc` 扩展改用 Unicode 感知的 `pymdownx.slugs.slugify`，纯中文标题现在生成 `#预览分支` 这类稳定且可引用的锚点，并与 GitHub 网页端浏览同一 Markdown 时的锚点保持一致；此前这类标题会退化为 `#_6`、`#_7` 等由标题出现顺序决定、插入新标题即漂移的锚点。
+
 ### 文档
 
 - `docs/development/release-workflow.md`：分支策略由双分支更新为三分支，新增「预览分支」章节 (目的、触发与更新逻辑、与 `main` 的差异对比、三种获取预览包的方式) ，并补充相关常见问题；
 - `docs/development/architecture.md`：补充发布清单变更在 `preview` 与 `main` 两个分支上的生效时机；
+- `docs/development/docs-workflow.md`：新增「标题与锚点」小节，说明锚点生成规则、跨页引用约定，以及显式 `{ #id }` 锚点的适用场景与 GitHub 兼容性限制；该小节同时记录 `architecture.md` 中此前失效的 `coding-conventions.md#llm-工具注册与参数类型解析` 交叉引用已恢复有效；
 - `AGENTS.md`：更新 CI/CD 说明，补充预览分支同步工作流。
 
 ## v0.3.0
