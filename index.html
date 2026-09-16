@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#滴答清单改进版" class="md-skip">
           跳转至
         </a>
       
@@ -292,7 +292,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#特性" class="md-nav__link">
     <span class="md-ellipsis">
       
         特性
@@ -304,7 +304,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#基础功能" class="md-nav__link">
     <span class="md-ellipsis">
       
         基础功能
@@ -315,7 +315,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#api" class="md-nav__link">
+  <a href="#api-支持" class="md-nav__link">
     <span class="md-ellipsis">
       
         API 支持
@@ -843,7 +843,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#特性" class="md-nav__link">
     <span class="md-ellipsis">
       
         特性
@@ -855,7 +855,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#基础功能" class="md-nav__link">
     <span class="md-ellipsis">
       
         基础功能
@@ -866,7 +866,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#api" class="md-nav__link">
+  <a href="#api-支持" class="md-nav__link">
     <span class="md-ellipsis">
       
         API 支持
@@ -901,12 +901,12 @@
   
 
 
-<h1 id="_1">滴答清单改进版</h1>
+<h1 id="滴答清单改进版">滴答清单改进版</h1>
 <p>滴答清单改进版 —— 在 AstrBot 中连接 Dida365/TickTick/滴答清单，支持完整的任务管理功能，包括收集箱 (Inbox) 任务。<a href="https://githubonline1396529.github.io/astrbot_plugin_dida_improved/">点击此处链接访问项目文档页面</a>。</p>
 <p>事情的起因是我之前使用 <a href="https://github.com/wuhuqif176">wuhuqif176</a>/<a href="https://github.com/wuhuqif176/astrbot_plugin_dida_todo">astrbot_plugin_dida_todo</a> 的时候发现插件的使用无法访问滴答清单的内建清单 <code>Inbox</code> 的问题。于是我 Fork 了原仓库，改进了插件项目，改进后的代码也在刚才提到的文件夹里面。我向原作者提交了 Issue 并声称可以提供 PR，但是他还没有回复我。于是我打算独立开发 <code>astrbot_plugin_dida_improved</code>，支持更多 API 功能。</p>
 <p>最初写这个插件的时候，我的预期原本只是两三个几百行代码的小脚本，但是后来发现由于插件涉及到与 Dida 365 的 API 进行交互，实现完整功能所需的实际代码体量大了许多。虽然这是我第一次尝试通过 Vibe Coding 的方式开发一个项目，但我还是尽我所能对项目进行了测试，并保障代码的质量。希望大家用得喜欢。</p>
-<h2 id="_2">特性</h2>
-<h3 id="_3">基础功能</h3>
+<h2 id="特性">特性</h2>
+<h3 id="基础功能">基础功能</h3>
 <p>本项目目前实现了如下的功能，均通过 LLM 工具调用，核心是 Astrbot 的自然语言处理能力。你只需要通过自然语言向 Astrbot 下达命令，就能让它完全接管你的滴答清单，就像操作本地文件一样容易。</p>
 <ul>
 <li>查询所有未完成任务 (含收集箱)；</li>
@@ -915,7 +915,7 @@
 <li>管理员指令 / 自然语言 LLM 两种交互方式；</li>
 <li>正确处理收集箱 (Inbox) 任务 (原插件遗漏的功能)。</li>
 </ul>
-<h3 id="api">API 支持</h3>
+<h3 id="api-支持">API 支持</h3>
 <p>本项目支持如下的 API，关于 API 的详情请查阅 <a href="https://developer.dida365.com/docs#/openapi">Dida365 Open API 手册</a>。</p>
 <table>
 <thead>
